@@ -37,7 +37,7 @@
                     <article class="card" style="max-width: 250px;">
                         <img src="../assets/board_game.jpeg" class="card-img-top">
                         <div class="card-body">
-                            <h5 class="card-title text-center">Board Games at John's House</h5>
+                            <a href="#"><h5 class="card-title text-center">Board Games at John's House</h5></a>
                             <ul class="list-unstyled">
                                 <li class="card-text"><i class="col-2 fa fa-calendar" aria-label="Date"></i>7 March, 2021</li>
                                 <li class="card-text"><i class="col-2 fa fa-map-marker" aria-label="Location"></i>Doctor Street, 172</li>
@@ -49,7 +49,7 @@
                     <article class="card" style="max-width: 250px;">
                         <img src="../assets/chess_event.jpg" class="card-img-top">
                         <div class="card-body">
-                            <h5 class="card-title text-center">Casual Chess Meetup - Bullet, Blitz and Rapid</h5>
+                            <a href="#"><h5 class="card-title text-center">Casual Chess Meetup - Bullet, Blitz and Rapid</h5></a>
                             <ul class="list-unstyled">
                                 <li class="card-text"><i class="col-2 fa fa-calendar" aria-label="Date"></i>16 March, 2021</li>
                                 <li class="card-text"><i class="col-2 fa fa-map-marker" aria-label="Location"></i>Friendly Local Game Store</li>
@@ -66,7 +66,7 @@
                     <article class="card" style="max-width: 250px;">
                         <img src="../assets/tibalt.jpg" class="card-img-top">
                         <div class="card-body">
-                            <h5 class="card-title text-center">Magic: The Gathering - Kaldheim Draft</h5>
+                            <a href="#"><h5 class="card-title text-center">Magic: The Gathering - Kaldheim Draft</h5></a>
                             <ul class="list-unstyled">
                                 <li class="card-text"><i class="col-2 fa fa-calendar" aria-label="Date"></i>25 March, 2021</li>
                                 <li class="card-text"><i class="col-2 fa fa-map-marker" aria-label="Location"></i>Friendly Local Game Store</li>
@@ -78,7 +78,7 @@
                     <article class="card" style="max-width: 250px;">
                         <img src="../assets/chess_event.jpg" class="card-img-top">
                         <div class="card-body">
-                            <h5 class="card-title text-center">Amateur Blitz Chess Tournament</h5>
+                            <a href="#"><h5 class="card-title text-center">Amateur Blitz Chess Tournament</h5></a>
                             <ul class="list-unstyled">
                                 <li class="card-text"><i class="col-2 fa fa-calendar" aria-label="Date"></i>28 March, 2021</li>
                                 <li class="card-text"><i class="col-2 fa fa-map-marker" aria-label="Location"></i>Marshall Street, 283</li>
@@ -90,7 +90,7 @@
                     <article class="card" style="max-width: 250px;">
                         <img src="../assets/dnd.jpg" class="card-img-top">
                         <div class="card-body">
-                            <h5 class="card-title text-center">Dungeons and Dragons Meetup #3</h5>
+                            <a href="#"><h5 class="card-title text-center">Dungeons and Dragons Meetup #3</h5></a>
                             <ul class="list-unstyled">
                                 <li class="card-text"><i class="col-2 fa fa-calendar" aria-label="Date"></i>4 April, 2021</li>
                                 <li class="card-text"><i class="col-2 fa fa-map-marker" aria-label="Location"></i>Friendly Local Game Store</li>
