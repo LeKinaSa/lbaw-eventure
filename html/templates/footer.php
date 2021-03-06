@@ -1,7 +1,7 @@
     <footer class="mt-auto bg-light">
         <div class="container p-3">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 mb-2">
                     <span>© Copyright 2021 Eventure</span>
                 </div>
                 <div class="col-md-6">
