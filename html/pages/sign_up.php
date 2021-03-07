@@ -2,6 +2,12 @@
     include_once('../templates/header.php');
 ?>
 <div class="container-fluid p-3">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Sign Up</li>
+        </ol>
+    </nav>
     <div class="align-self-center text-center">
         <h1 class="display-4">Create your Account</h1>
         <div class="d-grid gap-4">
