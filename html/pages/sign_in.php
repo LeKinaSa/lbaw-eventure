@@ -1,7 +1,7 @@
 <?php
     include_once('../templates/header.php');
 ?>
-<div class="container-fluid p-3">
+<div class="container py-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
