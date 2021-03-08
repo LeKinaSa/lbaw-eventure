@@ -8,7 +8,7 @@
         </ol>
     </nav>
 
-    <div class="row g-5">
+    <div class="row g-md-5">
         <section class="col-md-3 p-3 bg-light">
             <h4 class="text-center">Filters</h4>
 
@@ -43,7 +43,7 @@
                 <input type="text" class="form-control">
             </div>
             
-            <div id="tags" class="d-flex flex-wrap gap-2">
+            <div id="tags" class="d-flex flex-wrap gap-2 mb-3">
                 <span class="text-white d-inline-flex bg-primary rounded p-2 gap-1">
                     chess
                     <button type="button" class="btn-close btn-close-white"></button>
@@ -56,6 +56,17 @@
                     for-beginners
                     <button type="button" class="btn-close btn-close-white"></button>
                 </span>
+            </div>
+
+            <div class="mb-3">
+                <label for="category" class="h5 form-label">Category</label>
+                <select class="form-select" id="category" name="category">
+                    <option selected>Any</option>
+                    <option selected>Video games</option>
+                    <option selected>Board games</option>
+                    <option selected>Card games</option>
+                    <option selected>Other</option>
+                </select>
             </div>
         </section>
 
