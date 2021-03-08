@@ -4,9 +4,9 @@
 <div class="container-fluid p-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="homepage.php" class="link-dark">Home</a></li>
-            <li class="breadcrumb-item"><a href="events.php" class="link-dark">Events</a></li>
-            <li class="breadcrumb-item"><a href="event.php" class="link-dark">Magic Encounter</a></li>
+            <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
+            <li class="breadcrumb-item"><a href="events.php">Events</a></li>
+            <li class="breadcrumb-item"><a href="event.php">Magic Encounter</a></li>
             <li class="breadcrumb-item active" aria-current="page">Requests to Participate</li>
         </ol>
     </nav>
