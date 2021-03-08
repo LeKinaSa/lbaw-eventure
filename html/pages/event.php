@@ -5,7 +5,6 @@
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
-            <li class="breadcrumb-item"><a href="events.php">Events</a></li>
             <li class="breadcrumb-item active" aria-current="page">Magic Encounter</li>
         </ol>
     </nav>
@@ -193,17 +192,11 @@
                                 </div>
                             </div>
                             <div class="row p-2">
-                                <div class="d-grid col-12">
-                                    <button type="button" class="btn btn-primary btn-block">
-                                        See Results
-                                    </button>
+                                <div class="col">
+                                    <a href="results.php" role="button" class="btn btn-primary">Results</a>
                                 </div>
-                            </div>
-                            <div class="row p-2">
-                                <div class="d-grid col-12">
-                                    <button type="button" class="btn btn-primary btn-block">
-                                        Ask to Participate
-                                    </button>
+                                <div class="col">
+                                    <a href="invitations.php" role="button" class="btn btn-primary">Invitations</a>
                                 </div>
                             </div>
                         </div>
