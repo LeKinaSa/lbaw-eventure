@@ -34,8 +34,8 @@
                                     <button type="submit" class="btn btn-outline-light"><i class="fa fa-search"></i></button>
                                 </div>
                             </form>
-                            <a href="search_results.php" role="button" class="btn btn-outline-light">Sign in</a>
-                            <a href="category.php" role="button" class="btn btn-outline-light">Sign up</a>
+                            <a href="sign_in.php" role="button" class="btn btn-outline-light">Sign in</a>
+                            <a href="sign_up.php" role="button" class="btn btn-outline-light">Sign up</a>
                         </div>
                     </div>
                 </div>
