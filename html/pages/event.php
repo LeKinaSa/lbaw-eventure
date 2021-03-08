@@ -171,7 +171,7 @@
                                     <div class="collapse" id="polls">
                                         <div class="card card-body">
                                             <h5 class="card-title">Polls</h5>
-                                            <p class="card-text">Will something inesperate happen in the next game?</p>
+                                            <p class="card-text">Will something unexpected happen in the next game?</p>
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="d-grid">
