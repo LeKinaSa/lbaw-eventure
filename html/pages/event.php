@@ -6,22 +6,22 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
             <li class="breadcrumb-item"><a href="search_results.php">Events</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Magic Encounter</li>
+            <li class="breadcrumb-item active" aria-current="page">Amateur Blitz Chess Tournament</li>
         </ol>
     </nav>
     <div class="align-self-center text-center">
-        <h1 class="display-4">Magic Encounter</h1>
+        <h1 class="display-4">Amateur Blitz Chess Tournament</h1>
         <div class="d-grid p-3">
             <div class="row">
                 <div class="col-md-6">
                     <div class="row">
-                        <img src="../assets/dnd.jpg" class="img-fluid" alt="Magic Encounter Image">
+                        <img src="../assets/chess_event.jpg" class="img-fluid" alt="Magic Encounter Image">
                     </div>
                     <div class="row text-start p-3">
                         <p>
-                        Magic encounter, where all the magic comes together.
-                        The time for magic to appear has come and we can feel it floating in the air.
-                        Will you answer this call and dive deeper into the exotic airs of magic encounter?
+                            Test your blitz skills in this amateur chess competition!
+                            Players with up to 1500 rating can participate.
+                            The time control is 5 minutes with 3 seconds of move increment.
                         </p>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                                         Start
                                     </div>
                                     <div class="border border-dark p-2">
-                                        <i class="fa fa-calendar"></i> 1/3/2021
+                                        <i class="fa fa-calendar"></i> 28/3/2021
                                     </div>
                                 </div>
                                 <div class="col-md-6 text-start">
@@ -42,7 +42,7 @@
                                         Finish
                                     </div>
                                     <div class="border border-dark p-2">
-                                        <i class="fa fa-calendar"></i> 5/3/2021
+                                        <i class="fa fa-calendar"></i> 4/4/2021
                                     </div>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@
                                         Location
                                     </div>
                                     <div class="border border-dark p-2">
-                                        <i class="fa fa-map-marker"></i> Castelo de Bragança
+                                        <i class="fa fa-map-marker"></i> Marshall Street, 283
                                     </div>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
                                         Attendance
                                     </div>
                                     <div class="border border-dark p-2">
-                                        50
+                                        37
                                     </div>
                                 </div>
                                 <div class="col-md-6 text-start">
@@ -95,28 +95,28 @@
                                                 <div class="carousel-item active">
                                                     <div class="border border-dark border-2 p-2">
                                                         <strong>
-                                                            Luís vs Mário
+                                                            Dimitri vs Martin
                                                         </strong>
                                                         <br>
-                                                        1/3/2021 13h00
+                                                        28/3/2021 13h00
                                                     </div>
                                                 </div>
                                                 <div class="carousel-item">
                                                     <div class="border border-dark border-2 p-2">
                                                         <strong>
-                                                            João vs Paulo
+                                                            Martin vs Jane
                                                         </strong>
                                                         <br>
-                                                        2/3/2021 9h00
+                                                        30/3/2021 9h00
                                                     </div>
                                                 </div>
                                                 <div class="carousel-item">
                                                     <div class="border border-dark border-2 p-2">
                                                         <strong>
-                                                            Paulo vs Kiko
+                                                            Jane vs Santiago
                                                         </strong>
                                                         <br>
-                                                       4/3/2021 18h30
+                                                       1/4/2021 15h30
                                                     </div>
                                                 </div>
                                             </div>
