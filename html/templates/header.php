@@ -13,16 +13,19 @@
             <nav class="navbar navbar-expand-md navbar-dark bg-primary">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="homepage.php">EVENTURE</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <form class="d-flex">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        </form>
-                        <div class="col d-flex justify-content-end">
-                            <a href="sign_in.php" role="button" class="btn btn-outline-light m-1">Sign in</a>
-                            <a href="sign_up.php" role="button" class="btn btn-outline-light m-1">Sign up</a>
+                    <div class="collapse navbar-collapse mt-3 mt-md-0" id="navbarContent">
+                        <div class="col d-flex flex-column flex-md-row justify-content-end gap-2">
+                            <form>
+                                <div class="input-group">
+                                    <input type="search" class="form-control" placeholder="Search" aria-label="Search" required>
+                                    <button type="submit" class="btn btn-outline-light"><i class="fa fa-search"></i></button>
+                                </div>
+                            </form>
+                            <a href="sign_in.php" role="button" class="btn btn-outline-light">Sign in</a>
+                            <a href="sign_up.php" role="button" class="btn btn-outline-light">Sign up</a>
                         </div>
                     </div>
                 </div>
