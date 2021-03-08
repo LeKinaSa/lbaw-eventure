@@ -15,7 +15,7 @@
             <div class="card" style="max-width: 500px;">
                 <div class="row g-0">
                     <div class="col-md-4 d-flex align-items-center">
-                        <img src="../assets/profile_default.png" class="card-img-top">
+                        <img src="../assets/profile_default.png" class="card-img-top" alt="Profile picture">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
@@ -76,10 +76,10 @@
         <h2>Banned users</h2>
 
         <div class="d-flex flex-wrap gap-3">
-        <div class="card" style="max-width: 500px;">
+            <div class="card" style="max-width: 500px;">
                 <div class="row g-0">
                     <div class="col-md-4 d-flex align-items-center">
-                        <img src="../assets/profile_default.png" class="card-img-top">
+                        <img src="../assets/profile_default.png" class="card-img-top" alt="Profile picture">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">

@@ -4,7 +4,7 @@
 <div class="container-fluid p-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="homepage.php" class="link-dark">Home</a></li>
+            <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Password Recovery</li>
         </ol>
     </nav>
@@ -12,7 +12,7 @@
         <h1 class="display-4">Password Recovery</h1>
         <div class="d-grid gap-4">
             <div class="row justify-content-center">
-                <div class="col-3">
+                <div class="col-11 col-sm-8 col-md-6 col-lg-5 col-xl-4">
                     <div class="border border-3">
                         <div class="container-fluid p-3">
                             <p>
