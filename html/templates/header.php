@@ -16,16 +16,6 @@
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="dropdown">
-                            <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                Event Categories
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                <a href="category.php" role="button" class="btn">Board Games</a>
-                                <a href="" role="button" class="btn">Videogames</a>
-                                <a href="" role="button" class="btn">Card Games</a>
-                            </div>
-                    </div>
                     <div class="collapse navbar-collapse mt-3 mt-md-0" id="navbarContent">
                         <div class="col d-flex flex-column flex-md-row justify-content-end gap-2">
                             <form>
