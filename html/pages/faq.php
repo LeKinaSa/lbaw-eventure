@@ -40,12 +40,13 @@
             <div class="accordion-item">
                 <h2 class="accordion-header" id="heading3">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse1">
-                        How do I create a poll?
+                        How do I post match results?
                     </button>
                 </h2>
                 <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#faqAccordion">
                     <div class="accordion-body">
-                        Navigate to your event's page.
+                        Navigate to your event's page and then to the results page. Click the green "plus" button to add a new match.
+                        Afterwards you can fill in the match details.
                     </div>
                 </div>
             </div>

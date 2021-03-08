@@ -5,7 +5,7 @@
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Sign In</li>
+            <li class="breadcrumb-item active" aria-current="page">Sign in</li>
         </ol>
     </nav>
     <div class="align-self-center text-center">

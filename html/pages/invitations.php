@@ -5,7 +5,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
             <li class="breadcrumb-item"><a href="event.php">Amateur Blitz Chess Tournament</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Requests to Participate</li>
+            <li class="breadcrumb-item active" aria-current="page">Invitations</li>
         </ol>
     </nav>
 
