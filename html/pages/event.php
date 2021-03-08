@@ -5,7 +5,7 @@
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
-            <li class="breadcrumb-item"><a href="events.php">Events</a></li>
+            <li class="breadcrumb-item"><a href="search_results.php">Events</a></li>
             <li class="breadcrumb-item active" aria-current="page">Magic Encounter</li>
         </ol>
     </nav>
