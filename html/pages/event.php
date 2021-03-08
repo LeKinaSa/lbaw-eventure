@@ -13,7 +13,7 @@
         <h1 class="display-4">Magic Encounter</h1>
         <div class="d-grid p-3">
             <div class="row">
-                <div class="col-6">
+                <div class="col-md-6">
                     <div class="row">
                         <img src="../assets/dnd.jpg" class="img-fluid" alt="Magic Encounter Image">
                     </div>
@@ -25,11 +25,11 @@
                         </p>
                     </div>
                 </div>
-                <div class="col-6">
+                <div class="col-md-6">
                     <div class="row">
                         <div class="d-grid">
                             <div class="row p-2">
-                                <div class="col-6 text-start">
+                                <div class="col-md-6 text-start">
                                     <div>
                                         Start
                                     </div>
@@ -37,7 +37,7 @@
                                         <i class="fa fa-calendar"></i> 1/3/2021
                                     </div>
                                 </div>
-                                <div class="col-6 text-start">
+                                <div class="col-md-6 text-start">
                                     <div>
                                         Finish
                                     </div>
@@ -47,7 +47,7 @@
                                 </div>
                             </div>
                             <div class="row p-2">
-                                <div class="col-6 text-start">
+                                <div class="col-md-6 text-start">
                                     <div>
                                         Type
                                     </div>
@@ -55,7 +55,7 @@
                                         Mixed
                                     </div>
                                 </div>
-                                <div class="col-6 text-start">
+                                <div class="col-md-6 text-start">
                                     <div>
                                         Location
                                     </div>
@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                             <div class="row p-2">
-                                <div class="col-6 text-start">
+                                <div class="col-md-6 text-start">
                                     <div>
                                         Attendance
                                     </div>
@@ -73,9 +73,9 @@
                                         50
                                     </div>
                                 </div>
-                                <div class="col-6 text-start">
+                                <div class="col-md-6 text-start">
                                     <div>
-                                        Maximum Attendance
+                                        Max Attendance
                                     </div>
                                     <div class="border border-dark p-2">
                                         150
@@ -84,7 +84,7 @@
                             </div>
                             <div class="row p-2">
                                 <div class="row justify-content-center">
-                                    <div class="col-5">
+                                    <div class="col-md-5">
                                         <div id="matches" class="carousel slide" data-bs-ride="carousel">
                                             <ol class="carousel-indicators">
                                                 <li data-bs-target="#matches" data-bs-slide-to="0" class="active"></li>
@@ -135,16 +135,16 @@
                             <div class="row p-2">
                                 <div class="d-grid gap-4">
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-md-6">
                                             <div class="d-grid">
-                                                <button class="btn btn-outline-primary btn-block" type="button" data-bs-toggle="collapse" data-bs-target="#comments" aria-expanded="false" aria-controls="comments">
+                                                <button class="btn btn-outline-primary btn-block mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#comments" aria-expanded="false" aria-controls="comments">
                                                     Comments
                                                 </button>
                                             </div>
                                         </div>
-                                        <div class="col-6">
+                                        <div class="col-md-6">
                                             <div class="d-grid">
-                                                <button class="btn btn-outline-primary btn-block" type="button" data-bs-toggle="collapse" data-bs-target="#polls" aria-expanded="false" aria-controls="polls">
+                                                <button class="btn btn-outline-primary btn-block mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#polls" aria-expanded="false" aria-controls="polls">
                                                     Polls
                                                 </button>
                                             </div>
@@ -173,14 +173,14 @@
                                             <h5 class="card-title">Polls</h5>
                                             <p class="card-text">Will something unexpected happen in the next game?</p>
                                             <div class="row">
-                                                <div class="col-6">
+                                                <div class="col-md-6">
                                                     <div class="d-grid">
                                                         <button class="btn btn-outline-success btn-sm">
                                                             Yes
                                                         </button>
                                                     </div>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-md-6">
                                                     <div class="d-grid">
                                                         <button class="btn btn-outline-danger btn-sm">
                                                             No

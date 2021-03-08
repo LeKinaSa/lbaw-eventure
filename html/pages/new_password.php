@@ -12,7 +12,7 @@
         <h1 class="display-4">Password Recovery</h1>
         <div class="d-grid gap-4">
             <div class="row justify-content-center">
-                <div class="col-3">
+                <div class="col-11 col-sm-8 col-md-6 col-lg-5 col-xl-4">
                     <div class="border border-3">
                         <div class="container-fluid p-3">
                             <p>
