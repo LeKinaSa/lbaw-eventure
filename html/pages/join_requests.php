@@ -23,11 +23,9 @@
                                         <input type="text" class="form-control border-dark" id="invite" placeholder="Invite Someone">
                                     </div>
                                     <div class="col-1">
-                                        <div class="d-grid">
-                                            <button type="submit" class="btn btn-outline-primary btn-block">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
+                                        <button type="submit" class="btn btn-outline-primary btn-block">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
