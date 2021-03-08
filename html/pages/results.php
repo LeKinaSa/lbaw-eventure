@@ -12,14 +12,20 @@
     <h1 class="text-center mb-4">Results</h1>
 
     <section id="matches" class="mb-3">
-        <header class="d-flex gap-2 align-items-center mb-2">
+        <header class="d-flex gap-2 justify-content-between align-items-center mb-2">
             <h4>Matches</h4>
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#matchModal" aria-label="Add match">
-                <i class="fa fa-plus"></i>
-            </button>
-            <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSettings" aria-expanded="false" aria-controls="collapseSettings" aria-label="Settings">
-                <i class="fa fa-wrench"></i>
-            </button>
+
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#matchModal" aria-label="Add match">
+                    <i class="fa fa-plus"></i>
+                </button>
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePlayers" aria-expanded="false" aria-controls="collapsePlayers" aria-label="Players">
+                    <i class='fa fa-users'></i>
+                </button>
+                <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSettings" aria-expanded="false" aria-controls="collapseSettings" aria-label="Settings">
+                    <i class="fa fa-wrench"></i>
+                </button>
+            </div>
 
             <div class="modal fade" id="matchModal" tabindex="-1" aria-labelledby="matchModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -84,8 +90,40 @@
             </div>
         </header>
         
-        <div class="collapse mb-2" id="collapseSettings">
-            <form class="bg-light p-3">
+        <div class="collapse mb-2 bg-light" id="collapsePlayers">
+            <div class="p-3">
+                <h5>Players / Teams</h5>
+                <ul class="list-unstyled d-flex flex-column gap-1">
+                    <li class="input-group">
+                        <input type="text" class="form-control" value="Dmitri Dolyakov">
+                        <button type="button" class="btn btn-primary"><i class="fa fa-pencil"></i></button>
+                        <button type="button" class="btn btn-danger"><i class="fa fa-remove"></i></button>
+                    </li>
+                    <li class="input-group">
+                        <input type="text" class="form-control" value="Martin Fowler">
+                        <button type="button" class="btn btn-primary"><i class="fa fa-pencil"></i></button>
+                        <button type="button" class="btn btn-danger"><i class="fa fa-remove"></i></button>
+                    </li>
+                    <li class="input-group">
+                        <input type="text" class="form-control" value="Jane Caldwin">
+                        <button type="button" class="btn btn-primary"><i class="fa fa-pencil"></i></button>
+                        <button type="button" class="btn btn-danger"><i class="fa fa-remove"></i></button>
+                    </li>
+                    <li class="input-group">
+                        <input type="text" class="form-control" value="Santiago Neves">
+                        <button type="button" class="btn btn-primary"><i class="fa fa-pencil"></i></button>
+                        <button type="button" class="btn btn-danger"><i class="fa fa-remove"></i></button>
+                    </li>
+                </ul>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Name" aria-label="Name">
+                    <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="collapse mb-2 bg-light" id="collapseSettings">
+            <form class="p-3">
                 <h5>Points</h5>
                 <div class="d-inline-flex flex-column flex-md-row mb-3 gap-2">
                     <div class="input-group">
