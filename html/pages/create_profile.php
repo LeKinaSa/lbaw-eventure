@@ -30,19 +30,19 @@
 
                 <div class="row mb-3">
                     <div class="col-md-3">
-                    <h5>Sex *</h5>
+                    <h5>Gender *</h5>
 
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" id="female" name="sex">
+                        <input class="form-check-input" type="radio" id="female" name="gender">
                         <label for="female" class="form-check-label"><i class="fa fa-venus"></i> Female</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" id="male" name="sex">
+                        <input class="form-check-input" type="radio" id="male" name="gender">
                         <label for="male" class="form-check-label"><i class="fa fa-mars"></i> Male</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" id="undefined" name="sex" checked required>
-                        <label for="undefined" class="form-check-label"><i class="fa fa-question"></i> Undefined</label>
+                        <input class="form-check-input" type="radio" id="undefined" name="gender" checked required>
+                        <label for="undefined" class="form-check-label"><i class="fa fa-question"></i> Prefer Not To Say</label>
                     </div>
                     </div>
                     <div class="col-md-9">
@@ -62,31 +62,8 @@
                 </div>
 
                 <div class="mb-3">
-                    <div class="row">
-                        <label for="link" class="h5 form-label">Links</label>
-                    </div>
-                    <div class="row">    
-                        <div class="col-11">
-                            <input type="text" id="link" name="link" class="form-control" placeholder="New Link">
-                        </div>
-                        <div class="col-1">
-                            <div class="d-grid">
-                                <button class="btn btn-outline-primary"><i class="fa fa-plus"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-11">
-                            <div class="border border-dark rounded p-1">
-                                <i class="fa fa-link"></i> www.johndoeblog.com
-                            </div>
-                        </div>
-                        <div class="col-1">
-                            <div class="d-grid">
-                                <button class="btn btn-outline-danger"><i class="fa fa-minus"></i></button>
-                            </div>
-                        </div>
-                    </div>
+                    <label for="link" class="h5 form-label">Link</label>
+                    <input type="text" id="link" name="link" class="form-control">
                 </div>
 
                 <div class="mb-3">
