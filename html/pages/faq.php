@@ -9,7 +9,7 @@
     </nav>
 
     <section id="frequentlyAskedQuestions" class="container">
-        <h1 class="text-center">Frequently Asked Questions</h1>
+        <h1 class="text-center mb-3">Frequently Asked Questions</h1>
         <div class="accordion" id="faqAccordion">
             <div class="accordion-item">
                 <h2 class="accordion-header" id="heading1">

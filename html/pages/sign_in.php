@@ -1,6 +1,5 @@
-<?php
-    include_once('../templates/header.php');
-?>
+<? include_once('../templates/header.php'); ?>
+
 <div class="container py-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -41,7 +40,4 @@
     </div>
 </div>
 
-
-<?php
-    include_once('../templates/footer.php');
-?>
+<? include_once('../templates/footer.php'); ?>
