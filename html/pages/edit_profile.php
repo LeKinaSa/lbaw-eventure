@@ -3,8 +3,8 @@
 <div class="container py-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
-            <li class="breadcrumb-item"><a href="profile.php">Profile</a></li>
+            <li class="breadcrumb-item"><a class="text-primary" href="homepage.php">Home</a></li>
+            <li class="breadcrumb-item"><a class="text-primary" href="profile.php">Profile</a></li>
             <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
         </ol>
     </nav>

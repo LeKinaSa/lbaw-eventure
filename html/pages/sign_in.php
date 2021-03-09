@@ -4,7 +4,7 @@
 <div class="container py-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
+            <li class="breadcrumb-item"><a class="text-primary" href="homepage.php">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Sign in</li>
         </ol>
     </nav>
@@ -23,7 +23,7 @@
                                         <input type="text" class="form-control" id="username" required>
                                         <div class="col d-flex justify-content-between">
                                             <label for="password" class="form-label">Password *</label>
-                                            <a href="recover.php"> Forgot your password?</a>
+                                            <a class="text-primary" href="recover.php"> Forgot your password?</a>
                                         </div>
                                         <input type="password" class="form-control" id="password" required>
                                     </div>
@@ -49,7 +49,7 @@
                                 <label for="password" class="form-label">
                                 New to Eventure?
                                 </label>
-                                <a href="sign_up.php"> Sign up</a>
+                                <a class="text-primary" href="sign_up.php"> Sign up</a>
                                 <label for="password" class="form-label">
                                 now!
                                 </label>

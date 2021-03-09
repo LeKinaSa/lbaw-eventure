@@ -7,9 +7,9 @@
                 <div class="col-md-6">
                     <h5 class="text-uppercase">Help</h5>
                     <ul class="list-unstyled">
-                        <li><a href="about.php">About</a></li>
-                        <li><a href="contacts.php">Contacts</a></li>
-                        <li><a href="faq.php">FAQ</a></li>
+                        <li><a class="text-primary" href="about.php">About</a></li>
+                        <li><a class="text-primary" href="contacts.php">Contacts</a></li>
+                        <li><a class="text-primary" href="faq.php">FAQ</a></li>
                     </ul>
                 </div>
             </div>

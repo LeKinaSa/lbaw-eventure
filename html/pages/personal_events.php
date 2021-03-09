@@ -3,7 +3,7 @@
 <div class="container p-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
+            <li class="breadcrumb-item"><a class="text-primary" href="homepage.php">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Events you are organizing</li>
         </ol>
     </nav>
@@ -20,7 +20,7 @@
                     </div>
                     <div class="col-md-9">
                         <div class="card-body">
-                            <a href="#"><h5 class="card-title text-center">Casual Chess Meetup - Bullet, Blitz and Rapid</h5></a>
+                            <a class="text-primary" href="#"><h5 class="card-title text-center">Casual Chess Meetup - Bullet, Blitz and Rapid</h5></a>
                             <ul class="list-unstyled">
                                 <li class="card-text"><i class="col-1 fa fa-calendar" aria-label="Date"></i>16 March, 2021</li>
                                 <li class="card-text"><i class="col-1 fa fa-globe" aria-label="Type"></i>Mixed</li>
@@ -42,7 +42,7 @@
                     </div>
                     <div class="col-md-9">
                         <div class="card-body">
-                            <a href="#"><h5 class="card-title text-center">Amateur Blitz Chess Tournament</h5></a>
+                            <a class="text-primary" href="#"><h5 class="card-title text-center">Amateur Blitz Chess Tournament</h5></a>
                             <ul class="list-unstyled">
                                 <li class="card-text"><i class="col-1 fa fa-calendar" aria-label="Date"></i>28 March, 2021</li>
                                 <li class="card-text"><i class="col-1 fa fa-globe" aria-label="Type"></i>Mixed</li>
