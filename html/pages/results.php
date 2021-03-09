@@ -38,7 +38,7 @@
                             <form>
                                 <div class="row mb-3">
                                     <div class="col">
-                                        <label for="first" class="h5 form-label">First</label>
+                                        <label for="first" class="h5 form-label">First *</label>
                                         <select class="form-select" name="first" required>
                                             <option selected>Dmitri Dolyakov</option>
                                             <option>Martin Fowler</option>
@@ -47,7 +47,7 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <label for="second" class="h5 form-label">Second</label>
+                                        <label for="second" class="h5 form-label">Second *</label>
                                         <select class="form-select" name="second" required>
                                             <option>Dmitri Dolyakov</option>
                                             <option selected>Martin Fowler</option>
@@ -58,10 +58,10 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <h5>Result</h5>
+                                    <h5>Result *</h5>
                                     <div class="d-flex justify-content-evenly">
                                         <div class="form-check">
-                                            <label class="form-check-label" for="futureMatch">Future Match</label>
+                                            <label class="form-check-label" for="futureMatch">Future match</label>
                                             <input class="form-check-input" type="radio" name="result" id="futureMatch" checked required>
                                         </div>
                                         <div class="form-check">
@@ -81,12 +81,12 @@
 
                                 <div class="mb-3">
                                     <label for="matchDate" class="h5 form-label">Date</label>
-                                    <input type="date" class="form-control" id="matchDate" name="matchDate" value="28/03/2021" required>
+                                    <input type="date" class="form-control" id="matchDate" name="matchDate">
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="matchTime" class="h5 form-label">Time</label>
-                                    <input type="time" class="form-control" id="matchTime" name="matchTime" required>
+                                    <input type="time" class="form-control" id="matchTime" name="matchTime">
                                 </div>
 
                                 <div class="mb-3">
