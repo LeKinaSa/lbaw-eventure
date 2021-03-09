@@ -26,7 +26,7 @@
                 <li class="h5" aria-label="Website"><i class="col-1 fa fa-link"></i> <a class="text-primary" href="http://www.johndoeblog.com">www.johndoeblog.com</a></li>
             </ul>
             <div class="d-grid">
-                <a class="text-primary" href="edit_profile.php" role="button" class="btn btn-light border">Edit profile</a>
+                <a href="edit_profile.php" role="button" class="btn btn-light border">Edit profile</a>
             </div>
         </div>
 

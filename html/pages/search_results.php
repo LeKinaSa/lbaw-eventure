@@ -62,10 +62,10 @@
                 <label for="category" class="h5 form-label">Category</label>
                 <select class="form-select" id="category" name="category">
                     <option selected>Any</option>
-                    <option selected>Video games</option>
-                    <option selected>Board games</option>
-                    <option selected>Card games</option>
-                    <option selected>Other</option>
+                    <option>Video games</option>
+                    <option>Board games</option>
+                    <option>Card games</option>
+                    <option>Other</option>
                 </select>
             </div>
         </section>

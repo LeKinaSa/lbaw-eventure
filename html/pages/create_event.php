@@ -58,7 +58,7 @@
                 </div>
                 <div class="col-md-9">
                     <label for="address" class="h5 form-label">Address</label>
-                    <input type="text" id="address" name="address" class="form-control" placeholder="Where the venue will take place">
+                    <input type="text" id="address" name="address" class="form-control" placeholder="Where the event will take place, if applicable">
                 </div>
             </div>
 
