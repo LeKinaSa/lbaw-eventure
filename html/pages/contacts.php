@@ -3,7 +3,7 @@
 <div class="container-fluid p-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
+            <li class="breadcrumb-item"><a class="text-primary" href="homepage.php">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Contacts</li>
         </ol>
     </nav>

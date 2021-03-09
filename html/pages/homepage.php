@@ -14,7 +14,7 @@
             <h5>Top Events this Week</h5>
             <div class="card mt-2">
                 <div class="card-body">
-                    <h5 class="card-title"><a href="event.php">Magic: the Gathering Tournament</a></h5>
+                    <h5 class="card-title"><a class="text-primary" href="event.php">Magic: the Gathering Tournament</a></h5>
                     <div class="row align-items-center h-100">
                         <div class="col-md-6">
                             <img class="card-img-bottom" src="../assets/tibalt.jpg"> 
@@ -29,7 +29,7 @@
             </div>
             <div class="card mt-2">
                 <div class="card-body">
-                    <h5 class="card-title"><a href="event.php">Amateur Blitz Chess Tournament</a></h5>
+                    <h5 class="card-title"><a class="text-primary" href="event.php">Amateur Blitz Chess Tournament</a></h5>
                     <div class="row align-items-center h-100">
                         <div class="col-md-6">
                             <img class="card-img-bottom" src="../assets/chess_event.jpg"> 
@@ -44,7 +44,7 @@
             </div>
             <div class="card mt-2">
                 <div class="card-body">
-                    <h5 class="card-title"><a href="event.php">Starcraft 2 Invitational</a></h5>
+                    <h5 class="card-title"><a class="text-primary" href="event.php">Starcraft 2 Invitational</a></h5>
                     <div class="row align-items-center h-100">
                         <div class="col-md-6">
                             <img class="card-img-bottom" src="../assets/starcraft2.jpg"> 

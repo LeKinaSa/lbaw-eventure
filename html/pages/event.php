@@ -4,7 +4,7 @@
 <div class="container-fluid p-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
+            <li class="breadcrumb-item"><a class="text-primary" href="homepage.php">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Amateur Blitz Chess Tournament</li>
         </ol>
     </nav>
@@ -124,11 +124,9 @@
                                             </div>
                                             <a class="carousel-control-prev" href="#matches" role="button" data-bs-slide="prev">
                                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                <span class="sr-only">Previous</span>
                                             </a>
                                             <a class="carousel-control-next" href="#matches" role="button" data-bs-slide="next">
                                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                <span class="sr-only">Next</span>
                                             </a>
                                         </div>
                                     </div>
