@@ -2,16 +2,15 @@
     include_once('../templates/header.php');
 ?>
 
-<div class="container-fluid ps-0">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-8">
-            <img src="../assets/chess.jpg" class="img-fluid" alt="An image">
-            <h1 class="display-4 text-center p-3">
-                Helping you organize and participate in all the events you dream of
-            </h1>
+        <div class="col-lg-8">
+            <img src="../assets/chess.jpg" class="img-fluid mb-3" alt="An image">
+            <h1 class="display-4 text-center">EVENTURE</h1>
+            <h2 class="display-5 text-center">A leading platform for event management and tournament organization</h1>
         </div>
 
-        <div class="col-md-4 p-3">
+        <div class="col-lg-4 p-3">
             <h3 class="text-center">Top Events this Month</h3>
 
     	    <div class="d-flex flex-column gap-2">
