@@ -14,12 +14,12 @@
 
             <div class="mb-3">
                 <label for="name" class="h5 form-label">Name</label>
-                <input type="text" id="name" name="name" class="form-control" required>
+                <input type="text" id="name" name="name" class="form-control" placeholder="The full name of the event" required>
             </div>
 
             <div class="mb-3">
                 <label for="description" class="h5 form-label">Description</label>
-                <textarea class="form-control" id="description" name="description" required></textarea>
+                <textarea class="form-control" id="description" name="description" placeholder="A thorough description of the event. You should include important information such as timelines, etc." required></textarea>
             </div>
 
             <div class="mb-3">
@@ -58,7 +58,7 @@
                 </div>
                 <div class="col-md-9">
                     <label for="address" class="h5 form-label">Address</label>
-                    <input type="text" id="address" name="address" class="form-control">
+                    <input type="text" id="address" name="address" class="form-control" placeholder="Where the venue will take place">
                 </div>
             </div>
 
