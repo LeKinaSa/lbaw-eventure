@@ -8,7 +8,7 @@
         </ol>
     </nav>
 
-    <h1 class="text-center display-4">Contacts</h1>
+    <h1 class="text-center">Contacts</h1>
 
     <div class="row">
         <div class="col-lg">

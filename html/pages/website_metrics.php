@@ -194,6 +194,26 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                            <td>Video games</td>
+                            <td>233</td>
+                            <td>46.2%</td>
+                        </tr>
+                        <tr>
+                            <td>Board games</td>
+                            <td>139</td>
+                            <td>27.6%</td>
+                        </tr>
+                        <tr>
+                            <td>Card games</td>
+                            <td>64</td>
+                            <td>12.7%</td>
+                        </tr>
+                        <tr>
+                            <td>Other</td>
+                            <td>68</td>
+                            <td>13.5%</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

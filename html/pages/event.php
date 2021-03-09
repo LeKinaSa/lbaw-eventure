@@ -5,12 +5,11 @@
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="homepage.php">Home</a></li>
-            <li class="breadcrumb-item"><a href="search_results.php">Events</a></li>
             <li class="breadcrumb-item active" aria-current="page">Amateur Blitz Chess Tournament</li>
         </ol>
     </nav>
     <div class="align-self-center text-center">
-        <h1 class="display-4">Amateur Blitz Chess Tournament</h1>
+        <h1>Amateur Blitz Chess Tournament</h1>
         <div class="d-grid p-3">
             <div class="row">
                 <div class="col-md-6">

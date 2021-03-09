@@ -102,7 +102,7 @@
                         </div>
                         <div class="col-md-9">
                             <div class="card-body">
-                                <a href="#"><h5 class="card-title text-center">Amateur Blitz Chess Tournament</h5></a>
+                                <a href="event.php"><h5 class="card-title text-center">Amateur Blitz Chess Tournament</h5></a>
                                 <ul class="list-unstyled">
                                     <li class="card-text"><i class="col-1 fa fa-calendar" aria-label="Date"></i>28 March, 2021</li>
                                     <li class="card-text"><i class="col-1 fa fa-globe" aria-label="Type"></i>Mixed</li>

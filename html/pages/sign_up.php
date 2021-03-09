@@ -8,7 +8,7 @@
         </ol>
     </nav>
     <div class="align-self-center text-center">
-        <h1 class="display-4">Sign up</h1>
+        <h1>Sign up</h1>
         <div class="row justify-content-center">
             <div class="col-11 col-sm-8 col-md-6 col-lg-5 col-xl-4">
                 <form>

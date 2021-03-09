@@ -26,7 +26,7 @@
                 <li class="h5" aria-label="Website"><i class="col-1 fa fa-link"></i> <a href="http://www.johndoeblog.com">www.johndoeblog.com</a></li>
             </ul>
             <div class="d-grid">
-                <button class="btn btn-light border">Edit profile</button>
+                <a href="edit_profile.php" role="button" class="btn btn-light border">Edit profile</a>
             </div>
         </div>
 
@@ -78,7 +78,7 @@
                     <article class="card" style="max-width: 250px;">
                         <img src="../assets/chess_event.jpg" class="card-img-top">
                         <div class="card-body">
-                            <a href="#"><h5 class="card-title text-center">Amateur Blitz Chess Tournament</h5></a>
+                            <a href="event.php"><h5 class="card-title text-center">Amateur Blitz Chess Tournament</h5></a>
                             <ul class="list-unstyled">
                                 <li class="card-text"><i class="col-2 fa fa-calendar" aria-label="Date"></i>28 March, 2021</li>
                                 <li class="card-text"><i class="col-2 fa fa-map-marker" aria-label="Location"></i>Marshall Street, 283</li>
