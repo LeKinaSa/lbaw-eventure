@@ -10,6 +10,9 @@
     </nav>
     <div class="align-self-center text-center">
         <h1>Amateur Blitz Chess Tournament</h1>
+        <div class="text-end">
+            <a href="create_event.php"><i class="fa fa-edit"></i></a>
+        </div>
         <div class="d-grid p-3">
             <div class="row">
                 <div class="col-md-6">

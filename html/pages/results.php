@@ -61,18 +61,32 @@
                                     <h5>Result</h5>
                                     <div class="d-flex justify-content-evenly">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="result" id="resultWinFirst" checked required>
+                                            <label class="form-check-label" for="futureMatch">Future Match</label>
+                                            <input class="form-check-input" type="radio" name="result" id="futureMatch" checked required>
+                                        </div>
+                                        <div class="form-check">
                                             <label class="form-check-label" for="resultWinFirst">1st Win</label>
+                                            <input class="form-check-input" type="radio" name="result" id="resultWinFirst">
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="result" id="resultDraw">
                                             <label class="form-check-label" for="resultDraw">Draw</label>
+                                            <input class="form-check-input" type="radio" name="result" id="resultDraw">
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="result" id="resultWinSecond">
                                             <label class="form-check-label" for="resultWinSecond">2nd Win</label>
+                                            <input class="form-check-input" type="radio" name="result" id="resultWinSecond">
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="matchDate" class="h5 form-label">Date</label>
+                                    <input type="date" class="form-control" id="matchDate" name="matchDate" value="28/03/2021" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="matchTime" class="h5 form-label">Time</label>
+                                    <input type="time" class="form-control" id="matchTime" name="matchTime" required>
                                 </div>
 
                                 <div class="mb-3">
