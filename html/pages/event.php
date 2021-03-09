@@ -11,7 +11,7 @@
     <div class="align-self-center text-center">
         <h1>Amateur Blitz Chess Tournament</h1>
         <div class="text-end">
-            <button class="btn btn-secondary" aria-label="Edit"><i class="fa fa-pencil"></i></button>
+            <button class="btn btn-secondary" aria-label="Edit"><a class="link-light" href="create_event.php"><i class="fa fa-pencil"></i></a></button>
         </div>
         <div class="d-grid p-3">
             <div class="row">
