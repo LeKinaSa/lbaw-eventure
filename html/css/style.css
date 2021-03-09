@@ -3,10 +3,7 @@ img.google {
     height: 1em;
 }
 
-/*------------------------------------
-- COLOR Primary
-------------------------------------*/
-
+/*
 .alert-primary {
     color: #845100;
     background-color: #ffebcc;
@@ -147,10 +144,6 @@ a.text-primary:hover, a.text-primary:focus {
     color: #cc7c00 !important;
 }
 
-/*------------------------------------
-- COLOR Secondary
-------------------------------------*/
-
 .alert-secondary {
     color: #143c51;
     background-color: #beddee;
@@ -290,3 +283,5 @@ button.bg-secondary:focus {
 a.text-secondary:hover, a.text-secondary:focus {
     color: #23668a !important;
 }
+
+*/
