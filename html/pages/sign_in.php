@@ -35,7 +35,7 @@
                     Sign in with your <img src="../assets/google.png" class="google" alt="Google"> account
                 </button>
                 
-                <span class="text-center">New to Eventure? class="text-primary" href="sign_up.php"> Sign up</a> now!</span>
+                <span class="text-center">New to Eventure? <a class="text-primary" href="sign_up.php"> Sign up</a> now!</span>
             </div>
         </div>
     </div>
