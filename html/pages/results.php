@@ -16,7 +16,7 @@
             <h4>Matches</h4>
 
             <div class="d-flex gap-2">
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#matchModal" aria-label="Add match">
+                <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#matchModal" aria-label="Add match">
                     <i class="fa fa-plus"></i>
                 </button>
                 <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePlayers" aria-expanded="false" aria-controls="collapsePlayers" aria-label="Players">

@@ -31,7 +31,7 @@
 
             <div class="d-flex flex-column justify-content-center">
                 <button type="button" class="btn btn-outline-primary mb-3">
-                    Sign in with your <img src="../assets/google.png" class="google" alt="Google"> account
+                    Sign in with <img src="../assets/google.png" class="google" alt="Google">
                 </button>
                 
                 <span class="text-center">New to Eventure? <a class="text-primary" href="sign_up.php"> Sign up</a> now!</span>

@@ -38,9 +38,11 @@
             </form>
 
             <div class="d-flex flex-column justify-content-center">
-                <button type="button" class="btn btn-outline-primary">
-                    Sign up with your <img src="../assets/google.png" class="google" alt="Google logo"> account
+                <button type="button" class="btn btn-outline-primary mb-3">
+                    Sign up with <img src="../assets/google.png" class="google" alt="Google logo">
                 </button>
+
+                <span class="text-center">Already have an account? <a class="text-primary" href="sign_in.php"> Sign in</a> now!</span>
             </div>
         </div>
     </div>
