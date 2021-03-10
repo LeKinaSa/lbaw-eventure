@@ -12,7 +12,7 @@
 
     <div class="row">
         <div class="col-md-8">
-            <img src="../assets/macdesk.jpeg" class="img-fluid" alt="Macbook laptop on a desk">
+            <img src="../assets/macdesk.jpeg" class="img-fluid rounded" alt="Macbook laptop on a desk">
         </div>
         
         <div class="col-md-4 py-2">
