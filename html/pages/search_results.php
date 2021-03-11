@@ -44,16 +44,16 @@
             </div>
             
             <div id="tags" class="d-flex flex-wrap gap-2 mb-3">
-                <span class="text-white d-inline-flex bg-primary rounded p-2 gap-1">
+                <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">
                     chess
                     <button type="button" class="btn-close btn-close-white"></button>
                 </span>
-                <span class="text-white d-inline-flex bg-primary rounded p-2 gap-1">
+                <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">
                     friendly
                     <button type="button" class="btn-close btn-close-white"></button>
                 </span>
-                <span class="text-white d-inline-flex bg-primary rounded p-2 gap-1">
-                    for-beginners
+                <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">
+                    for beginners
                     <button type="button" class="btn-close btn-close-white"></button>
                 </span>
             </div>

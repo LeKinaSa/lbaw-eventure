@@ -9,22 +9,20 @@
     </nav>
 
     <div class="align-self-center text-center">
-        <h1 class="display-4">Password Recovery</h1>
+        <h1>Password Recovery</h1>
 
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="border border-3">
-                    <div class="container-fluid p-3">
-                        <p>Enter your account's email address and we will send you a link to reset your password.</p>
-                        <form>
-                            <div class="mb-3 text-start">
-                                <label for="email" class="form-label">Email address</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
+                <div class="container-fluid p-3">
+                    <p>Enter your account's email address and we will send you a link to reset your password.</p>
+                    <form>
+                        <div class="mb-3 text-start">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
 
-                            <input type="submit" class="btn btn-primary" value="Send email">
-                        </form>
-                    </div>
+                        <input type="submit" class="btn btn-primary" value="Send email">
+                    </form>
                 </div>
             </div>
         </div>

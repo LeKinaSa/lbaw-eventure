@@ -9,7 +9,7 @@
     </nav>
 
     <section id="suspendedUsers" class="mb-4">
-        <h2>Suspended users</h2>
+        <h3>Suspended users</h3>
 
         <ul class="list-group">
             <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -55,7 +55,7 @@
     </section>
 
     <section id="bannedUsers">
-        <h2>Banned users</h2>
+        <h3>Banned users</h3>
 
         <ul class="list-group">
             <li class="list-group-item d-flex justify-content-between align-items-center">
