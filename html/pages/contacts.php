@@ -11,19 +11,37 @@
     <h1 class="text-center mb-3">Contacts</h1>
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8 mb-2 mb-md-0">
             <img src="../assets/macdesk.jpeg" class="img-fluid rounded" alt="Macbook laptop on a desk">
         </div>
         
         <div class="col-md-4 py-2">
-            <ul class="list-unstyled fs-5">
-                <li><i class="fa fa-map-marker"></i> Faculdade de Engenharia da Universidade do Porto (FEUP)<br>Rua Dr. Roberto Frias</li>
-                <li><i class="fa fa-envelope"></i> eventure@email.com</li>
+            <ul class="list-unstyled">
+                <li>
+                    <h5><i class="fa fa-map-marker"></i> Address</h5>
+                    <p>Faculdade de Engenharia da Universidade do Porto (FEUP)<br>
+                    Rua Dr. Roberto Frias<br>
+                    4200-465 PORTO
+                    </p>
+                </li>
+                <li>
+                    <h5><i class="fa fa-envelope"></i> Email</h5>
+                    <p>eventure@email.com</p>
+                </li>
+                <li>
+                    <h5><i class="fa fa-phone"></i> Phone number</h5>
+                    <p>+351 999 999 999</p>
+                </li>
             </ul>
-            <p class="fs-5"><b>Daniel Monteiro</b><br><span>up201806185@fe.up.pt</span></p>
-            <p class="fs-5"><b>Daniel Monteiro</b><br><span>up201806185@fe.up.pt</span></p>
-            <p class="fs-5"><b>Daniel Monteiro</b><br><span>up201806185@fe.up.pt</span></p>
-            <p class="fs-5"><b>Daniel Monteiro</b><br><span>up201806185@fe.up.pt</span></p>
+
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#" class="fs-2"><i class="fa fa-facebook-square"></i></a></li>
+                <li class="list-inline-item"><a href="#" class="fs-2"><i class="fa fa-twitter"></i></a></li>
+                <li class="list-inline-item"><a href="#" class="fs-2"><i class="fa fa-linkedin-square"></i></a></li>
+                <li class="list-inline-item"><a href="#" class="fs-2"><i class="fa fa-instagram"></i></a></li>
+                <li class="list-inline-item"><a href="#" class="fs-2"><i class="fa fa-youtube-play"></i></a></li>
+                <li class="list-inline-item"><a href="#" class="fs-2"><i class="fa fa-twitch"></i></a></li>
+            </ul>
         </div>
     </div>
 </div>
