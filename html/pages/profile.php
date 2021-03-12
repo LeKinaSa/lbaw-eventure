@@ -31,10 +31,13 @@
         </div>
 
         <div class="col-md-9 pt-3">
-            <section id="eventsOrganizer" class="row bg-light m-3 p-3">
-                <h4>Events you are organizing</h4>
-                <div class="d-flex flex-wrap gap-3">
-                    <article class="card" style="max-width: 250px;">
+            <section id="eventsOrganizer" class="row bg-light m-2 p-3">
+                <header class="d-flex align-items-center justify-content-between mb-2">
+                    <h4>Events you are organizing</h4>
+                    <a href="personal_events.php" class="btn btn-primary text-uppercase">See all</a>
+                </header>
+                <div class="d-flex justify-content-center justify-content-md-start flex-wrap gap-3">
+                    <article class="card card-profile">
                         <img src="../assets/board_game.jpeg" class="card-img-top">
                         <div class="card-body">
                             <a class="text-primary" href="#"><h5 class="card-title text-center">Board Games at John's House</h5></a>
@@ -46,7 +49,7 @@
                         </div>
                     </article>
 
-                    <article class="card" style="max-width: 250px;">
+                    <article class="card card-profile">
                         <img src="../assets/chess_event.jpg" class="card-img-top">
                         <div class="card-body">
                             <a class="text-primary" href="#"><h5 class="card-title text-center">Casual Chess Meetup - Bullet, Blitz and Rapid</h5></a>
@@ -60,10 +63,13 @@
                 </div>
             </section>
 
-            <section id="eventsParticipant" class="row bg-light m-3 p-3">
-                <h4>Events you are participating in</h4>
-                <div class="d-flex flex-wrap gap-3">
-                    <article class="card" style="max-width: 250px;">
+            <section id="eventsParticipant" class="row bg-light m-2 p-3">
+                <header class="d-flex align-items-center justify-content-between mb-2">
+                    <h4>Events you are participating in</h4>
+                    <a href="personal_events.php" class="btn btn-primary text-uppercase">See all</a>
+                </header>
+                <div class="d-flex justify-content-center justify-content-md-start flex-wrap gap-3">
+                    <article class="card card-profile">
                         <img src="../assets/tibalt.jpg" class="card-img-top">
                         <div class="card-body">
                             <a class="text-primary" href="#"><h5 class="card-title text-center">Magic: The Gathering - Kaldheim Draft</h5></a>
@@ -75,7 +81,7 @@
                         </div>
                     </article>
 
-                    <article class="card" style="max-width: 250px;">
+                    <article class="card card-profile">
                         <img src="../assets/chess_event.jpg" class="card-img-top">
                         <div class="card-body">
                             <a class="text-primary" href="event.php"><h5 class="card-title text-center">Amateur Blitz Chess Tournament</h5></a>
@@ -87,7 +93,7 @@
                         </div>
                     </article>
 
-                    <article class="card" style="max-width: 250px;">
+                    <article class="card card-profile">
                         <img src="../assets/dnd.jpg" class="card-img-top">
                         <div class="card-body">
                             <a class="text-primary" href="#"><h5 class="card-title text-center">Dungeons and Dragons Meetup #3</h5></a>
