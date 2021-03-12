@@ -27,3 +27,9 @@ img.google {
     border-color:var(--secondary-darker);
     box-shadow: 0 0 0 0.2rem rgba(250, 180, 40, 0.5);
 }
+
+@media (min-width: 768px) {
+    .card-profile {
+        max-width: 250px;
+    }
+}
