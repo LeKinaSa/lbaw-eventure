@@ -16,7 +16,7 @@
             These tools are customisable and can be adapted to several kinds of tournaments and games</p>
         </div>
 
-        <img src="../assets/evo.jpg" class="img-fluid" alt="Several computer setups for gaming">
+        <img src="../assets/evo.jpg" class="img-fluid" alt="EVO fighting game tournament">
         <div class="text-center">
             <h1 class="display-4">A way to interact with the community</h1>
             <p class="fs-4">We know the importance of the feeling of community and social interaction in these events, 

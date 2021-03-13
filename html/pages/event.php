@@ -243,7 +243,7 @@
                                     <button type="button" class="btn btn-success" aria-label="Add option"><i class="fa fa-plus"></i></button>
                                 </div>
 
-                                <div class="modal-footer">
+                                <div class="modal-footer px-0">
                                     <input type="submit" class="btn btn-primary" value="Create">
                                 </div>
                             </form>
