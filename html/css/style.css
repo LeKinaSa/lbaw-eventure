@@ -1,0 +1,48 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --secondary: #ffbf00;
+    --secondary-darker: #e59900;
+    --secondary-darkest: #cc7700;
+}
+
+.navbar-brand {
+    font-family: Quicksand;
+}
+
+img.google {
+    height: 1em;
+}
+
+.btn-secondary {
+    color: #212529;
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+}
+
+.btn-secondary:hover {
+    color: #212529;
+    background-color: var(--secondary-darker);
+    border-color:var(--secondary-darker);
+}
+
+.btn-secondary:focus, .btn-secondary.focus {
+    color: #212529;
+    background-color: var(--secondary-darker);
+    border-color:var(--secondary-darker);
+    box-shadow: 0 0 0 0.2rem rgba(250, 180, 40, 0.5);
+}
+
+@media (min-width: 768px) {
+    .card-profile {
+        max-width: 250px;
+    }
+}
+
+#homepageCarousel img {
+    width: 100%;
+    object-fit: cover;
+    min-height: 30em;
+    max-height: 50vh;
+}
