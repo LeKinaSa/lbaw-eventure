@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS suspension;
 DROP TABLE IF EXISTS banned_user;
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS administrator;
 
 DROP TYPE IF EXISTS gender;
 DROP TYPE IF EXISTS "status";
@@ -173,4 +174,11 @@ CREATE TABLE suspension (
     until TIMESTAMP NOT NULL,
     reason TEXT NOT NULL
     CONSTRAINT date_ck CHECK "from" < until
+);
+
+-- R16
+CREATE TABLE administrator (
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
+    "password" TEXT NOT NULL
 );
