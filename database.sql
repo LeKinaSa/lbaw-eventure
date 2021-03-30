@@ -37,7 +37,7 @@ CREATE TABLE "user" (
     id SERIAL PRIMARY KEY,
     username TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
     "name" TEXT NOT NULL,
-    email email NOT NULL CONSTRAINT email_uk UNIQUE,
+    email TEXT NOT NULL CONSTRAINT email_uk UNIQUE,
     "password" TEXT NOT NULL,
     "address" TEXT,
     gender gender,
@@ -123,7 +123,7 @@ CREATE TABLE event_tag (
 CREATE TABLE comment (
     id SERIAL PRIMARY KEY,
     id_author INTEGER REFERENCES "user"(id),
-    id_event INTEGER REFERENCES "event"(id) NOT NUL,
+    id_event INTEGER REFERENCES "event"(id) NOT NULL,
     id_parent INTEGER REFERENCES comment(id),
     "text" TEXT NOT NULL,
     "date" TIMESTAMP NOT NULL DEFAULT now()  
@@ -172,8 +172,8 @@ CREATE TABLE suspension (
     id_user INTEGER REFERENCES "user"(id) NOT NULL, 
     "from" TIMESTAMP NOT NULL,
     until TIMESTAMP NOT NULL,
-    reason TEXT NOT NULL
-    CONSTRAINT date_ck CHECK "from" < until
+    reason TEXT NOT NULL,
+    CONSTRAINT date_ck CHECK ("from" < until)
 );
 
 -- R16
