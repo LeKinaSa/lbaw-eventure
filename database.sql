@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS "event";
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS suspension;
 DROP TABLE IF EXISTS banned_user;
-DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS "user";
 DROP TABLE IF EXISTS administrator;
 
 DROP TYPE IF EXISTS gender;
@@ -33,11 +33,11 @@ CREATE TYPE result AS ENUM ('TBD', 'Winner1', 'Winner2', 'Tie');
 -- Tables
 
 -- R01
-CREATE TABLE user (
+CREATE TABLE "user" (
     id SERIAL PRIMARY KEY,
     username TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
     "name" TEXT NOT NULL,
-    email NOT NULL CONSTRAINT email_uk UNIQUE,
+    email email NOT NULL CONSTRAINT email_uk UNIQUE,
     "password" TEXT NOT NULL,
     "address" TEXT,
     gender gender,
@@ -51,7 +51,7 @@ CREATE TABLE user (
 -- R02
 CREATE TABLE "event" (
     id SERIAL PRIMARY KEY,
-    id_organizer INTEGER REFERENCES user(id) NOT NULL,
+    id_organizer INTEGER REFERENCES "user"(id) NOT NULL,
     title TEXT NOT NULL,
     visibility visibility NOT NULL DEFAULT 'Public',
     "description" TEXT NOT NULL,
@@ -122,7 +122,7 @@ CREATE TABLE event_tag (
 -- R09
 CREATE TABLE comment (
     id SERIAL PRIMARY KEY,
-    id_author INTEGER REFERENCES user(id),
+    id_author INTEGER REFERENCES "user"(id),
     id_event INTEGER REFERENCES "event"(id) NOT NUL,
     id_parent INTEGER REFERENCES comment(id),
     "text" TEXT NOT NULL,
@@ -131,7 +131,7 @@ CREATE TABLE comment (
 
 -- R10
 CREATE TABLE participation (
-    id_user INTEGER REFERENCES user(id),
+    id_user INTEGER REFERENCES "user"(id),
     id_event INTEGER REFERENCES "event"(id),
     "status" "status" NOT NULL,
     PRIMARY KEY (id_user, id_event)
@@ -153,7 +153,7 @@ CREATE TABLE poll_option (
 
 -- R13
 CREATE TABLE poll_answer (
-    id_user INTEGER REFERENCES user(id) NOT NULL,
+    id_user INTEGER REFERENCES "user"(id) NOT NULL,
     id_poll INTEGER REFERENCES poll(id) NOT NULL,
     id_poll_option INTEGER REFERENCES poll_option(id),
     PRIMARY KEY (id_user, id_poll)
@@ -161,7 +161,7 @@ CREATE TABLE poll_answer (
 
 -- R14
 CREATE TABLE banned_user (
-    id_user INTEGER REFERENCES user(id) PRIMARY KEY,
+    id_user INTEGER REFERENCES "user"(id) PRIMARY KEY,
     since TIMESTAMP NOT NULL,
     reason TEXT NOT NULL
 );
@@ -169,7 +169,7 @@ CREATE TABLE banned_user (
 -- R15
 CREATE TABLE suspension (
     id SERIAL PRIMARY KEY,
-    id_user INTEGER REFERENCES user(id) NOT NULL, 
+    id_user INTEGER REFERENCES "user"(id) NOT NULL, 
     "from" TIMESTAMP NOT NULL,
     until TIMESTAMP NOT NULL,
     reason TEXT NOT NULL
