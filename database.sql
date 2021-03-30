@@ -33,6 +33,13 @@ CREATE TYPE result AS ENUM ('TBD', 'Winner1', 'Winner2', 'Tie');
 -- Tables
 
 -- R01
+CREATE TABLE administrator (
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
+    "password" TEXT NOT NULL
+);
+
+-- R02
 CREATE TABLE "user" (
     id SERIAL PRIMARY KEY,
     username TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
@@ -48,7 +55,30 @@ CREATE TABLE "user" (
     active BOOLEAN NOT NULL DEFAULT true
 );
 
--- R02
+-- R03
+CREATE TABLE banned_user (
+    id_user INTEGER REFERENCES "user"(id) PRIMARY KEY,
+    since TIMESTAMP NOT NULL,
+    reason TEXT NOT NULL
+);
+
+-- R04
+CREATE TABLE suspension (
+    id SERIAL PRIMARY KEY,
+    id_user INTEGER REFERENCES "user"(id) NOT NULL, 
+    "from" TIMESTAMP NOT NULL,
+    until TIMESTAMP NOT NULL,
+    reason TEXT NOT NULL,
+    CONSTRAINT date_ck CHECK ("from" < until)
+);
+
+-- R05
+CREATE TABLE category (
+    id SERIAL PRIMARY KEY,
+    "name" TEXT NOT NULL CONSTRAINT category_uk UNIQUE
+);
+
+-- R06
 CREATE TABLE "event" (
     id SERIAL PRIMARY KEY,
     id_organizer INTEGER REFERENCES "user"(id) NOT NULL,
@@ -71,7 +101,46 @@ CREATE TABLE "event" (
     CONSTRAINT date_ck CHECK ("start_date" < end_date)
 );
 
--- R03
+-- R07
+CREATE TABLE poll (
+    id SERIAL PRIMARY KEY,
+    id_event INTEGER REFERENCES "event"(id) NOT NULL,
+    question TEXT NOT NULL
+);
+
+-- R08
+CREATE TABLE poll_option (
+    id SERIAL PRIMARY KEY,
+    id_poll INTEGER REFERENCES poll(id) NOT NULL,
+    "option" TEXT NOT NULL
+);
+
+-- R09
+CREATE TABLE poll_answer (
+    id_user INTEGER REFERENCES "user"(id) NOT NULL,
+    id_poll INTEGER REFERENCES poll(id) NOT NULL,
+    id_poll_option INTEGER REFERENCES poll_option(id),
+    PRIMARY KEY (id_user, id_poll)
+);
+
+-- R10
+CREATE TABLE "file" (
+    id SERIAL PRIMARY KEY,
+    id_event INTEGER REFERENCES "event"(id) NOT NULL,
+    "name" TEXT NOT NULL,
+    "data" BYTEA NOT NULL,
+    date_uploaded TIMESTAMP NOT NULL DEFAULT now()
+);
+
+-- R11
+CREATE TABLE competitor (
+    id SERIAL PRIMARY KEY,
+    id_event INTEGER REFERENCES "event"(id) NOT NULL,
+    "name" TEXT NOT NULL,
+    CONSTRAINT competitor_uk UNIQUE (id_event, "name")
+);
+
+-- R12
 CREATE TABLE "match" (
     id SERIAL PRIMARY KEY,
     id_event INTEGER REFERENCES "event"(id) NOT NULL,
@@ -83,43 +152,7 @@ CREATE TABLE "match" (
     CONSTRAINT competitor_ids_ck CHECK (id_competitor1 <> id_competitor2)
 );
 
--- R04
-CREATE TABLE competitor (
-    id SERIAL PRIMARY KEY,
-    id_event INTEGER REFERENCES "event"(id) NOT NULL,
-    "name" TEXT NOT NULL,
-    CONSTRAINT competitor_uk UNIQUE (id_event, "name")
-);
-
--- R05
-CREATE TABLE tag (
-    id SERIAL PRIMARY KEY,
-    "name" TEXT NOT NULL CONSTRAINT tag_uk UNIQUE
-);
-
--- R06
-CREATE TABLE category (
-    id SERIAL PRIMARY KEY,
-    "name" TEXT NOT NULL CONSTRAINT category_uk UNIQUE
-);
-
--- R07
-CREATE TABLE "file" (
-    id SERIAL PRIMARY KEY,
-    id_event INTEGER REFERENCES "event"(id) NOT NULL,
-    "name" TEXT NOT NULL,
-    "data" BYTEA NOT NULL,
-    date_uploaded TIMESTAMP NOT NULL DEFAULT now()
-);
-
--- R08
-CREATE TABLE event_tag (
-    id_event INTEGER REFERENCES "event"(id),
-    id_tag INTEGER REFERENCES tag(id),
-    PRIMARY KEY (id_event, id_tag)
-);
-
--- R09
+-- R13
 CREATE TABLE comment (
     id SERIAL PRIMARY KEY,
     id_author INTEGER REFERENCES "user"(id),
@@ -129,7 +162,7 @@ CREATE TABLE comment (
     "date" TIMESTAMP NOT NULL DEFAULT now()  
 );
 
--- R10
+-- R14
 CREATE TABLE participation (
     id_user INTEGER REFERENCES "user"(id),
     id_event INTEGER REFERENCES "event"(id),
@@ -137,48 +170,16 @@ CREATE TABLE participation (
     PRIMARY KEY (id_user, id_event)
 );
 
--- R11
-CREATE TABLE poll (
-    id SERIAL PRIMARY KEY,
-    id_event INTEGER REFERENCES "event"(id) NOT NULL,
-    question TEXT NOT NULL
-);
-
--- R12
-CREATE TABLE poll_option (
-    id SERIAL PRIMARY KEY,
-    id_poll INTEGER REFERENCES poll(id) NOT NULL,
-    "option" TEXT NOT NULL
-);
-
--- R13
-CREATE TABLE poll_answer (
-    id_user INTEGER REFERENCES "user"(id) NOT NULL,
-    id_poll INTEGER REFERENCES poll(id) NOT NULL,
-    id_poll_option INTEGER REFERENCES poll_option(id),
-    PRIMARY KEY (id_user, id_poll)
-);
-
--- R14
-CREATE TABLE banned_user (
-    id_user INTEGER REFERENCES "user"(id) PRIMARY KEY,
-    since TIMESTAMP NOT NULL,
-    reason TEXT NOT NULL
-);
-
 -- R15
-CREATE TABLE suspension (
+CREATE TABLE tag (
     id SERIAL PRIMARY KEY,
-    id_user INTEGER REFERENCES "user"(id) NOT NULL, 
-    "from" TIMESTAMP NOT NULL,
-    until TIMESTAMP NOT NULL,
-    reason TEXT NOT NULL,
-    CONSTRAINT date_ck CHECK ("from" < until)
+    "name" TEXT NOT NULL CONSTRAINT tag_uk UNIQUE
 );
+
 
 -- R16
-CREATE TABLE administrator (
-    id SERIAL PRIMARY KEY,
-    username TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
-    "password" TEXT NOT NULL
+CREATE TABLE event_tag (
+    id_event INTEGER REFERENCES "event"(id),
+    id_tag INTEGER REFERENCES tag(id),
+    PRIMARY KEY (id_event, id_tag)
 );
