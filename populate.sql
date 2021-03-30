@@ -48,8 +48,17 @@ INSERT INTO "category" (id,"name") VALUES (2,'Video Games');
 INSERT INTO "category" (id,"name") VALUES (3,'Card Games');
 INSERT INTO "category" (id,"name") VALUES (4,'Role-Playing Games');
 
--- R06 - event (daniel)
-
+-- R06
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (1,2,'faucibus ut, nulla. Cras',      'Private', 'Nullam scelerisque neque sed sem egestas blandit. Nam nulla magna,','null','2021-03-10T18:32:20-08:00','2021-04-30T03:54:50-07:00','Virtual','Subbiano',55,'true','null',2,93,91,38,'true');
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (2,4,'nascetur ridiculus mus. Donec', 'Public',  'Nunc pulvinar arcu et pede. Nunc sed orci lobortis augue scelerisque mollis. Phasellus libero','null','2021-03-15T04:35:58-07:00','2021-04-29T10:53:13-07:00','Mixed','Borgone Susa',31,'false','null',1,19,5,13,'false');
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (3,6,'diam lorem, auctor quis,',      'Public',  'cursus, diam at pretium aliquet, metus urna convallis erat, eget tincidunt dui','null','2021-03-18T07:21:28-07:00','2021-04-26T15:01:28-07:00','Mixed','Banjarmasin',79,'true','null',2,8,90,39,'true');
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (4,8,'pharetra ut, pharetra sed,',    'Public',  'lorem, vehicula et, rutrum eu, ultrices sit amet, risus. Donec nibh enim, gravida sit amet, dapibus id, blandit at,','null','2021-03-12T08:21:36-08:00','2021-04-26T05:01:44-07:00','Mixed','Whitehorse',82,'true','null',4,36,94,99,'true');
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (5,10,'augue. Sed molestie. Sed',      'Public',  'Donec tincidunt. Donec vitae erat vel pede blandit congue. In scelerisque scelerisque dui. Suspendisse ac metus vitae velit egestas lacinia.','null','2021-03-17T21:44:52-07:00','2021-04-27T04:35:00-07:00','Mixed','100 Mile House',87,'false','null',1,30,69,92,'true');
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (6,12,'tempus, lorem fringilla ornare','Private', 'ullamcorper eu, euismod ac, fermentum vel, mauris. Integer sem elit, pharetra ut, pharetra sed,','null','2021-03-11T07:02:25-08:00','2021-04-27T08:21:29-07:00','Virtual','B.S.D.',56,'true','null',2,88,3,92,'true');
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (7,14,'dolor. Fusce feugiat. Lorem',   'Private', 'turpis vitae purus gravida sagittis. Duis gravida. Praesent eu nulla at','null','2021-03-11T22:51:12-08:00','2021-04-27T16:30:48-07:00','Virtual','Butzbach',63,'false','null',3,12,91,20,'true');
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (8,16,'ullamcorper, nisl arcu iaculis','Public',  'Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin orci sem eget','null','2021-03-19T10:40:17-07:00','2021-04-27T15:56:12-07:00','Virtual','Abingdon',41,'true','null',4,95,88,81,'false');
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (9,18,'id ante dictum cursus.',        'Public',  'litora torquent per conubia nostra, per inceptos hymenaeos. Mauris ut quam vel sapien imperdiet ornare. In faucibus.','null','2021-03-16T01:49:26-07:00','2021-04-29T13:46:14-07:00','Virtual','Yeovil',53,'true','null',2,50,82,9,'false');
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (10,20,'Nullam ut nisi a',            'Public',  'Phasellus dapibus quam quis diam. Pellentesque habitant morbi tristique senectus et','null','2021-03-17T23:57:52-07:00','2021-04-29T10:24:03-07:00','Virtual','Avise',89,'true','null',3,96,96,61,'true');
 
 -- R07
 INSERT INTO "poll" (id,id_event,question) VALUES (1,4,'ut dolor dapibus gravida. Aliquam tincidunt, nunc');
@@ -82,7 +91,7 @@ INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (8,4,11);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (16,2,3);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (3,1,15);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (5,3,15);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (3,1,2);
+INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (6,1,2);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (14,4,13);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (17,5,7);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (11,4,12);
@@ -140,36 +149,27 @@ INSERT INTO "competitor" (id,id_event,"name") VALUES (28,10,'Merritt Simpson');
 INSERT INTO "competitor" (id,id_event,"name") VALUES (29,10,'Cody Ryan');
 INSERT INTO "competitor" (id,id_event,"name") VALUES (30,10,'Kevyn Massey');
 
--- R12 (clara) - match
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (1,1,'2020-07-07T05:12:55-07:00','amet, dapibus id,','Winner2',1,2);
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (2,1,'2021-01-22T23:06:28-08:00','convallis est, vitae sodales nisi magna sed dui.','TBD',2,3);
-
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (3,2,'2021-09-27T00:20:55-07:00','molestie dapibus ligula. Aliquam','Tie',4,5);
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (4,2,'2021-12-14T02:40:59-08:00','Duis','Winner1',4,6);
-
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (5,3,'2020-06-04T04:39:39-07:00','mauris ipsum porta elit, a feugiat','Tie',7,8);
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (6,3,'2021-04-27T07:17:42-07:00','et malesuada fames ac','Winner2',8,9);
-
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (7,4,'2020-04-23T21:39:07-07:00','elit fermentum risus, at','TBD',10,12);
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (8,4,'2021-11-16T21:15:50-08:00','nunc','TBD',11,12);
-
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (9,5,'2020-04-17T01:46:14-07:00','Donec sollicitudin','Winner1',13,14);
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (10,5,'2020-10-27T04:47:54-07:00','consequat auctor, nunc nulla vulputate dui, nec','TBD',14,15);
-
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (11,6,'2020-06-19T03:44:08-07:00','lectus pede et risus.','Winner2',16,17);
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (12,6,'2022-03-28T12:41:10-07:00','primis in faucibus orci','TBD',17,18);
-
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (13,7,'2021-01-08T22:33:06-08:00','eu tellus. Phasellus','Tie',19,20);
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (14,7,'2020-04-08T02:43:08-07:00','vulputate, lacus. Cras interdum. Nunc sollicitudin commodo ipsum.','TBD',21,20);
-
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (15,8,'2020-08-17T10:19:41-07:00','Morbi non sapien molestie orci tincidunt adipiscing.','Tie',22,23);
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (16,8,'2021-03-02T03:45:09-08:00','metus facilisis lorem tristique','TBD',24,23);
-
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (17,9,'2020-06-03T19:19:12-07:00','tincidunt','Winner1',25,26);
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (18,9,'2021-12-22T14:18:53-08:00','vitae risus. Duis','Winner1',26,27);
-
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (19,10,'2021-02-03T01:32:30-08:00','ac mattis velit justo','Winner2',29,28);
-INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (20,10,'2022-03-03T18:44:35-08:00','non arcu. Vivamus sit','TBD',29,30);
+-- R12
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (1,1,'2021-03-15T18:32:20-08:00','amet, dapibus id,','Winner2',1,2);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (2,1,'2021-04-01T23:06:28-09:00','convallis est, vitae sodales nisi magna sed dui.','TBD',2,3);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (3,2,'2021-03-20T04:35:58-05:00','molestie dapibus ligula. Aliquam','Tie',4,5);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (4,2,'2021-03-25T04:35:58-06:00','Duis','Winner1',4,6);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (5,3,'2021-03-20T07:21:28-07:00','mauris ipsum porta elit, a feugiat','Tie',7,8);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (6,3,'2021-03-28T07:21:28-01:00','et malesuada fames ac','Winner2',8,9);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (7,4,'2021-04-15T08:21:36-08:00','elit fermentum risus, at','TBD',10,12);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (8,4,'2021-04-20T08:21:36-08:00','nunc','TBD',11,12);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (9,5,'2021-03-17T21:44:52-07:00','Donec sollicitudin','Winner1',13,14);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (10,5,'2021-04-01T21:44:52-07:00','consequat auctor, nunc nulla vulputate dui, nec','TBD',14,15);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (11,6,'2021-03-13T07:02:25-08:00','lectus pede et risus.','Winner2',16,17);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (12,6,'2021-04-21T07:02:25-08:00','primis in faucibus orci','TBD',17,18);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (13,7,'2021-03-15T22:51:12-08:00','eu tellus. Phasellus','Tie',19,20);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (14,7,'2021-04-25T22:51:12-08:00','vulputate, lacus. Cras interdum. Nunc sollicitudin commodo ipsum.','TBD',21,20);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (15,8,'2021-03-19T22:51:12-08:00','Morbi non sapien molestie orci tincidunt adipiscing.','Tie',22,23);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (16,8,'2021-04-02T22:51:12-08:00','metus facilisis lorem tristique','TBD',24,23);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (17,9,'2021-03-20T01:49:26-07:00','tincidunt','Winner1',25,26);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (18,9,'2021-03-25T01:49:26-07:00','vitae risus. Duis','Winner1',26,27);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (19,10,'2021-03-29T23:57:52-07:00','ac mattis velit justo','Winner2',29,28);
+INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (20,10,'2021-04-17T23:57:52-07:00','non arcu. Vivamus sit','TBD',29,30);
 
 -- R13
 INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (1,13,7,NULL,'enim. Etiam imperdiet dictum magna. Ut tincidunt orci quis lectus. Nullam suscipit,','2021-02-01T01:22:24-08:00');
@@ -183,7 +183,7 @@ INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (8,
 INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (9,18,1,NULL,'commodo ipsum. Suspendisse non leo. Vivamus nibh dolor, nonummy ac, feugiat non, lobortis quis, pede. Suspendisse dui. Fusce diam nunc,','2020-08-01T16:01:28-07:00');
 INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (10,5,6,NULL,'risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet non, vestibulum nec,','2022-03-24T19:39:49-07:00');
 INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (11,14,3,8,'libero lacus, varius et, euismod et, commodo','2022-01-19T16:45:43-08:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (12,8,4,NULL,'mauris elit, dictum eu, eleifend','2020-10-18T10:58:45-07:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (12,9,4,NULL,'mauris elit, dictum eu, eleifend','2020-10-18T10:58:45-07:00');
 INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (13,2,7,6,'dignissim tempor arcu. Vestibulum ut eros non enim commodo hendrerit. Donec porttitor tellus non magna. Nam ligula elit,','2021-08-18T01:06:05-07:00');
 INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (14,1,10,NULL,'consectetuer, cursus et, magna. Praesent interdum ligula','2020-07-27T16:49:56-07:00');
 INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (15,10,6,NULL,'id, blandit','2020-12-13T16:34:01-08:00');
@@ -199,16 +199,16 @@ INSERT INTO "participation" (id_user,id_event,"status") VALUES (18,7,'JoinReques
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (3,7,'Accepted');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (10,3,'Accepted');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (12,1,'Accepted');
-INSERT INTO "participation" (id_user,id_event,"status") VALUES (8,4,'JoinRequest');
+INSERT INTO "participation" (id_user,id_event,"status") VALUES (9,4,'JoinRequest');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (14,1,'Declined');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (5,2,'Declined');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (1,5,'Invitation');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (12,7,'Accepted');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (19,6,'Invitation');
-INSERT INTO "participation" (id_user,id_event,"status") VALUES (2,1,'JoinRequest');
+INSERT INTO "participation" (id_user,id_event,"status") VALUES (3,1,'JoinRequest');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (2,5,'Declined');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (6,8,'JoinRequest');
-INSERT INTO "participation" (id_user,id_event,"status") VALUES (18,9,'Invitation');
+INSERT INTO "participation" (id_user,id_event,"status") VALUES (19,9,'Invitation');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (16,2,'Declined');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (10,1,'Declined');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (13,2,'JoinRequest');
