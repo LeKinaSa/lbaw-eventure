@@ -35,16 +35,16 @@ CREATE TYPE result AS ENUM ('TBD', 'Winner1', 'Winner2', 'Tie');
 -- R01
 CREATE TABLE administrator (
     id SERIAL PRIMARY KEY,
-    username TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
+    username TEXT NOT NULL CONSTRAINT administrator_username_uk UNIQUE,
     "password" TEXT NOT NULL
 );
 
 -- R02
 CREATE TABLE "user" (
     id SERIAL PRIMARY KEY,
-    username TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
+    username TEXT NOT NULL CONSTRAINT user_username_uk UNIQUE,
     "name" TEXT NOT NULL,
-    email TEXT NOT NULL CONSTRAINT email_uk UNIQUE,
+    email TEXT NOT NULL CONSTRAINT user_email_uk UNIQUE,
     "password" TEXT NOT NULL,
     "address" TEXT,
     gender gender,
@@ -69,7 +69,7 @@ CREATE TABLE suspension (
     "from" TIMESTAMP NOT NULL,
     until TIMESTAMP NOT NULL,
     reason TEXT NOT NULL,
-    CONSTRAINT date_ck CHECK ("from" < until)
+    CONSTRAINT suspension_date_ck CHECK ("from" < until)
 );
 
 -- R05
@@ -98,7 +98,7 @@ CREATE TABLE "event" (
     draw_points REAL NOT NULL DEFAULT 0.5 CONSTRAINT draw_points_ck CHECK ((draw_points >= 0) AND (draw_points <= 100)),
     loss_points REAL NOT NULL DEFAULT 0 CONSTRAINT loss_points_ck CHECK ((loss_points >= 0) AND (loss_points <= 100)),
     leaderboard BOOLEAN NOT NULL DEFAULT false,
-    CONSTRAINT date_ck CHECK ("start_date" < end_date)
+    CONSTRAINT event_date_ck CHECK ("start_date" < end_date)
 );
 
 -- R07
@@ -175,7 +175,6 @@ CREATE TABLE tag (
     id SERIAL PRIMARY KEY,
     "name" TEXT NOT NULL CONSTRAINT tag_uk UNIQUE
 );
-
 
 -- R16
 CREATE TABLE event_tag (
