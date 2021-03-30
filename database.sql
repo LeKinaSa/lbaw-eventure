@@ -64,7 +64,7 @@ CREATE TABLE "event" (
     cancelled BOOLEAN NOT NULL DEFAULT false,
     keywords tsvector,
     id_category INTEGER REFERENCES category(id) NOT NULL,
-    win_points REAL NOT NULL DEFAULT 1 CONSTRAINT win_points_ck CHECK ((win_points) >= 0) AND (win_points <= 100)),
+    win_points REAL NOT NULL DEFAULT 1 CONSTRAINT win_points_ck CHECK ((win_points >= 0) AND (win_points <= 100)),
     draw_points REAL NOT NULL DEFAULT 0.5 CONSTRAINT draw_points_ck CHECK ((draw_points >= 0) AND (draw_points <= 100)),
     loss_points REAL NOT NULL DEFAULT 0 CONSTRAINT loss_points_ck CHECK ((loss_points >= 0) AND (loss_points <= 100)),
     leaderboard BOOLEAN NOT NULL DEFAULT false,
