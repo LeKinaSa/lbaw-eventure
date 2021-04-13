@@ -1,10 +1,10 @@
 
 DROP TRIGGER IF EXISTS comment_author ON comment;
 DROP TRIGGER IF EXISTS comment_parent ON parent;
-DROP TRIGGER IF EXISTS match_competitors ON match;
+DROP TRIGGER IF EXISTS match_competitors ON "match";
 DROP TRIGGER IF EXISTS poll_answer_user ON poll_answer;
 DROP TRIGGER IF EXISTS poll_answer_option ON poll_answer;
-DROP TRIGGER IF EXISTS match_during_event ON match;
+DROP TRIGGER IF EXISTS match_during_event ON "match";
 
 DROP FUNCTION IF EXISTS comment_author();
 DROP FUNCTION IF EXISTS comment_parent();
@@ -249,7 +249,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER match_competitors
-    BEFORE INSERT OR UPDATE ON match
+    BEFORE INSERT OR UPDATE ON "match"
     FOR EACH ROW
     EXECUTE PROCEDURE match_competitors();
 
@@ -304,6 +304,6 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER match_during_event
-    BEFORE INSERT OR UPDATE ON match
+    BEFORE INSERT OR UPDATE ON "match"
     FOR EACH ROW
     EXECUTE PROCEDURE match_during_event();
