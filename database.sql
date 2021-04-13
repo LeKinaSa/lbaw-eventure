@@ -1,4 +1,18 @@
 
+DROP TRIGGER IF EXISTS comment_author ON comment;
+DROP TRIGGER IF EXISTS comment_parent ON parent;
+DROP TRIGGER IF EXISTS match_competitors ON match;
+DROP TRIGGER IF EXISTS poll_answer_user ON poll_answer;
+DROP TRIGGER IF EXISTS poll_answer_option ON poll_answer;
+DROP TRIGGER IF EXISTS match_during_event ON match;
+
+DROP FUNCTION IF EXISTS comment_author();
+DROP FUNCTION IF EXISTS comment_parent();
+DROP FUNCTION IF EXISTS match_competitors();
+DROP FUNCTION IF EXISTS poll_answer_user();
+DROP FUNCTION IF EXISTS poll_answer_option();
+DROP FUNCTION IF EXISTS match_during_event();
+
 DROP TABLE IF EXISTS event_tag;
 DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS participation;
@@ -182,3 +196,114 @@ CREATE TABLE event_tag (
     id_tag INTEGER REFERENCES tag(id),
     PRIMARY KEY (id_event, id_tag)
 );
+
+
+-- Triggers
+
+-- TRIGGER01
+CREATE FUNCTION comment_author() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF (NEW.id_author IS NOT NULL 
+    AND NEW.id_author <> (SELECT id_organizer FROM "event" WHERE "event".id = NEW.id_event)
+    AND NOT EXISTS (SELECT * FROM participation WHERE id_user = NEW.id_author AND participation.id_event = NEW.id_event AND "status" = 'Accepted')) THEN
+        RAISE EXCEPTION 'Comment author must be the event organizer or one of its participants.';
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER comment_author
+    BEFORE INSERT OR UPDATE ON comment
+    FOR EACH ROW
+    EXECUTE PROCEDURE comment_author();
+
+-- TRIGGER02
+CREATE FUNCTION comment_parent() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF (NEW.id_parent IS NOT NULL AND NEW.id_event <> (SELECT id_event FROM comment WHERE comment.id = NEW.id_parent)) THEN
+        RAISE EXCEPTION 'The parent comment must be from the same event.';
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER comment_parent
+    BEFORE INSERT ON comment
+    FOR EACH ROW
+    EXECUTE PROCEDURE comment_parent();
+
+-- TRIGGER03
+CREATE FUNCTION match_competitors() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF (NEW.id_event <> (SELECT id_event FROM competitor AS c1 WHERE c1.id = NEW.id_competitor1) OR NEW.id_event <> (SELECT id_event FROM competitor AS c2 WHERE c2.id = NEW.id_competitor2)) THEN
+        RAISE EXCEPTION 'The competitors must be part of the same event as the match.';
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER match_competitors
+    BEFORE INSERT OR UPDATE ON match
+    FOR EACH ROW
+    EXECUTE PROCEDURE match_competitors();
+
+-- TRIGGER04
+CREATE FUNCTION poll_answer_user() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF NOT EXISTS (SELECT * FROM participation WHERE participation.id_user = NEW.id_user AND "status" = 'Accepted' AND participation.id_event = (SELECT id_event FROM poll WHERE poll.id = NEW.id_poll)) THEN
+        RAISE EXCEPTION 'The user who answered the poll must be a participant in the event.';
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER poll_answer_user
+    BEFORE INSERT OR UPDATE ON poll_answer
+    FOR EACH ROW
+    EXECUTE PROCEDURE poll_answer_user();
+
+-- TRIGGER05
+CREATE FUNCTION poll_answer_option() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF NEW.id_poll_option NOT IN (SELECT id FROM poll_option WHERE poll_option.id_poll = NEW.id_poll) THEN
+        RAISE EXCEPTION 'The chosen option in a poll answer must be one of the options from the poll.';
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER poll_answer_option
+    BEFORE INSERT OR UPDATE ON poll_answer
+    FOR EACH ROW
+    EXECUTE PROCEDURE poll_answer_option();
+
+-- TRIGGER06
+CREATE FUNCTION match_during_event() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    ev_start_date TIMESTAMP;
+    ev_end_date TIMESTAMP;
+BEGIN
+    SELECT "start_date", end_date INTO ev_start_date, ev_end_date FROM "event" WHERE NEW.id_event = "event".id;
+    IF NEW.date IS NOT NULL AND ev_start_date IS NOT NULL AND ev_end_date IS NOT NULL AND (NEW.date < ev_start_date OR NEW.date > ev_end_date) THEN
+        RAISE EXCEPTION 'The date of a match must be between the start and end dates of the event.';
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER match_during_event
+    BEFORE INSERT OR UPDATE ON match
+    FOR EACH ROW
+    EXECUTE PROCEDURE match_during_event();
