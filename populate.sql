@@ -88,7 +88,7 @@ INSERT INTO "poll_option" (id,id_poll,"option") VALUES (15,5,'neque. Morbi quis 
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (9,4,2);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (16,2,9);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (8,4,11);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (16,2,3);
+INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (16,3,3);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (3,1,15);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (5,3,15);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (6,1,2);
@@ -104,7 +104,7 @@ INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (5,5,4);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (18,2,3);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (1,2,10);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (9,2,12);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (15,1,1);
+INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (15,2,1);
 
 -- R10
 INSERT INTO "file" (id,id_event,"name","data",date_uploaded) VALUES (1,2,'mollis', E'\\x3bfe931080c060f2','2021-03-29T22:06:41-07:00');
@@ -198,7 +198,7 @@ INSERT INTO "participation" (id_user,id_event,"status") VALUES (16,7,'Accepted')
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (18,7,'JoinRequest');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (3,7,'Accepted');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (10,3,'Accepted');
-INSERT INTO "participation" (id_user,id_event,"status") VALUES (12,1,'Accepted');
+INSERT INTO "participation" (id_user,id_event,"status") VALUES (13,1,'Accepted');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (9,4,'JoinRequest');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (14,1,'Declined');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (5,2,'Declined');
@@ -212,7 +212,7 @@ INSERT INTO "participation" (id_user,id_event,"status") VALUES (19,9,'Invitation
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (16,2,'Declined');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (10,1,'Declined');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (13,2,'JoinRequest');
-INSERT INTO "participation" (id_user,id_event,"status") VALUES (6,8,'Declined');
+INSERT INTO "participation" (id_user,id_event,"status") VALUES (6,9,'Declined');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (11,10,'Accepted');
 
 -- R15
@@ -233,15 +233,15 @@ INSERT INTO "tag" (id,"name") VALUES (14,'pellentesque');
 INSERT INTO "tag" (id,"name") VALUES (15,'malesuada');
 
 -- R16
-INSERT INTO "event_tag" (id_user,id_tag) VALUES (6,13);
-INSERT INTO "event_tag" (id_user,id_tag) VALUES (10,12);
-INSERT INTO "event_tag" (id_user,id_tag) VALUES (1,10);
-INSERT INTO "event_tag" (id_user,id_tag) VALUES (4,6);
-INSERT INTO "event_tag" (id_user,id_tag) VALUES (9,8);
-INSERT INTO "event_tag" (id_user,id_tag) VALUES (7,3);
-INSERT INTO "event_tag" (id_user,id_tag) VALUES (8,11);
-INSERT INTO "event_tag" (id_user,id_tag) VALUES (10,10);
-INSERT INTO "event_tag" (id_user,id_tag) VALUES (9,7);
-INSERT INTO "event_tag" (id_user,id_tag) VALUES (2,1);
-INSERT INTO "event_tag" (id_user,id_tag) VALUES (3,14);
-INSERT INTO "event_tag" (id_user,id_tag) VALUES (7,9);
+INSERT INTO "event_tag" (id_event,id_tag) VALUES (6,13);
+INSERT INTO "event_tag" (id_event,id_tag) VALUES (10,12);
+INSERT INTO "event_tag" (id_event,id_tag) VALUES (1,10);
+INSERT INTO "event_tag" (id_event,id_tag) VALUES (4,6);
+INSERT INTO "event_tag" (id_event,id_tag) VALUES (9,8);
+INSERT INTO "event_tag" (id_event,id_tag) VALUES (7,3);
+INSERT INTO "event_tag" (id_event,id_tag) VALUES (8,11);
+INSERT INTO "event_tag" (id_event,id_tag) VALUES (10,10);
+INSERT INTO "event_tag" (id_event,id_tag) VALUES (9,7);
+INSERT INTO "event_tag" (id_event,id_tag) VALUES (2,1);
+INSERT INTO "event_tag" (id_event,id_tag) VALUES (3,14);
+INSERT INTO "event_tag" (id_event,id_tag) VALUES (7,9);
