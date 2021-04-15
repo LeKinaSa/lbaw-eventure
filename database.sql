@@ -1,4 +1,6 @@
 
+DROP INDEX IF EXISTS search_idx;
+
 DROP TRIGGER IF EXISTS comment_author ON comment;
 DROP TRIGGER IF EXISTS comment_parent ON comment;
 DROP TRIGGER IF EXISTS match_competitors ON "match";
@@ -317,7 +319,7 @@ BEGIN
         -- Delete poll votes
         DELETE FROM poll_answer WHERE id_user = NEW.id;
         -- Make user's comments anonymous
-        UPDATE comment SET id_author = NULL WHERE id_author = NEW.id;
+        UPDATE "comment" SET id_author = NULL WHERE id_author = NEW.id;
         -- Delete events the user is organizing
         DELETE FROM "event" WHERE id_organizer = NEW.id;
     END IF;
@@ -330,3 +332,9 @@ CREATE TRIGGER account_deletion
     BEFORE UPDATE OF active ON "user"
     FOR EACH ROW
     EXECUTE PROCEDURE account_deletion();
+
+-- Indices
+
+CREATE INDEX event_id_organizer_idx ON "event" USING hash(id_organizer);
+
+CREATE INDEX search_idx ON "event" USING GIST (to_tsvector('english', title || ' ' || "description"));
