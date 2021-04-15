@@ -1,6 +1,6 @@
 
 DROP TRIGGER IF EXISTS comment_author ON comment;
-DROP TRIGGER IF EXISTS comment_parent ON parent;
+DROP TRIGGER IF EXISTS comment_parent ON comment;
 DROP TRIGGER IF EXISTS match_competitors ON "match";
 DROP TRIGGER IF EXISTS poll_answer_user ON poll_answer;
 DROP TRIGGER IF EXISTS poll_answer_option ON poll_answer;
