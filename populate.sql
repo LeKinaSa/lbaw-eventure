@@ -48,17 +48,17 @@ INSERT INTO "category" (id,"name") VALUES (2,'Video Games'       );
 INSERT INTO "category" (id,"name") VALUES (3,'Card Games'        );
 INSERT INTO "category" (id,"name") VALUES (4,'Role-Playing Games');
 
--- R06 https://influencermarketinghub.com/esports-events-2021/
-INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 1, 2,'2021 FIFAe Club World Cup'       ,'Private',"The FIFAe World Cup is an online tournament in various places around the world organized by FIFA and EA. It will feature representatives of clubs. After a league model online qualification, the world's best clubs and organizations meet at the FIFAe Club World Cup."                                                                                ,NULL,'2021-03-10T18:32:20-08:00','2021-04-30T03:54:50-07:00','Virtual','Subbiano'      ,55,'true' ,NULL,2,93,91,38,'true' );
-INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 2, 4,'2021 VCT Challengers'            ,'Public' ,"The 2021 Valorant Champions Tour (VCT) features three competition levels (Challengers, Masters, and Champions). Challengers focus on regional competition, and the winners qualify for the Masters competition."                                                                                                                                         ,NULL,'2021-03-15T04:35:58-07:00','2021-04-29T10:53:13-07:00','Mixed'  ,'Borgone Susa'  ,31,'false',NULL,2,19, 5,13,'false');
-INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 3, 6,'RLCS Season X - Winter Split'    ,'Public' ,"Rocket League Esports developed RLCS Season X. In the Group Stage of the Winter tournament, 12 teams play in a Double Elimination Bracket. In the Grand Finals, teams from the loser's bracket need to bracket reset opponents from the Winners Bracket."                                                                                                ,NULL,'2021-03-18T07:21:28-07:00','2021-04-26T15:01:28-07:00','Mixed'  ,'Banjarmasin'   ,79,'true' ,NULL,2, 8,90,39,'true' );
-INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 4, 8,'2021 VCT Masters'                ,'Public' ,"The 2021 Valorant Champions Tour (VCT) features three competition levels (Challengers, Masters, and Champions). The Masters feature the top teams from each region (i.e., the winners of the Challengers series.) These teams face-off to gain entry to the Champions event."                                                                            ,NULL,'2021-03-12T08:21:36-08:00','2021-04-26T05:01:44-07:00','Mixed'  ,'Whitehorse'    ,82,'true' ,NULL,2,36,94,99,'true' );
-INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 5,10,'EPIC League Season 3'            ,'Public' ,"The Dota 2 EPIC League Season 3 features 16 European and CIS teams. It starts 16 invited teams who will initially play a group stage. Then, the top 8 teams advance to Division 1, and the bottom 8 go to Division 2. Each division's playoffs are double-elimination bracket, with all best-of-three matches (with the grand final being best-of-five).",NULL,'2021-03-17T21:44:52-07:00','2021-04-27T04:35:00-07:00','Mixed'  ,'100 Mile House',87,'false',NULL,2,30,69,92,'true' );
-INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 6,12,'2021 LPL Pro CS:GO'              ,'Private',"LPL Pro hosts professional Australia / New Zealand / Oceania Counter-Strike: Global Offensive (CS: GO) tournaments. The tournament is organized by Let's Play Live (LPL). The eSports event features playoffs (best-of-three) leading to a grand final (best-of-five)."                                                                                  ,NULL,'2021-03-11T07:02:25-08:00','2021-04-27T08:21:29-07:00','Virtual','B.S.D.'        ,56,'true' ,NULL,2,88, 3,92,'true' );
-INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 7,14,'LEC 2021 Spring Season'          ,'Private',"The LEC 2021 Spring Season is the first split of the third year of Europe's rebranded professional League of Legends league. Ten teams compete in a round robin group stage."                                                                                                                                                                            ,NULL,'2021-03-11T22:51:12-08:00','2021-04-27T16:30:48-07:00','Virtual','Berlin'        ,63,'false',NULL,2,12,91,20,'true' );
-INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 8,16,'2021 WardiTV Winter Championship','Public' ,"The WardiTV Winter Championship is a Starcraft2 tournament organized by WardiTV. It will feature notable players from around the globe. There has already been a Preliminaries Stage, consisting of a Group Stage, followed by Playoffs. The main tournament will be played in a double-elimination bracket series, with best-of-five matches."          ,NULL,'2021-03-19T10:40:17-07:00','2021-04-27T15:56:12-07:00','Virtual','Abingdon'      ,41,'true' ,NULL,2,95,88,81,'false');
-INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 9,18,'2021 Elisa Nordic Championship'  ,'Public' ,"The 2021 Elisa Nordic Championship is an online tournament in Finland, Denmark, Sweden, and Norway organized by Elisa Sports and dust2.dk. The Group Stage was held in January and February, with the Playoffs occurring in March. Teams battle for spots to Elisa Invitational."                                                                        ,NULL,'2021-03-16T01:49:26-07:00','2021-04-29T13:46:14-07:00','Virtual','Yeovil'        ,53,'true' ,NULL,2,50,82, 9,'false');
-INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (10,20,'2021 Master Tour (Hearthstone)'    ,'Public' ,"These tournaments bring together top Hearthstone players worldwide to fight for their share of the prize purse and the illustrious title of Masters Tour Champion. All matches are played online using 4-deck, best of five Conquest format."                                                                                                          ,NULL,'2021-03-17T23:57:52-07:00','2021-04-29T10:24:03-07:00','Virtual','Avise'         ,89,'true' ,NULL,3,96,96,61,'true' );
+-- R06
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 1, 2,'2021 FIFAe Club World Cup'       ,'Private','Fifa tournament'                                           ,NULL,'2021-03-10T18:32:20-08:00','2021-04-30T03:54:50-07:00','Virtual','Subbiano'      ,55,'true' ,NULL,2,93,91,38,'true' );
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 2, 4,'2021 VCT Challengers'            ,'Public' ,'Valorant Challengers Competition'                          ,NULL,'2021-03-15T04:35:58-07:00','2021-04-29T10:53:13-07:00','Mixed'  ,'Borgone Susa'  ,31,'false',NULL,2,19, 5,13,'false');
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 3, 6,'RLCS Season X - Winter Split'    ,'Public' ,'Who is gonna be carrying the Winter trophy home?'          ,NULL,'2021-03-18T07:21:28-07:00','2021-04-26T15:01:28-07:00','Mixed'  ,'Banjarmasin'   ,79,'true' ,NULL,2, 8,90,39,'true' );
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 4, 8,'2021 VCT Masters'                ,'Public' ,'Valorant Masters Competition'                              ,NULL,'2021-03-12T08:21:36-08:00','2021-04-26T05:01:44-07:00','Mixed'  ,'Whitehorse'    ,82,'true' ,NULL,2,36,94,99,'true' );
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 5,10,'EPIC League Season 3'            ,'Public' ,'Features 16 European and CIS teams.'                       ,NULL,'2021-03-17T21:44:52-07:00','2021-04-27T04:35:00-07:00','Mixed'  ,'100 Mile House',87,'false',NULL,2,30,69,92,'true' );
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 6,12,'2021 LPL Pro CS:GO'              ,'Private','Let''s Play Live Pro hosts professional CS:GO tournaments.',NULL,'2021-03-11T07:02:25-08:00','2021-04-27T08:21:29-07:00','Virtual','B.S.D.'        ,56,'true' ,NULL,2,88, 3,92,'true' );
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 7,14,'LEC 2021 Spring Season'          ,'Private','European League of Legends teams fight in round robin group stage',NULL,'2021-03-11T22:51:12-08:00','2021-04-27T16:30:48-07:00','Virtual','Berlin'        ,63,'false',NULL,2,12,91,20,'true' );
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 8,16,'2021 WardiTV Winter Championship','Public' ,'Starcraft2 tournament with players from around the globe'  ,NULL,'2021-03-19T10:40:17-07:00','2021-04-27T15:56:12-07:00','Virtual','Abingdon'      ,41,'true' ,NULL,2,95,88,81,'false');
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 9,18,'2021 Elisa Nordic Championship'  ,'Public' ,'Online tournament organized by Elisa Sports and dust2.dk.' ,NULL,'2021-03-16T01:49:26-07:00','2021-04-29T13:46:14-07:00','Virtual','Yeovil'        ,53,'true' ,NULL,2,50,82, 9,'false');
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,keywords,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (10,20,'2021 Master Tour (Hearthstone)'  ,'Public' ,'Featuring top Hearthstone players worldwide.'              ,NULL,'2021-03-17T23:57:52-07:00','2021-04-29T10:24:03-07:00','Virtual','Avise'         ,89,'true' ,NULL,3,96,96,61,'true' );
 
 -- R07
 INSERT INTO "poll" (id,id_event,question) VALUES (1,4,'Which group should play first?'                         );
@@ -83,28 +83,6 @@ INSERT INTO "poll_option" (id,id_poll,"option") VALUES (12,5,'Sonics'          )
 INSERT INTO "poll_option" (id,id_poll,"option") VALUES (13,5,'NRG'             );
 INSERT INTO "poll_option" (id,id_poll,"option") VALUES (14,5,'Guild'           );
 INSERT INTO "poll_option" (id,id_poll,"option") VALUES (15,5,'Cloud9'          );
-
--- R09
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES ( 9, 4, 2);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (16, 2, 9);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES ( 8, 4,11);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (16, 3, 3);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES ( 3, 1,15);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES ( 5, 3,15);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES ( 6, 1, 2);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (14, 4,13);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (17, 5, 7);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (11, 4,12);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (15, 1,14);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES ( 9, 1,10);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (20, 4, 6);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES ( 4, 1, 2);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (11, 1, 4);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES ( 5, 5, 4);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (18, 2, 3);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES ( 1, 2,10);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES ( 9, 2,12);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (15, 2, 1);
 
 -- R10
 INSERT INTO "file" (id,id_event,"name","data",date_uploaded) VALUES (1, 2,'Presentation', E'\\x3bfe931080c060f2','2021-03-29T22:06:41-07:00');
@@ -171,23 +149,6 @@ INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_c
 INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (19,10,'2021-03-29T23:57:52-07:00','Close match'                                    ,'Winner2',29,28);
 INSERT INTO "match" (id,id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (20,10,'2021-04-17T23:57:52-07:00',NULL                                             ,'TBD'    ,29,30);
 
--- R13
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 1,13, 7,NULL,'Such great games'                        ,'2021-02-01T01:22:24-08:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 2, 2, 8,NULL,'I wanna see epic battles'                ,'2020-09-12T14:13:42-07:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 3, 2, 6,NULL,'So many headshots today'                 ,'2020-10-20T16:06:10-07:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 4, 9, 7,   1,'Especially the first one'                ,'2021-07-31T11:20:41-07:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 5,14, 1,NULL,'I wanna see epic goals'                  ,'2020-06-03T00:42:52-07:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 6, 4, 7,NULL,'Epic games'                              ,'2020-06-17T15:44:30-07:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 7, 4, 3,NULL,'Great shots'                             ,'2022-02-13T02:43:19-08:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 8, 5, 3,   7,'Agreed'                                  ,'2021-06-30T18:51:00-07:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 9,18, 1,NULL,'I hope to see great e-football'          ,'2020-08-01T16:01:28-07:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (10, 5, 6,NULL,'So hyped for these matches'              ,'2022-03-24T19:39:49-07:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (11,14, 3,   8,'That goal on game 3. Noone saw it coming','2022-01-19T16:45:43-08:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (12, 9, 4,NULL,'That smoke was so good'                  ,'2020-10-18T10:58:45-07:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (13, 2, 7,   6,'Legendary games'                         ,'2021-08-18T01:06:05-07:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (14, 1,10,NULL,'Such a felt battle on game 2'            ,'2020-07-27T16:49:56-07:00');
-INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (15,10, 6,NULL,'Amazing sniper shots'                    ,'2020-12-13T16:34:01-08:00');
-
 -- R14
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (20, 7,'Declined'   );
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (19, 2,'Invitation' );
@@ -214,6 +175,40 @@ INSERT INTO "participation" (id_user,id_event,"status") VALUES (10, 1,'Declined'
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (13, 2,'JoinRequest');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES ( 6, 9,'Declined'   );
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (11,10,'Accepted'   );
+INSERT INTO "participation" (id_user,id_event,"status") VALUES ( 2, 6,'Accepted'   );
+INSERT INTO "participation" (id_user,id_event,"status") VALUES (14, 3,'Accepted'   );
+INSERT INTO "participation" (id_user,id_event,"status") VALUES ( 5, 3,'Accepted'   );
+INSERT INTO "participation" (id_user,id_event,"status") VALUES (18, 1,'Accepted'   );
+INSERT INTO "participation" (id_user,id_event,"status") VALUES ( 5, 6,'Accepted'   );
+INSERT INTO "participation" (id_user,id_event,"status") VALUES (14, 4,'Accepted'   );
+INSERT INTO "participation" (id_user,id_event,"status") VALUES (10, 6,'Accepted'   );
+
+-- R13
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 1,12, 7,NULL,'Such great games'                        ,'2021-02-01T01:22:24-08:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 2,16, 8,NULL,'Expect to see epic battles'              ,'2020-09-12T14:13:42-07:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 3, 2, 6,NULL,'So many headshots today'                 ,'2020-10-20T16:06:10-07:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 4,16, 7,   1,'Especially the first one'                ,'2021-07-31T11:20:41-07:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 5,13, 1,NULL,'I wanna see epic goals'                  ,'2020-06-03T00:42:52-07:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 6,16, 7,NULL,'Epic games'                              ,'2020-06-17T15:44:30-07:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 7,10, 3,NULL,'Great shots'                             ,'2022-02-13T02:43:19-08:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 8, 5, 3,   7,'Agreed'                                  ,'2021-06-30T18:51:00-07:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES ( 9,18, 1,NULL,'I hope to see great e-football'          ,'2020-08-01T16:01:28-07:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (10, 5, 6,NULL,'So hyped for these matches'              ,'2022-03-24T19:39:49-07:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (11,14, 3,   8,'That goal on game 3. Noone saw it coming','2022-01-19T16:45:43-08:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (12,14, 4,NULL,'That smoke was so good'                  ,'2020-10-18T10:58:45-07:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (13, 3, 7,   6,'Legendary games'                         ,'2021-08-18T01:06:05-07:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (14,11,10,NULL,'Such a felt battle on game 2'            ,'2020-07-27T16:49:56-07:00');
+INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (15,10, 6,NULL,'Amazing sniper shots'                    ,'2020-12-13T16:34:01-08:00');
+
+-- R09
+INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (16, 3, 5);
+INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES ( 3, 3, 6);
+INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (10, 5,11);
+INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (12, 3, 6);
+INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (14, 5,15);
+INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES ( 5, 5,15);
+INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (14, 1, 2);
+INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (14, 4, 9);
 
 -- R15
 INSERT INTO "tag" (id,"name") VALUES (1,'FIFA'             );
@@ -236,7 +231,7 @@ INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 4,4);
 INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 5,5);
 INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 6,7);
 INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 7,6);
-INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 7,6);
+INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 7,4);
 INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 8,8);
 INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 9,7);
 INSERT INTO "event_tag" (id_event,id_tag) VALUES (10,9);
