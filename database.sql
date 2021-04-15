@@ -5,6 +5,7 @@ DROP TRIGGER IF EXISTS match_competitors ON "match";
 DROP TRIGGER IF EXISTS poll_answer_user ON poll_answer;
 DROP TRIGGER IF EXISTS poll_answer_option ON poll_answer;
 DROP TRIGGER IF EXISTS match_during_event ON "match";
+DROP TRIGGER IF EXISTS account_deletion ON "user";
 
 DROP FUNCTION IF EXISTS comment_author();
 DROP FUNCTION IF EXISTS comment_parent();
@@ -12,6 +13,7 @@ DROP FUNCTION IF EXISTS match_competitors();
 DROP FUNCTION IF EXISTS poll_answer_user();
 DROP FUNCTION IF EXISTS poll_answer_option();
 DROP FUNCTION IF EXISTS match_during_event();
+DROP FUNCTION IF EXISTS account_deletion();
 
 DROP TABLE IF EXISTS event_tag;
 DROP TABLE IF EXISTS tag;
@@ -306,3 +308,25 @@ CREATE TRIGGER match_during_event
     BEFORE INSERT OR UPDATE ON "match"
     FOR EACH ROW
     EXECUTE PROCEDURE match_during_event();
+
+-- TRIGGER07
+CREATE FUNCTION account_deletion() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF NEW.active = false THEN
+        -- Delete poll votes
+        DELETE FROM poll_answer WHERE id_user = NEW.id;
+        -- Make user's comments anonymous
+        UPDATE comment SET id_author = NULL WHERE id_author = NEW.id;
+        -- Delete events the user is organizing
+        DELETE FROM "event" WHERE id_organizer = NEW.id;
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER account_deletion
+    BEFORE UPDATE OF active ON "user"
+    FOR EACH ROW
+    EXECUTE PROCEDURE account_deletion();
