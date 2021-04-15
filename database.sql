@@ -106,7 +106,6 @@ CREATE TABLE "event" (
     "location" TEXT,
     max_attendance INTEGER CONSTRAINT max_attendance_ck CHECK ((max_attendance >= 0) AND (max_attendance <= 10000)),
     cancelled BOOLEAN NOT NULL DEFAULT false,
-    keywords tsvector,
     id_category INTEGER REFERENCES category(id) NOT NULL,
     win_points NUMERIC(3) NOT NULL DEFAULT 1 CONSTRAINT win_points_ck CHECK ((win_points >= 0) AND (win_points <= 100)),
     draw_points NUMERIC(3) NOT NULL DEFAULT 0.5 CONSTRAINT draw_points_ck CHECK ((draw_points >= 0) AND (draw_points <= 100)),
