@@ -71,7 +71,7 @@ CREATE TABLE "user" (
 
 -- R03
 CREATE TABLE banned_user (
-    id_user INTEGER REFERENCES "user"(id) PRIMARY KEY,
+    id_user INTEGER PRIMARY KEY REFERENCES "user"(id) ON DELETE CASCADE,
     since TIMESTAMP NOT NULL,
     reason TEXT NOT NULL
 );
@@ -79,7 +79,7 @@ CREATE TABLE banned_user (
 -- R04
 CREATE TABLE suspension (
     id SERIAL PRIMARY KEY,
-    id_user INTEGER REFERENCES "user"(id) NOT NULL, 
+    id_user INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE, 
     "from" TIMESTAMP NOT NULL,
     until TIMESTAMP NOT NULL,
     reason TEXT NOT NULL,
@@ -95,7 +95,7 @@ CREATE TABLE category (
 -- R06
 CREATE TABLE "event" (
     id SERIAL PRIMARY KEY,
-    id_organizer INTEGER REFERENCES "user"(id) NOT NULL,
+    id_organizer INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     visibility visibility NOT NULL DEFAULT 'Public',
     "description" TEXT NOT NULL,
@@ -117,29 +117,29 @@ CREATE TABLE "event" (
 -- R07
 CREATE TABLE poll (
     id SERIAL PRIMARY KEY,
-    id_event INTEGER REFERENCES "event"(id) NOT NULL,
+    id_event INTEGER NOT NULL REFERENCES "event"(id) ON DELETE CASCADE,
     question TEXT NOT NULL
 );
 
 -- R08
 CREATE TABLE poll_option (
     id SERIAL PRIMARY KEY,
-    id_poll INTEGER REFERENCES poll(id) NOT NULL,
+    id_poll INTEGER NOT NULL REFERENCES poll(id) ON DELETE CASCADE,
     "option" TEXT NOT NULL
 );
 
 -- R09
 CREATE TABLE poll_answer (
-    id_user INTEGER REFERENCES "user"(id) NOT NULL,
-    id_poll INTEGER REFERENCES poll(id) NOT NULL,
-    id_poll_option INTEGER REFERENCES poll_option(id),
+    id_user INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    id_poll INTEGER NOT NULL REFERENCES poll(id) ON DELETE CASCADE,
+    id_poll_option INTEGER REFERENCES poll_option(id) ON DELETE CASCADE,
     PRIMARY KEY (id_user, id_poll)
 );
 
 -- R10
 CREATE TABLE "file" (
     id SERIAL PRIMARY KEY,
-    id_event INTEGER REFERENCES "event"(id) NOT NULL,
+    id_event INTEGER NOT NULL REFERENCES "event"(id) ON DELETE CASCADE,
     "name" TEXT NOT NULL,
     "data" BYTEA NOT NULL,
     date_uploaded TIMESTAMP NOT NULL DEFAULT now()
@@ -148,7 +148,7 @@ CREATE TABLE "file" (
 -- R11
 CREATE TABLE competitor (
     id SERIAL PRIMARY KEY,
-    id_event INTEGER REFERENCES "event"(id) NOT NULL,
+    id_event INTEGER NOT NULL REFERENCES "event"(id) ON DELETE CASCADE,
     "name" TEXT NOT NULL,
     CONSTRAINT competitor_uk UNIQUE (id_event, "name")
 );
@@ -156,29 +156,29 @@ CREATE TABLE competitor (
 -- R12
 CREATE TABLE "match" (
     id SERIAL PRIMARY KEY,
-    id_event INTEGER REFERENCES "event"(id) NOT NULL,
+    id_event INTEGER NOT NULL REFERENCES "event"(id) ON DELETE CASCADE,
     "date" TIMESTAMP,
     "description" TEXT,
     result result NOT NULL,
-    id_competitor1 INTEGER REFERENCES competitor(id) NOT NULL,
-    id_competitor2 INTEGER REFERENCES competitor(id) NOT NULL,
+    id_competitor1 INTEGER NOT NULL REFERENCES competitor(id) ON DELETE CASCADE,
+    id_competitor2 INTEGER NOT NULL REFERENCES competitor(id) ON DELETE CASCADE,
     CONSTRAINT competitor_ids_ck CHECK (id_competitor1 <> id_competitor2)
 );
 
 -- R13
 CREATE TABLE comment (
     id SERIAL PRIMARY KEY,
-    id_author INTEGER REFERENCES "user"(id),
-    id_event INTEGER REFERENCES "event"(id) NOT NULL,
-    id_parent INTEGER REFERENCES comment(id),
+    id_author INTEGER REFERENCES "user"(id) ON DELETE SET NULL,
+    id_event INTEGER NOT NULL REFERENCES "event"(id) ON DELETE CASCADE,
+    id_parent INTEGER REFERENCES comment(id) ON DELETE SET NULL,
     "text" TEXT NOT NULL,
     "date" TIMESTAMP NOT NULL DEFAULT now()  
 );
 
 -- R14
 CREATE TABLE participation (
-    id_user INTEGER REFERENCES "user"(id),
-    id_event INTEGER REFERENCES "event"(id),
+    id_user INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
+    id_event INTEGER REFERENCES "event"(id) ON DELETE CASCADE,
     "status" "status" NOT NULL,
     PRIMARY KEY (id_user, id_event)
 );
@@ -191,8 +191,8 @@ CREATE TABLE tag (
 
 -- R16
 CREATE TABLE event_tag (
-    id_event INTEGER REFERENCES "event"(id),
-    id_tag INTEGER REFERENCES tag(id),
+    id_event INTEGER REFERENCES "event"(id) ON DELETE CASCADE,
+    id_tag INTEGER REFERENCES tag(id) ON DELETE CASCADE,
     PRIMARY KEY (id_event, id_tag)
 );
 
