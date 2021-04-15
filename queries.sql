@@ -84,5 +84,12 @@ SELECT suspension.id, username, "name", "from", until, reason
     FROM suspension JOIN "user"
     ON suspension.id_user = "user".id;
 
--- Search events
-
+-- Event full-text search (only public events or private events the user is organizing or participating in are shown)
+SELECT "event".id, id_organizer, "user".username, "user"."name", title, 
+"event"."description", "event".picture, "start_date", end_date, "type", "location", max_attendance,
+ts_rank(keywords, search_query) AS "rank"
+    FROM "event" JOIN "user" ON "user".id = id_organizer, to_tsquery('english', $search) AS search_query
+    WHERE keywords @@ search_query
+        AND (visibility = 'Public' OR $idUser = id_organizer OR $idUser IN 
+            (SELECT id_user FROM participation WHERE id_event = "event".id AND "status" = 'Accepted'))
+    ORDER BY "rank" DESC;
