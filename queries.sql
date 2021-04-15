@@ -91,5 +91,5 @@ ts_rank(keywords, search_query) AS "rank"
     FROM "event" JOIN "user" ON "user".id = id_organizer, to_tsquery('english', $search) AS search_query
     WHERE keywords @@ search_query
         AND (visibility = 'Public' OR $idUser = id_organizer OR $idUser IN 
-            (SELECT id_user FROM participation WHERE id_event = "event".id AND "status" = 'Accepted'))
+            (SELECT id_user FROM participation WHERE id_event = "event".id AND ("status" = 'Accepted' OR "status" = 'Invitation')))
     ORDER BY "rank" DESC;
