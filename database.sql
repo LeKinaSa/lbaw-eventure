@@ -8,6 +8,7 @@ DROP TRIGGER IF EXISTS poll_answer_user ON poll_answer;
 DROP TRIGGER IF EXISTS poll_answer_option ON poll_answer;
 DROP TRIGGER IF EXISTS match_during_event ON "match";
 DROP TRIGGER IF EXISTS account_deletion ON "user";
+DROP TRIGGER IF EXISTS update_event_keywords ON "event";
 
 DROP FUNCTION IF EXISTS comment_author();
 DROP FUNCTION IF EXISTS comment_parent();
@@ -16,6 +17,7 @@ DROP FUNCTION IF EXISTS poll_answer_user();
 DROP FUNCTION IF EXISTS poll_answer_option();
 DROP FUNCTION IF EXISTS match_during_event();
 DROP FUNCTION IF EXISTS account_deletion();
+DROP FUNCTION IF EXISTS update_event_keywords();
 
 DROP TABLE IF EXISTS event_tag;
 DROP TABLE IF EXISTS tag;
@@ -103,6 +105,7 @@ CREATE TABLE "event" (
     title TEXT NOT NULL,
     visibility visibility NOT NULL DEFAULT 'Public',
     "description" TEXT NOT NULL,
+    keywords tsvector,
     picture BYTEA,
     "start_date" TIMESTAMP,
     end_date TIMESTAMP,
@@ -333,8 +336,25 @@ CREATE TRIGGER account_deletion
     FOR EACH ROW
     EXECUTE PROCEDURE account_deletion();
 
+-- TRIGGER08
+CREATE FUNCTION update_event_keywords() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    UPDATE "event"
+        SET keywords = setweight(to_tsvector('english', NEW.title), 'A') || setweight(to_tsvector('english', NEW."description"), 'B')
+        WHERE "event".id = NEW.id;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_event_keywords
+    AFTER INSERT OR UPDATE OF title, "description" ON "event"
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_event_keywords();
+
 -- Indices
 
 CREATE INDEX event_id_organizer_idx ON "event" USING hash(id_organizer);
 
-CREATE INDEX search_idx ON "event" USING GIST (to_tsvector('english', title || ' ' || "description"));
+CREATE INDEX search_idx ON "event" USING GIST (keywords);
