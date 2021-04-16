@@ -1,5 +1,18 @@
 
 DROP INDEX IF EXISTS event_id_organizer_idx;
+DROP INDEX IF EXISTS poll_id_event_idx;
+DROP INDEX IF EXISTS file_id_event_idx;
+DROP INDEX IF EXISTS competitor_id_event_idx;
+DROP INDEX IF EXISTS match_id_event_idx;
+DROP INDEX IF EXISTS poll_option_id_poll_idx;
+DROP INDEX IF EXISTS poll_answer_id_poll_option_idx;
+DROP INDEX IF EXISTS event_tag_tag_name_idx;
+DROP INDEX IF EXISTS participation_status_id_event_idx;
+DROP INDEX IF EXISTS event_type_idx;
+DROP INDEX IF EXISTS event_start_date_idx;
+DROP INDEX IF EXISTS event_end_date_idx;
+DROP INDEX IF EXISTS event_id_category_idx;
+
 DROP INDEX IF EXISTS search_idx;
 
 DROP TRIGGER IF EXISTS comment_author ON comment;
@@ -194,7 +207,7 @@ CREATE TABLE participation (
 -- R15
 CREATE TABLE event_tag (
     id_event INTEGER REFERENCES "event"(id) ON DELETE CASCADE,
-    tag_name TEXT NOT NULL
+    tag_name TEXT NOT NULL,
     PRIMARY KEY (id_event, tag_name)
 );
 
@@ -351,6 +364,19 @@ CREATE TRIGGER update_event_keywords
 -- Indices
 
 CREATE INDEX event_id_organizer_idx ON "event" USING hash(id_organizer);
-CREATE INDEX participation_status_idx ON participation USING hash("status");
+CREATE INDEX poll_id_event_idx ON poll USING hash(id_event);
+CREATE INDEX file_id_event_idx ON "file" USING hash(id_event);
+CREATE INDEX competitor_id_event_idx ON competitor USING hash(id_event);
+CREATE INDEX match_id_event_idx ON "match" USING hash(id_event);
+CREATE INDEX poll_option_id_poll_idx ON poll_option USING hash(id_poll);
+CREATE INDEX poll_answer_id_poll_option_idx ON poll_answer USING hash(id_poll_option);
+CREATE INDEX event_tag_tag_name_idx ON event_tag USING hash(tag_name);
+CREATE INDEX participation_status_id_event_idx ON participation USING btree("status", id_event);
+CREATE INDEX event_type_idx ON "event" USING hash("type");
+CREATE INDEX event_start_date_idx ON "event" USING btree("start_date");
+CREATE INDEX event_end_date_idx ON "event" USING btree(end_date);
+CREATE INDEX event_id_category_idx ON "event" USING hash(id_category);
+
+-- Full-text search indices
 
 CREATE INDEX search_idx ON "event" USING GIST (keywords);
