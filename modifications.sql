@@ -12,8 +12,8 @@ INSERT INTO comment (id_author, id_event, id_parent, "text", "date")
     VALUES ($idAuthor, $idEvent, $idParent, $text, $date);
 
 -- INSERT03 - Answer a poll
-INSERT INTO poll_answer (id_user, id_poll, id_poll_option)
-    VALUES ($idUser, $idPoll, $idPollOption);
+INSERT INTO poll_answer (id_user, id_poll_option)
+    VALUES ($idUser, $idPollOption);
 
 -- INSERT04 - Create polls
 INSERT INTO poll (id_event, question)
@@ -118,7 +118,7 @@ DELETE FROM "file"
 
 -- DELETE04 - Remove poll answer
 DELETE FROM poll_answer
-    WHERE id_user = $idUser AND id_event = $idEvent;
+    WHERE id_user = $idUser AND id_poll_option = $idPollOption;
 
 -- DELETE05 - Remove tag from event
 DELETE FROM event_tag
