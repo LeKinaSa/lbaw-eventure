@@ -45,3 +45,6 @@ INSERT INTO banned_user (id_user, since, reason)
 -- UPDATE04 - Post results
 
 -- DELETE01 - Delete account
+
+DELETE FROM "user"
+    WHERE id = $id;
