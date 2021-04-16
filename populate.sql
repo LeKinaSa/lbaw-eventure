@@ -201,14 +201,14 @@ INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (14
 INSERT INTO "comment" (id,id_author,id_event,id_parent,"text","date") VALUES (15,10, 6,NULL,'Amazing sniper shots'                    ,'2020-12-13T16:34:01-08:00');
 
 -- R09
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (16, 3, 5);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES ( 3, 3, 6);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (10, 5,11);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (12, 3, 6);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (14, 5,15);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES ( 5, 5,15);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (14, 1, 2);
-INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (14, 4, 9);
+INSERT INTO "poll_answer" (id_user,id_poll_option) VALUES (16,5);
+INSERT INTO "poll_answer" (id_user,id_poll_option) VALUES (3,6);
+INSERT INTO "poll_answer" (id_user,id_poll_option) VALUES (10,11);
+INSERT INTO "poll_answer" (id_user,id_poll_option) VALUES (12,6);
+INSERT INTO "poll_answer" (id_user,id_poll_option) VALUES (14,15);
+INSERT INTO "poll_answer" (id_user,id_poll_option) VALUES (5,15);
+INSERT INTO "poll_answer" (id_user,id_poll_option) VALUES (14,2);
+INSERT INTO "poll_answer" (id_user,id_poll_option) VALUES (14,9);
 
 -- R15
 INSERT INTO "event_tag" (id_event,tag_name) VALUES ( 1,'FIFA'             );

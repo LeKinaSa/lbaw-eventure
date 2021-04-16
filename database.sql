@@ -34,7 +34,6 @@ DROP FUNCTION IF EXISTS account_deletion();
 DROP FUNCTION IF EXISTS update_event_keywords();
 
 DROP TABLE IF EXISTS event_tag;
-DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS participation;
 DROP TABLE IF EXISTS comment;
 DROP TABLE IF EXISTS "match";
@@ -152,9 +151,8 @@ CREATE TABLE poll_option (
 -- R09
 CREATE TABLE poll_answer (
     id_user INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-    id_poll INTEGER NOT NULL REFERENCES poll(id) ON DELETE CASCADE,
     id_poll_option INTEGER REFERENCES poll_option(id) ON DELETE CASCADE,
-    PRIMARY KEY (id_user, id_poll)
+    PRIMARY KEY (id_user, id_poll_option)
 );
 
 -- R10
@@ -270,8 +268,11 @@ CREATE TRIGGER match_competitors
 -- TRIGGER04
 CREATE FUNCTION poll_answer_user() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    var_id_poll INTEGER;
 BEGIN
-    IF NOT EXISTS (SELECT * FROM participation WHERE participation.id_user = NEW.id_user AND "status" = 'Accepted' AND participation.id_event = (SELECT id_event FROM poll WHERE poll.id = NEW.id_poll)) THEN
+    SELECT id_poll FROM poll_option INTO var_id_poll WHERE poll_option.id = NEW.id_poll_option;
+    IF NOT EXISTS (SELECT * FROM participation WHERE participation.id_user = NEW.id_user AND "status" = 'Accepted' AND participation.id_event = (SELECT id_event FROM poll WHERE poll.id = var_id_poll)) THEN
         RAISE EXCEPTION 'The user who answered the poll must be a participant in the event.';
     END IF;
     RETURN NEW;
@@ -287,9 +288,14 @@ CREATE TRIGGER poll_answer_user
 -- TRIGGER05
 CREATE FUNCTION poll_answer_option() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    var_id_poll INTEGER;
 BEGIN
-    IF NEW.id_poll_option NOT IN (SELECT id FROM poll_option WHERE poll_option.id_poll = NEW.id_poll) THEN
-        RAISE EXCEPTION 'The chosen option in a poll answer must be one of the options from the poll.';
+    SELECT id_poll FROM poll_option INTO var_id_poll WHERE poll_option.id = NEW.id_poll_option;
+    IF var_id_poll IN (SELECT id_poll 
+            FROM poll_answer JOIN poll_option ON poll_option.id = poll_answer.id_poll_option
+            WHERE poll_answer.id_user = NEW.id_user) THEN
+        RAISE EXCEPTION 'A user cannot vote twice on the same poll.';
     END IF;
     RETURN NEW;
 END
