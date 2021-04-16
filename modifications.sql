@@ -1,50 +1,125 @@
 
--- INSERT01 - Create an event
+----------------------------
+--         INSERTS        --
+----------------------------
 
-INSERT INTO "event" (id, id_organizer, title, visibility, "description", keywords, picture, "start_date", end_date, "type", "location", max_attendance, cancelled, id_category, win_points, draw_points, loss_points, leaderboard)
-    VALUES ($id, $id_organizer, $title, $visibility, $event_description, $keywords, $picture, $starting_date, $end_date, $event_type, $event_location, $max_attendance, $cancelled, $id_category, $win_points, $draw_points, $loss_points, $leaderboard);
+-- INSERT01 - Create an event
+INSERT INTO "event" (id_organizer, title, visibility, "description", picture, "start_date", end_date, "type", "location", max_attendance, id_category)
+    VALUES ($idOrganizer, $title, $visibility, $description, $picture, $startDate, $endDate, $type, $location, $maxAttendance, $idCategory);
 
 -- INSERT02 - Comment on an event
-
-INSERT INTO comment (id, id_author, id_event, id_parent, "text", "date")
-    VALUES ($id, $id_author, $id_event, $id_parent, $comment_text, $comment_date);
+INSERT INTO comment (id_author, id_event, id_parent, "text", "date")
+    VALUES ($idAuthor, $idEvent, $idParent, $text, $date);
 
 -- INSERT03 - Answer a poll
-
 INSERT INTO poll_answer (id_user, id_poll, id_poll_option)
-    VALUES ($id_user, $id_poll, $id_poll_option);
+    VALUES ($idUser, $idPoll, $idPollOption);
 
 -- INSERT04 - Create polls
+INSERT INTO poll (id_event, question)
+    VALUES ($idEvent, $question);
+    
+-- INSERT05 - Add poll option
+INSERT INTO poll_option (id_poll, "option")
+    VALUES ($idPoll, $option);
 
-INSERT INTO poll (id, id_event, question)
-    VALUES ($id, $id_event, $question);
+-- INSERT06 - Upload files
+INSERT INTO "file" (id_event, "name", "data", date_uploaded)
+    VALUES ($idEvent, $name, $data, $dateUploaded);
 
--- INSERT05 - Upload files
+-- INSERT07 - Suspend users
+INSERT INTO suspension (id_user, "from", until, reason)
+    VALUES ($idUser, $from, $until, $reason);
 
-INSERT INTO "file" (id, id_event, "name", "data", date_uploaded)
-    VALUES ($id, $id_event, $file_name, $file_data, $date_uploaded);
-
--- INSERT06 - Suspend users
-
-INSERT INTO suspension (id, id_user, "from", until, reason)
-    VALUES ($id, $id_user, $from_date, $until, $reason);
-
--- INSERT07 - Ban users
-
+-- INSERT08 - Ban users
 INSERT INTO banned_user (id_user, since, reason)
-    VALUES ($id_user, $since, $reason);
+    VALUES ($idUser, $since, $reason);
 
--- INSERT08 - Send invitations ??
+-- INSERT09 - Send invitations
+INSERT INTO participation (id_user, id_event, "status")
+    VALUES ($idUser, $idEvent, 'Invitation');
+
+-- INSERT10 - Post results
+INSERT INTO "match" (id_event, "date", "description", result, id_competitor1, id_competitor2)
+    VALUES (id_event, $date, $description, $result, $id_competitor1, $id_competitor2);
+
+-- INSERT11 - Sign up
+INSERT INTO "user" (username, "name", email, "password")
+    VALUES ($username, $name, $email, $password);
+
+-- INSERT12 - Add competitor
+INSERT INTO competitor (id_event, "name")
+    VALUES ($idEvent, $name);
+
+-- INSERT13 - Add tag to event
+INSERT INTO event_tag (id_event, tag_name)
+    VALUES ($idEvent, $tagName);
+
+----------------------------
+--         UPDATES        --
+----------------------------
 
 -- UPDATE01 - Update personal information
+UPDATE "user"
+    SET username = $username, "name" = $name, email = $email,
+        "address" = $address, gender = $gender, age = $age, website = $website,
+        picture = $picture, "description" = $description
+    WHERE id = $id;
 
 -- UPDATE02 - Manage invitations
+UPDATE participation
+    SET "status" = $status
+    WHERE id_event = $idEvent;
 
 -- UPDATE03 - Manage event details
-
--- UPDATE04 - Post results
-
--- DELETE01 - Delete account
-
-DELETE FROM "user"
+UPDATE "event"
+    SET title = $title, visibility = $visibility, "description" = $description,
+        picture = $picture, "start_date" = $startDate, end_date = $endDate,
+        "type" = $type, "location" = $location, max_attendance = $maxAttendance,
+        id_category = $idCategory
     WHERE id = $id;
+
+-- UPDATE04 - Update results
+UPDATE "match"
+    SET result = $result
+    WHERE id = $id;
+
+-- UPDATE05 - Delete account
+UPDATE "user"
+    SET active = false
+    WHERE id = $id;
+
+-- UPDATE06 - Manage event leaderboard details
+UPDATE "event"
+    SET win_points = $winPoints, drawPoints = $drawPoints, lossPoints = $lossPoints,
+        leaderboard = $leaderboard
+    WHERE id = $id;
+
+-- UPDATE07 - Delete comment (the child comments are preserved)
+UPDATE comment
+    SET id_author = NULL, "text" = NULL
+    WHERE id = $id;
+    
+----------------------------
+--         DELETES        --
+----------------------------
+
+-- DELETE01 - Delete event
+DELETE FROM "event"
+    WHERE id = $id;
+
+-- DELETE02 - Delete poll
+DELETE FROM "poll"
+    WHERE id = $id;
+
+-- DELETE03 - Delete file
+DELETE FROM "file"
+    WHERE id = $id;
+
+-- DELETE04 - Remove poll answer
+DELETE FROM poll_answer
+    WHERE id_user = $idUser AND id_event = $idEvent;
+
+-- DELETE05 - Remove tag from event
+DELETE FROM event_tag
+    WHERE id_event = $idEvent AND tag_name = $tagName;
