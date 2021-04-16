@@ -211,27 +211,16 @@ INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (14, 1, 2);
 INSERT INTO "poll_answer" (id_user,id_poll,id_poll_option) VALUES (14, 4, 9);
 
 -- R15
-INSERT INTO "tag" (id,"name") VALUES (1,'FIFA'             );
-INSERT INTO "tag" (id,"name") VALUES (2,'Valorant'         );
-INSERT INTO "tag" (id,"name") VALUES (3,'Rocket League'    );
-INSERT INTO "tag" (id,"name") VALUES (4,'Riot Games'       );
-INSERT INTO "tag" (id,"name") VALUES (5,'DOTA 2'           );
-INSERT INTO "tag" (id,"name") VALUES (6,'League of Legends');
-INSERT INTO "tag" (id,"name") VALUES (7,'CS:GO'            );
-INSERT INTO "tag" (id,"name") VALUES (8,'Starcraft2'       );
-INSERT INTO "tag" (id,"name") VALUES (9,'Hearthstone'      );
-
--- R16
-INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 1,1);
-INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 2,2);
-INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 2,4);
-INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 3,3);
-INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 4,2);
-INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 4,4);
-INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 5,5);
-INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 6,7);
-INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 7,6);
-INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 7,4);
-INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 8,8);
-INSERT INTO "event_tag" (id_event,id_tag) VALUES ( 9,7);
-INSERT INTO "event_tag" (id_event,id_tag) VALUES (10,9);
+INSERT INTO "event_tag" (id_event,tag_name) VALUES ( 1,'FIFA'             );
+INSERT INTO "event_tag" (id_event,tag_name) VALUES ( 2,'Valorant'         );
+INSERT INTO "event_tag" (id_event,tag_name) VALUES ( 2,'Riot Games'       );
+INSERT INTO "event_tag" (id_event,tag_name) VALUES ( 3,'Rocket League'    );
+INSERT INTO "event_tag" (id_event,tag_name) VALUES ( 4,'Valorant'         );
+INSERT INTO "event_tag" (id_event,tag_name) VALUES ( 4,'Riot Games'       );
+INSERT INTO "event_tag" (id_event,tag_name) VALUES ( 5,'DOTA 2'           );
+INSERT INTO "event_tag" (id_event,tag_name) VALUES ( 6,'CS:GO'            );
+INSERT INTO "event_tag" (id_event,tag_name) VALUES ( 7,'League of Legends');
+INSERT INTO "event_tag" (id_event,tag_name) VALUES ( 7,'Riot Games'       );
+INSERT INTO "event_tag" (id_event,tag_name) VALUES ( 8,'Starcraft2'       );
+INSERT INTO "event_tag" (id_event,tag_name) VALUES ( 9,'CS:GO'            );
+INSERT INTO "event_tag" (id_event,tag_name) VALUES (10,'Hearthstone'      );

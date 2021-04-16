@@ -1,4 +1,5 @@
 
+DROP INDEX IF EXISTS event_id_organizer_idx;
 DROP INDEX IF EXISTS search_idx;
 
 DROP TRIGGER IF EXISTS comment_author ON comment;
@@ -178,7 +179,7 @@ CREATE TABLE comment (
     id_author INTEGER REFERENCES "user"(id) ON DELETE SET NULL,
     id_event INTEGER NOT NULL REFERENCES "event"(id) ON DELETE CASCADE,
     id_parent INTEGER REFERENCES comment(id) ON DELETE SET NULL,
-    "text" TEXT NOT NULL,
+    "text" TEXT,
     "date" TIMESTAMP NOT NULL DEFAULT now()  
 );
 
@@ -191,16 +192,10 @@ CREATE TABLE participation (
 );
 
 -- R15
-CREATE TABLE tag (
-    id SERIAL PRIMARY KEY,
-    "name" TEXT NOT NULL CONSTRAINT tag_uk UNIQUE
-);
-
--- R16
 CREATE TABLE event_tag (
     id_event INTEGER REFERENCES "event"(id) ON DELETE CASCADE,
-    id_tag INTEGER REFERENCES tag(id) ON DELETE CASCADE,
-    PRIMARY KEY (id_event, id_tag)
+    tag_name TEXT NOT NULL
+    PRIMARY KEY (id_event, tag_name)
 );
 
 
@@ -322,7 +317,7 @@ BEGIN
         -- Delete poll votes
         DELETE FROM poll_answer WHERE id_user = NEW.id;
         -- Make user's comments anonymous
-        UPDATE "comment" SET id_author = NULL WHERE id_author = NEW.id;
+        UPDATE "comment" SET id_author = NULL, "text" = NULL WHERE id_author = NEW.id;
         -- Delete events the user is organizing
         DELETE FROM "event" WHERE id_organizer = NEW.id;
     END IF;
@@ -356,5 +351,6 @@ CREATE TRIGGER update_event_keywords
 -- Indices
 
 CREATE INDEX event_id_organizer_idx ON "event" USING hash(id_organizer);
+CREATE INDEX participation_status_idx ON participation USING hash("status");
 
 CREATE INDEX search_idx ON "event" USING GIST (keywords);
