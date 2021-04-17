@@ -66,12 +66,7 @@ UPDATE "user"
         picture = $picture, "description" = $description
     WHERE id = $id;
 
--- UPDATE02 - Manage invitations
-UPDATE participation
-    SET "status" = $status
-    WHERE id_event = $idEvent;
-
--- UPDATE03 - Manage event details
+-- UPDATE02 - Manage event details
 UPDATE "event"
     SET title = $title, visibility = $visibility, "description" = $description,
         picture = $picture, "start_date" = $startDate, end_date = $endDate,
@@ -79,23 +74,18 @@ UPDATE "event"
         id_category = $idCategory
     WHERE id = $id;
 
--- UPDATE04 - Update results
+-- UPDATE03 - Update results
 UPDATE "match"
     SET result = $result
     WHERE id = $id;
 
--- UPDATE05 - Delete account
-UPDATE "user"
-    SET active = false
-    WHERE id = $id;
-
--- UPDATE06 - Manage event leaderboard details
+-- UPDATE04 - Manage event leaderboard details
 UPDATE "event"
     SET win_points = $winPoints, drawPoints = $drawPoints, lossPoints = $lossPoints,
         leaderboard = $leaderboard
     WHERE id = $id;
 
--- UPDATE07 - Delete comment (the child comments are preserved)
+-- UPDATE05 - Delete comment (the child comments are preserved)
 UPDATE comment
     SET id_author = NULL, "text" = NULL
     WHERE id = $id;
@@ -123,3 +113,7 @@ DELETE FROM poll_answer
 -- DELETE05 - Remove tag from event
 DELETE FROM event_tag
     WHERE id_event = $idEvent AND tag_name = $tagName;
+
+-- DELETE06 - Delete account
+DELETE FROM "user"
+    WHERE id = $id;

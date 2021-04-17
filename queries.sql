@@ -1,6 +1,6 @@
 
 -- SELECT01 - User profile details
-SELECT id, username, "name", email, "address", gender, age, website, picture, "description", active
+SELECT id, username, "name", email, "address", gender, age, website, picture, "description"
     FROM "user"
     WHERE "user".id = $idUser;
 

@@ -84,8 +84,7 @@ CREATE TABLE "user" (
     age INTEGER,
     website TEXT,
     picture BYTEA,
-    "description" TEXT,
-    active BOOLEAN NOT NULL DEFAULT true
+    "description" TEXT
 );
 
 -- R03
@@ -332,21 +331,15 @@ CREATE TRIGGER match_during_event
 CREATE FUNCTION account_deletion() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NEW.active = false THEN
-        -- Delete poll votes
-        DELETE FROM poll_answer WHERE id_user = NEW.id;
-        -- Make user's comments anonymous
-        UPDATE "comment" SET id_author = NULL, "text" = NULL WHERE id_author = NEW.id;
-        -- Delete events the user is organizing
-        DELETE FROM "event" WHERE id_organizer = NEW.id;
-    END IF;
-    RETURN NEW;
+    -- Set the text of any comments the user has made to NULL
+    UPDATE "comment" SET "text" = NULL WHERE id_author = OLD.id;
+    RETURN OLD;
 END
 $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER account_deletion
-    BEFORE UPDATE OF active ON "user"
+    BEFORE DELETE ON "user"
     FOR EACH ROW
     EXECUTE PROCEDURE account_deletion();
 
