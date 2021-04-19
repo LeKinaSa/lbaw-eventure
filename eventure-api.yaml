@@ -1,0 +1,64 @@
+openapi: 3.0.0
+
+info:
+  version: '1.0'
+  title: 'Eventure Web API'
+  description: 'Web resources specification (A7) for Eventure'
+
+servers:
+- url: http://lbaw2136.lbaw-prod.fe.up.pt
+  description: Production server
+
+tags:
+  - name: 'M01: Authentication and User Profile'
+  - name: 'M02: Discovery and Filtering'
+  - name: 'M03: Event Pages'
+  - name: 'M04: Matches and Leaderboards'
+  - name: 'M05: Static Pages'
+  - name: 'M06: User Administration'
+
+paths:
+  /sign-in:
+    get:
+      operationId: R101
+      summary: 'R101: Sign In Form'
+      description: 'Provides a sign in form. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      responses:
+        '200':
+          description: 'Ok. Show [UI02](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui02-sign-in)'
+    post:
+      operationId: R102
+      summary: 'R102: Sign In Action'
+      description: 'Processes information sent through the sign in form. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '302':
+          description: 'Redirect user after processing the sign in credentials, depending on whether the authentication was successful or not.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to user profile.'
+                  value: '/profile/{username}'
+                302Error:
+                  description: 'Failed authentication (username or password did not match). Redirect to sign in form.'
+                  value: '/sign-in'
