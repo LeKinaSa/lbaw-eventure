@@ -22,7 +22,7 @@ paths:
     get:
       operationId: R101
       summary: 'R101: Sign In Form'
-      description: 'Provides a sign in form. Access: PUB'
+      description: 'Provides a sign in form, allowing users to authenticate themselves. Access: PUB'
       tags:
         - 'M01: Authentication and User Profile'
       responses:
@@ -63,22 +63,73 @@ paths:
                   description: 'Failed authentication (username or password did not match). Redirect to sign in form.'
                   value: '/sign-in'
     
-    /sign-out:
-      post:
-        operationId: R103
-        summary: 'R103: Sign Out Action'
-        description: 'Ends the session of the currently authenticated user. Access: USR, ADM'
-        tags:
-          - 'M01: Authentication and User Profile'
-        responses:
-          '302':
-            description: 'Redirect user after signing them out.'
-            headers:
-              Location:
-                schema:
-                  type: string
-                examples:
-                  302Success:
-                    description: 'Successful sign out. Redirect to login form.'
-                    value: '/login'
+  /sign-out:
+    post:
+      operationId: R103
+      summary: 'R103: Sign Out Action'
+      description: 'Ends the session of the currently authenticated user. Access: USR, ADM'
+      tags:
+        - 'M01: Authentication and User Profile'
+      responses:
+        '302':
+          description: 'Redirect user after signing them out.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful sign out. Redirect to login form.'
+                  value: '/login'
     
+  /sign-up:
+    get:
+      operationId: R104
+      summary: 'R104: Sign Up Form'
+      description: 'Provides a sign up form, allowing users to create a new account. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      responses:
+        '200':
+          description: 'Ok. Show [UI03](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui03-sign-up)'
+    post:
+      operationId: R105
+      summary: 'R105: Sign Up Action'
+      description: 'Processes the information sent through the sign up form. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - name
+                - username
+                - email
+                - password
+      responses:
+        '302':
+          description: 'Redirect user after processing the sign up information, depending on whether the account was created successfully or not.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to edit user profile.'
+                  value: '/profile/{username}/edit'
+                302Error:
+                  description: 'Account could not be created (username or email already in use). Redirect to sign up form.'
+                  value: '/sign-up'
+  
