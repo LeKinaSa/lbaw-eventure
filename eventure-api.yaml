@@ -296,3 +296,38 @@ paths:
                 302Error:
                   description: 'An error occurred when changing password. Redirect to edit profile form.'
                   value: '/user/{username}/edit'
+
+  # M04: Static Pages
+
+  /faq:
+    get:
+      operationId: R401
+      summary: 'R401: Frequent Asked Questions'
+      description: 'Show frequently asked questions and their answers. Access: PUB'
+      tags:
+        - 'M04: Static Pages'
+      responses:
+        '200':
+          description: 'Ok. Show [UI13](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui13-faq)'
+  
+  /about:
+    get:
+      operationId: R402
+      summary: 'R402: About'
+      description: 'Show a page summarizing the functionality and objectives of the website. Access: PUB'
+      tags:
+        - 'M04: Static Pages'
+      responses:
+        '200':
+          description: 'Ok. Show [UI14](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui14-about)'
+  
+  /contacts:
+    get:
+      operationId: R403
+      summary: 'R403: Contacts'
+      description: 'Show contact information and social media links. Access: PUB'
+      tags:
+        - 'M04: Static Pages'
+      responses:
+        '200':
+          description: 'Ok. Show [UI15](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui15-contacts)'
