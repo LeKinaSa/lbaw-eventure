@@ -62,3 +62,23 @@ paths:
                 302Error:
                   description: 'Failed authentication (username or password did not match). Redirect to sign in form.'
                   value: '/sign-in'
+    
+    /sign-out:
+      post:
+        operationId: R103
+        summary: 'R103: Sign Out Action'
+        description: 'Ends the session of the currently authenticated user. Access: USR, ADM'
+        tags:
+          - 'M01: Authentication and User Profile'
+        responses:
+          '302':
+            description: 'Redirect user after signing them out.'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'Successful sign out. Redirect to login form.'
+                    value: '/login'
+    
