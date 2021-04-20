@@ -11,13 +11,14 @@ servers:
 
 tags:
   - name: 'M01: Authentication and User Profile'
-  - name: 'M02: Discovery and Filtering'
-  - name: 'M03: Event Pages'
-  - name: 'M04: Matches and Leaderboards'
-  - name: 'M05: Static Pages'
-  - name: 'M06: User Administration'
+  - name: 'M02: Events'
+  - name: 'M03: Matches and Leaderboards'
+  - name: 'M04: Static Pages'
+  - name: 'M05: Administration'
 
 paths:
+  # M01: Authentication and User Profile
+
   /sign-in:
     get:
       operationId: R101
@@ -58,7 +59,7 @@ paths:
               examples:
                 302Success:
                   description: 'Successful authentication. Redirect to user profile.'
-                  value: '/profile/{username}'
+                  value: '/user/{username}'
                 302Error:
                   description: 'Failed authentication (username or password did not match). Redirect to sign in form.'
                   value: '/sign-in'
@@ -128,12 +129,12 @@ paths:
               examples:
                 302Success:
                   description: 'Successful authentication. Redirect to edit user profile.'
-                  value: '/profile/{username}/edit'
+                  value: '/user/{username}/edit'
                 302Error:
                   description: 'Account could not be created (username or email already in use). Redirect to sign up form.'
                   value: '/sign-up'
   
-  /profile/{username}:
+  /user/{username}:
     get:
       operationId: R106
       summary: 'R106: View User Profile'
@@ -149,13 +150,12 @@ paths:
       responses:
         '200':
           description: 'Ok. Show [UI05](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui05-user-profile)'
-        # TODO: 404?
 
-  /profile/{username}/edit:
+  /user/{username}/edit:
     get:
       operationId: R107
       summary: 'R107: Edit Profile Form'
-      description: 'Provides a form that allows users to edit their account details. Access: USR'
+      description: 'Provides a form that allows users to edit their account details. Access: OWN'
       tags:
         - 'M01: Authentication and User Profile'
       parameters:
@@ -167,13 +167,10 @@ paths:
       responses:
         '200':
           description: 'Ok. Show [UI06](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui06-edit-profile)'
-        '403':
-          description: 'Forbidden: attempted to edit account details of another user.'
-        # TODO: 404?
     post:
       operationId: R108
       summary: 'R108: Edit Profile Action'
-      description: 'Processes information sent through the edit profile form. Access: USR'
+      description: 'Processes information sent through the edit profile form. Access: OWN'
       tags:
         - 'M01: Authentication and User Profile'
       parameters:
@@ -219,18 +216,54 @@ paths:
               examples:
                 302Success:
                   description: 'Account details were changed successfully. Redirect to user profile'
-                  value: '/profile/{username}'
+                  value: '/user/{username}'
                 302Error:
                   description: 'An error occurred while changing the account details. Redirect to edit profile form.'
-                  value: '/profile/{username}/edit'
-        '403':
-          description: 'Forbidden: attempted to edit account details of another user.'
-        # TODO: 404?
+                  value: '/user/{username}/edit'
+
+  /user/{username}/delete:
+    post:
+      operationId: R109
+      summary: 'R109: Delete Account'
+      description: 'Deletes the account of the currently authenticated user and signs them out. Access: OWN'
+      tags:
+        - 'M01: Authentication and User Profile'
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                required:
+                  - password
+      responses:
+        '302':
+          description: 'Redirect user after account deletion.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful account deletion. Redirect to home page.'
+                  value: '/'
+                302Error:
+                  description: 'An error occurred during account deletion. Redirect to edit profile form.'
+                  value: '/user/{username}/edit'
 
   /api/change-password:
     post:
-      operationId: R109
-      summary: 'R109: Change Password'
+      operationId: R110
+      summary: 'R110: Change Password'
       description: 'Changes the password of the currently authenticated user. Access: USR'
       tags:
         - 'M01: Authentication and User Profile'
@@ -249,6 +282,7 @@ paths:
                 - oldPassword
                 - newPassword
       responses:
+        # TODO
         '302':
           description: 'Redirect user after changing their password.'
           headers:
@@ -258,29 +292,7 @@ paths:
               examples:
                 302Success:
                   description: 'Password was successfully changed. Redirect to user profile.'
-                  value: '/profile/{username}'
+                  value: '/user/{username}'
                 302Error:
                   description: 'An error occurred when changing password. Redirect to edit profile form.'
-                  value: '/profile/{username}/edit'
-
-  /api/delete-account:
-    post:
-      operationId: R110
-      summary: 'R110: Delete Account'
-      description: 'Deletes the account of the currently authenticated user and signs them out. Access: USR'
-      tags:
-        - 'M01: Authentication and User Profile'
-      responses:
-        '302':
-          description: 'Redirect user after account deletion.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Successful account deletion. Redirect to home page.'
-                  value: '/'
-                302Error:
-                  description: 'An error occurred during account deletion. Redirect to edit profile form.'
-                  value: '/profile/{username}/edit'
+                  value: '/user/{username}/edit'
