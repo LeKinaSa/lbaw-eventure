@@ -133,3 +133,96 @@ paths:
                   description: 'Account could not be created (username or email already in use). Redirect to sign up form.'
                   value: '/sign-up'
   
+  /profile/{username}:
+    get:
+      operationId: R106
+      summary: 'R106: View User Profile'
+      description: 'Show an individual user profile. Access: USR, ADM'
+      tags:
+        - 'M01: Authentication and User Profile'
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI05](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui05-user-profile)'
+        # TODO: 404?
+
+  /profile/{username}/edit:
+    get:
+      operationId: R107
+      summary: 'R107: Edit Profile Form'
+      description: 'Provides a form that allows users to edit their account details. Access: USR'
+      tags:
+        - 'M01: Authentication and User Profile'
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI06](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui06-edit-profile)'
+        '403':
+          description: 'Forbidden: attempted to edit account details of another user.'
+        # TODO: 404?
+    post:
+      operationId: R108
+      summary: 'R108: Edit Profile Action'
+      description: 'Processes information sent through the edit profile form. Access: USR'
+      tags:
+        - 'M01: Authentication and User Profile'
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                description:
+                  type: string
+                gender:
+                  type: string
+                age:
+                  type: integer
+                location:
+                  type: string
+                website:
+                  type: string
+              required:
+                - name
+                - username
+                - email
+      responses:
+        '302':
+          description: 'Redirect user after processing the form information, depending on whether an error occurred or not.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Account details were changed successfully. Redirect to user profile'
+                  value: 'profile/{username}'
+                302Error:
+                  description: 'An error occurred while changing the account details. Redirect to edit profile form.'
+                  value: 'profile/{username}/edit'
+        '403':
+          description: 'Forbidden: attempted to edit account details of another user.'
+        # TODO: 404?
