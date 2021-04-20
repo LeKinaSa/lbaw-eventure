@@ -403,6 +403,103 @@ paths:
                       location: null
                       maxAttendance: 40
     
+  /event/{id}:
+    get:
+      operationId: R202
+      summary: 'R202: View Event'
+      description: 'Show a specific event. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI09](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui09-event)'
+  
+  /event/{id}/edit:
+    get:
+      operationId: R203
+      summary: 'R203: Edit Event Form'
+      description: 'Provides a form that allows an organizer to edit the details of their event. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI10](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui10-create-edit-event)'
+    post:
+      operationId: R204
+      summary: 'R204: Edit Event Action'
+      description: 'Processes information sent through the edit event form. Access: OWN'
+      tags: 
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                visibility:
+                  type: string
+                type:
+                  type: string
+                address:
+                  type: string
+                startDate:
+                  type: string
+                startTime:
+                  type: string
+                finishDate:
+                  type: string
+                finishTime:
+                  type: string
+                category:
+                  type: string
+                tags:
+                  type: string
+                  description: 'Tags are separated by commas'
+                maxAttendance:
+                  type: integer
+              required:
+                - name
+                - description
+                - visibility
+                - type
+                - category
+      responses:
+        '302':
+          description: 'Redirect user after processing the form information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Event details were successfully changed. Redirect to event page.'
+                  value: '/event/{id}'
+                302Error:
+                  description: 'An error occurred while changing event details. Redirect to edit event form.'
+                  value: '/event/{id}/edit'
   # M04: Static Pages
 
   /faq:
