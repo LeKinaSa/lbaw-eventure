@@ -366,3 +366,56 @@ paths:
       responses:
         '200':
           description: 'Ok. Show [UI18](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui18-event-metrics)'
+  
+  /api/suspend-user:
+    post:
+      operationId: R504
+      summary: 'R504: Suspend User API'
+      description: 'Suspends the specified user, preventing them from accessing the site for a certain amount of time. Access: ADM'
+      tags:
+        - 'M05: Administration'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                duration:
+                  type: string
+                reason:
+                  type: string
+              required:
+                - id
+                - duration
+                - reason
+      responses:
+        '200': # TODO
+          description: 'User was successfully suspended'
+
+  /api/ban-user:
+    post:
+      operationId: R505
+      summary: 'R505: Ban User API'
+      description: 'Bans the specified user, permanently preventing them from accessing the site. Access: ADM'
+      tags:
+        - 'M05: Administration'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                reason:
+                  type: string
+              required:
+                - id
+                - reason
+      responses:
+        '200': # TODO
+          description: 'User was successfully banned'
