@@ -243,8 +243,8 @@ paths:
               properties:
                 password:
                   type: string
-                required:
-                  - password
+              required:
+                - password
       responses:
         '302':
           description: 'Redirect user after account deletion.'
@@ -331,3 +331,38 @@ paths:
       responses:
         '200':
           description: 'Ok. Show [UI15](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui15-contacts)'
+
+  # M05: Administration
+
+  /admin/user-management:
+    get:
+      operationId: R501
+      summary: 'R501: User Management'
+      description: 'Show a page containing all the users that have been suspended or banned. Access: ADM'
+      tags:
+        - 'M05: Administration'
+      responses:
+        '200':
+          description: 'Ok. Show [UI16](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui16-user-management)'
+  
+  /admin/user-metrics:
+    get:
+      operationId: R502
+      summary: 'R502: View User Metrics'
+      description: 'Show a page containing user-related statistics. Access: ADM'
+      tags:
+        - 'M05: Administration'
+      responses:
+        '200':
+          description: 'Ok. Show [UI17](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui17-user-metrics)'
+  
+  /admin/event-metrics:
+    get:
+      operationId: R503
+      summary: 'R503: View Event Metrics'
+      description: 'Show a page containing event-related statistics. Access: ADM'
+      tags:
+        - 'M05: Administration'
+      responses:
+        '200':
+          description: 'Ok. Show [UI18](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui18-event-metrics)'
