@@ -297,6 +297,112 @@ paths:
                   description: 'An error occurred when changing password. Redirect to edit profile form.'
                   value: '/user/{username}/edit'
 
+  # M02: Events
+
+  /api/search-events:
+    get:
+      operationId: R201
+      summary: 'R201: Search Events API'
+      description: 'Searches for events and returns the result as JSON. Several filters are available to narrow down the search. Access: PUB'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: query
+          name: query
+          description: 'String to be used in the full-text search'
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: dateFrom
+          description: 'Filters events that start at or after the specified date'
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: dateTo
+          description: 'Filters events that end at or before the specified date'
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: type
+          description: 'Filters events whose type is one of the specified types'
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+        - in: query
+          name: category
+          description: 'Filters events by their category'
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: tags
+          description: 'Filters events by their user-defined tags'
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+      responses:
+        '200':
+          description: 'Success. Contains a list of events that match the search parameters'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    idOrganizer:
+                      type: integer
+                    organizerUsername:
+                      type: string
+                    organizerName:
+                      type: string
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    startDate:
+                      type: string
+                    endDate:
+                      type: string
+                    type:
+                      type: string
+                    location:
+                      type: string
+                    maxAttendance:
+                      type: integer
+                  example:
+                    - id: 1
+                      idOrganizer: 2
+                      organizerUsername: 'rick1993'
+                      organizerName: 'Richard Stevenson'
+                      title: 'Magic: The Gathering Strixhaven Draft'
+                      description: 'Come draft the new set in a friendly environment. Players of all skill levels are welcome!'
+                      startDate: '2021-05-15 14:00'
+                      endDate: '2021-05-15 20:00'
+                      type: 'InPerson'
+                      location: 'Friendly Local Game Store, 123 John Doe Street'
+                      maxAttendance: 32
+                    - id: 3
+                      idOrganizer: 4
+                      organizerUsername: 'mattparker'
+                      organizerName: 'Matt Parker'
+                      title: 'League of Legends Tournament'
+                      description: 'Assemble an team and compete in this two-day tournament for a chance to win great prizes.'
+                      startDate: '2021-06-01 15:00'
+                      endDate: '2021-06-02 22:00'
+                      type: 'Virtual'
+                      location: null
+                      maxAttendance: 40
+    
   # M04: Static Pages
 
   /faq:
