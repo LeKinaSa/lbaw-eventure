@@ -63,7 +63,7 @@ paths:
                 302Error:
                   description: 'Failed authentication (username or password did not match). Redirect to sign in form.'
                   value: '/sign-in'
-    
+
   /sign-out:
     post:
       operationId: R103
@@ -82,7 +82,7 @@ paths:
                 302Success:
                   description: 'Successful sign out. Redirect to sign in form.'
                   value: '/sign-in'
-    
+
   /sign-up:
     get:
       operationId: R104
@@ -133,7 +133,7 @@ paths:
                 302Error:
                   description: 'Account could not be created (username or email already in use). Redirect to sign up form.'
                   value: '/sign-up'
-  
+
   /user/{username}:
     get:
       operationId: R106
@@ -402,7 +402,7 @@ paths:
                       type: 'Virtual'
                       location: null
                       maxAttendance: 40
-    
+
   /event/{id}:
     get:
       operationId: R202
@@ -419,7 +419,7 @@ paths:
       responses:
         '200':
           description: 'Ok. Show [UI09](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui09-event)'
-  
+
   /event/{id}/edit:
     get:
       operationId: R203
@@ -500,6 +500,207 @@ paths:
                 302Error:
                   description: 'An error occurred while changing event details. Redirect to edit event form.'
                   value: '/event/{id}/edit'
+
+  /api/event/{id}/comments:
+    get:
+      operationId: R205
+      summary: 'R205: Get Event Comments'
+      description: 'Returns the comments of the specified event in JSON format, ordered by date. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Contains a list of all comments from the specified event, ordered by date.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    idAuthor:
+                      type: integer
+                    authorUsername:
+                      type: string
+                    authorName:
+                      type: string
+                    idParent:
+                      type: integer
+                    text:
+                      type: string
+                    date:
+                      type: string
+                  example:
+                    - id: 1
+                      idAuthor: 2
+                      authorUsername: 'rick1993'
+                      authorName: 'Richard Stevenson'
+                      idParent: null
+                      text: 'What is the time control for the chess matches?'
+                      date: '2021-04-21 21:02:05'
+                    - id: 2
+                      idAuthor: 6
+                      authorUsername: 'sophiesmith'
+                      authorName: 'Sophie Smith'
+                      idParent: 1
+                      text: 'The time control will be 10 minutes with 5 seconds increment for all matches.'
+                      date: '2021-04-21 22:22:54'
+
+  /api/event/{id}/comments/new:
+    post:
+      operationId: R206
+      summary: 'R206: Add Comment'
+      description: 'Adds a new comment to the specified event. Access: OWN, PAR'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                idParent:
+                  - type: integer
+                text:
+                  - type: string
+              required:
+                - idParent
+                - text
+      responses:
+        # TODO
+
+  /api/event/{id}/polls:
+    get:
+      operationId: R207
+      summary: 'R207: Get Event Polls'
+      description: 'Returns information about the polls of the specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Contains a list of all polls from the specified event.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    question:
+                      type: string
+                  example:
+                    - id: 1
+                      question: 'What time control would you prefer for the matches?'
+                    - id: 2
+                      question: 'Do you prefer playing with the white pieces or the black pieces?'
+
+  /api/event/{id}/polls/{idPoll}:
+    get:
+      operationId: R208
+      summary: 'R208: Get Poll Information'
+      description: 'Returns information about a poll from the specified event (its options as well as the amount of votes each one has) in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idPoll
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Contains information about the specified poll.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    option:
+                      type: string
+                    voteCount:
+                      type: integer
+                  example:
+                    - id: 1
+                      option: '10 + 0'
+                      voteCount: 2
+                    - id: 2
+                      option: '10 + 3'
+                      voteCount: 3
+                    - id: 3
+                      option: '10 + 5'
+                      voteCount: 7
+
+  /api/event/{id}/polls/new:
+    post:
+      operationId: R209
+      summary: 'R209: Add Poll'
+      description: 'Adds a new poll to the specified event. Access: OWN'
+      tags:
+        'M02 - Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+
+      responses:
+
+  # M03: Matches and Leaderboards
+
+  /event/{id}/matches:
+    get:
+      operationId: R301
+      summary: 'R301: Matches and Leaderboards'
+      description: 'Show Matches and Leaderboards'
+      tags:
+        - 'M03: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI12](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui12-results)'
+
   # M04: Static Pages
 
   /faq:
@@ -512,7 +713,7 @@ paths:
       responses:
         '200':
           description: 'Ok. Show [UI13](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui13-faq)'
-  
+
   /about:
     get:
       operationId: R402
@@ -523,7 +724,7 @@ paths:
       responses:
         '200':
           description: 'Ok. Show [UI14](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui14-about)'
-  
+
   /contacts:
     get:
       operationId: R403
@@ -547,7 +748,7 @@ paths:
       responses:
         '200':
           description: 'Ok. Show [UI16](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui16-user-management)'
-  
+
   /admin/user-metrics:
     get:
       operationId: R502
@@ -558,7 +759,7 @@ paths:
       responses:
         '200':
           description: 'Ok. Show [UI17](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui17-user-metrics)'
-  
+
   /admin/event-metrics:
     get:
       operationId: R503
@@ -569,7 +770,7 @@ paths:
       responses:
         '200':
           description: 'Ok. Show [UI18](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui18-event-metrics)'
-  
+
   /api/suspend-user:
     post:
       operationId: R504
