@@ -743,8 +743,8 @@ paths:
   /events/{id}/matches:
     get:
       operationId: R301
-      summary: 'R301: Get Event Matches and Leaderboard'
-      description: 'Show matches and leaderboard for a specific event. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      summary: 'R301: View Matches and Leaderboard'
+      description: 'Show match results page for a specific event. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
         - 'M03: Matches and Leaderboards'
       parameters:
@@ -984,8 +984,8 @@ paths:
 
   /api/events/{id}/update-leaderboard:
     post:
-      operationId: R302
-      summary: 'R302: Update Leaderboard'
+      operationId: R307
+      summary: 'R307: Update Leaderboard'
       description: 'Updates the leaderboard of the specified event and returns it in JSON format. Access: OWN'
       tags:
         - 'M03: Matches and Leaderboards'
