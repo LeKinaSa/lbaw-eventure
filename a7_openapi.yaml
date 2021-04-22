@@ -668,7 +668,7 @@ paths:
       summary: 'R209: Add Poll'
       description: 'Adds a new poll to the specified event. Access: OWN'
       tags:
-        'M02 - Events'
+        'M02: Events'
       parameters:
         - in: path
           name: id
@@ -687,19 +687,208 @@ paths:
   /event/{id}/matches:
     get:
       operationId: R301
-      summary: 'R301: Matches and Leaderboards'
-      description: 'Show Matches and Leaderboards'
+      summary: 'R301: Get Event Matches and Leaderboard'
+      description: 'Show Matches and Leaderboard for a specific event. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
         - 'M03: Matches and Leaderboards'
       parameters:
         - in: path
           name: id
           schema:
-            type: string
+            type: integer
           required: true
       responses:
         '200':
           description: 'Ok. Show [UI12](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui12-results)'
+
+  /event/{id}/update-leaderboard:
+    post:
+      operationId: R302
+      summary: 'R302: Update Leaderboard'
+      description: 'Updates the leaderboard of the specified event and returns it in JSON format. Access: OWN'
+      tags:
+        - 'M03: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Contains information about the leaderboard.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    games:
+                      type: integer
+                    wins:
+                      type: integer
+                    draws:
+                      type: integer
+                    losses:
+                      type: integer
+                    points:
+                      type: number
+  
+  /event/{id}/competitor-new:
+    post:
+      operationId: R303
+      summary: 'R303: Add competitor'
+      description: 'Adds a new competitor to the specified event. Access: OWN'
+      tags:
+        - 'M03: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  - type: string
+              required:
+                - name
+      responses:
+        # TODO
+  
+  /event/{id}/match/new:
+    post:
+      operationId: R304
+      summary: 'R304: Add match'
+      description: 'Adds a new match to the specified event. Access: OWN'
+      tags:
+        - 'M03: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                competitor1:
+                  - type: integer
+                competitor2:
+                  - type: integer
+                date:
+                  - type: string
+                description:
+                  - type: string
+                result:
+                  - type: string
+              required:
+                - competitor1
+                - competitor2
+                - result
+      responses:
+        # TODO
+  
+  /event/{id}/match/{matchId}/edit:
+    post:
+      operationId: R305
+      summary: 'R305: Edit Match Action'
+      description: 'Processes information sent through the edit match form. Access: OWN'
+      tags:
+        - 'M03: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: matchId
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                competitor1:
+                  - type: integer
+                competitor2:
+                  - type: integer
+                date:
+                  - type: string
+                description:
+                  - type: string
+                result:
+                  - type: string
+              required:
+                - competitor1
+                - competitor2
+                - result
+      responses:
+        '302':
+          description: 'Redirect user after processing the form information, depending on whether an error occurred or not.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Match details were changed successfully. Redirect to matches and leaderboard.'
+                  value: '/event/{id}/matches'
+                302Error:
+                  description: 'An error occurred while changing the match details. Redirect to edit match form.'
+                  value: '/event/{id}/match/{matchId}/edit'
+
+  /event/{id}/match/{matchId}/delete:
+    post:
+      operationId: R306
+      summary: 'R306: Delete Match'
+      description: 'Deletes the specified match from the event. Access: OWN'
+      tags:
+        - 'M03: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+         - in: path
+          name: matchId
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        # TODO
+      responses:
+        '302':
+          description: 'Redirect user after match deletion.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful match deletion. Redirect to macthes and leaderboard.'
+                  value: '/event/{id}/matches'
+                302Error:
+                  description: 'An error occurred during match deletion. Redirect to edit match form.'
+                  value: '/event/{id}/match/{matchId}/edit'
 
   # M04: Static Pages
 
