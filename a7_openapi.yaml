@@ -994,7 +994,6 @@ paths:
       responses:
         '200':
           description: 'Ok. Show [UI01](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui01-home)'
-        
 
   /faq:
     get:
@@ -1009,8 +1008,8 @@ paths:
 
   /about:
     get:
-      operationId: R402
-      summary: 'R402: About'
+      operationId: R403
+      summary: 'R403: About'
       description: 'Show a page summarizing the functionality and objectives of the website. Access: PUB'
       tags:
         - 'M04: Static Pages'
@@ -1020,8 +1019,8 @@ paths:
 
   /contacts:
     get:
-      operationId: R403
-      summary: 'R403: Contacts'
+      operationId: R404
+      summary: 'R404: Contacts'
       description: 'Show contact information and social media links. Access: PUB'
       tags:
         - 'M04: Static Pages'
