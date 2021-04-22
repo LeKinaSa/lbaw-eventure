@@ -573,9 +573,9 @@ paths:
               type: object
               properties:
                 idParent:
-                  - type: integer
+                  type: integer
                 text:
-                  - type: string
+                  type: string
               required:
                 - idParent
                 - text
@@ -609,7 +609,6 @@ paths:
                     idParent: null
                     text: 'Looking forward to the Daredevils vs Ascend game!'
                     date: '2021-05-20 17:15:21'
-
 
   /api/events/{id}/polls:
     get:
@@ -648,7 +647,7 @@ paths:
       summary: 'R208: Add Poll'
       description: 'Adds a new poll to the specified event. Access: OWN'
       tags:
-        'M02: Events'
+        - 'M02: Events'
       parameters:
         - in: path
           name: id
@@ -659,7 +658,40 @@ paths:
         required: true
         content:
           application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: string
+                options:
+                  type: string
+                  description: 'Options are separated by newline (\n) characters. Minimum of two options.'
+              required:
+                - question
+                - options
       responses:
+        '200':
+          description: 'Success. Returns a JSON representation of the new poll.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  question:
+                    type: string
+                  options:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        option:
+                          type: string
+                        voteCount:
+                          type: integer
 
   /api/events/{id}/polls/{idPoll}:
     get:
@@ -782,16 +814,18 @@ paths:
               type: object
               properties:
                 name:
-                  - type: string
+                  type: string
               required:
                 - name
       responses:
+        '200':
+          description: 'Success. Returns a JSON representation of the new competitor.'
         # TODO
 
   /api/events/{id}/matches:
     post:
       operationId: R304
-      summary: 'R304: Add match'
+      summary: 'R304: Add Match'
       description: 'Adds a new match to the specified event. Access: OWN'
       tags:
         - 'M03: Matches and Leaderboards'
@@ -808,27 +842,57 @@ paths:
             schema:
               type: object
               properties:
-                competitor1:
-                  - type: integer
-                competitor2:
-                  - type: integer
+                idCompetitor1:
+                  type: integer
+                idCompetitor2:
+                  type: integer
                 date:
-                  - type: string
+                  type: string
                 description:
-                  - type: string
+                  type: string
                 result:
-                  - type: string
+                  type: string
               required:
-                - competitor1
-                - competitor2
+                - idCompetitor1
+                - idCompetitor2
                 - result
       responses:
-        # TODO
+        '200':
+          description: 'Success. Returns a JSON representation of the new match.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  idCompetitor1:
+                    type: integer
+                  nameCompetitor1:
+                    type: string
+                  idCompetitor2:
+                    type: integer
+                  nameCompetitor2:
+                    type: string
+                  date:
+                    type: string
+                  description:
+                    type: string
+                  result:
+                    type: string
+                example:
+                  - id: 2
+                    idCompetitor1: 1
+                    nameCompetitor1: 'Daredevils'
+                    idCompetitor2: 2
+                    nameCompetitor2: 'Ascend'
+                    date: '2021-05-22 20:00'
+                    result: 'TBD'
 
   /api/events/{id}/matches/{idMatch}:
     put:
       operationId: R305
-      summary: 'R305: Edit Match Action'
+      summary: 'R305: Edit Match'
       description: 'Processes information sent through the edit match form. Access: OWN'
       tags:
         - 'M03: Matches and Leaderboards'
@@ -850,19 +914,19 @@ paths:
             schema:
               type: object
               properties:
-                competitor1:
-                  - type: integer
-                competitor2:
-                  - type: integer
+                idCompetitor1:
+                  type: integer
+                idCompetitor2:
+                  type: integer
                 date:
-                  - type: string
+                  type: string
                 description:
-                  - type: string
+                  type: string
                 result:
-                  - type: string
+                  type: string
               required:
-                - competitor1
-                - competitor2
+                - idCompetitor1
+                - idCompetitor2
                 - result
       responses:
         '200':
@@ -872,7 +936,31 @@ paths:
               schema:
                 type: object
                 properties:
+                  id:
+                    type: integer
+                  idCompetitor1:
+                    type: integer
+                  nameCompetitor1:
+                    type: string
+                  idCompetitor2:
+                    type: integer
+                  nameCompetitor2:
+                    type: string
+                  date:
+                    type: string
+                  description:
+                    type: string
+                  result:
+                    type: string
                 example:
+                  - id: 2
+                    idCompetitor1: 1
+                    nameCompetitor1: 'Daredevils'
+                    idCompetitor2: 2
+                    nameCompetitor2: 'Ascend'
+                    date: '2021-05-22 20:00'
+                    description: 'Very exciting and close games. Daredevils win the best-of-five series 3-2.'
+                    result: 'Winner1'
     delete:
       operationId: R306
       summary: 'R306: Delete Match'
@@ -896,10 +984,22 @@ paths:
 
   # M04: Static Pages
 
-  /faq:
+  /:
     get:
       operationId: R401
-      summary: 'R401: Frequent Asked Questions'
+      summary: 'R401: Home'
+      description: 'Show the home page. Access: PUB'
+      tags:
+        - 'M04: Static Pages'
+      responses:
+        '200':
+          description: 'Ok. Show [UI01](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui01-home)'
+        
+
+  /faq:
+    get:
+      operationId: R402
+      summary: 'R402: Frequent Asked Questions'
       description: 'Show frequently asked questions and their answers. Access: PUB'
       tags:
         - 'M04: Static Pages'
