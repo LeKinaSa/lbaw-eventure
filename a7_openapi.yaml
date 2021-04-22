@@ -760,7 +760,7 @@ paths:
                       type: integer
                     points:
                       type: number
-  
+
   /api/events/{id}/competitors:
     post:
       operationId: R303
@@ -787,7 +787,7 @@ paths:
                 - name
       responses:
         # TODO
-  
+
   /api/events/{id}/matches:
     post:
       operationId: R304
@@ -824,7 +824,7 @@ paths:
                 - result
       responses:
         # TODO
-  
+
   /api/events/{id}/matches/{idMatch}:
     put:
       operationId: R305
@@ -885,7 +885,7 @@ paths:
           schema:
             type: integer
           required: true
-         - in: path
+        - in: path
           name: idMatch
           schema:
             type: integer
