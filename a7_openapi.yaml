@@ -59,7 +59,7 @@ paths:
               examples:
                 302Success:
                   description: 'Successful authentication. Redirect to user profile.'
-                  value: '/user/{username}'
+                  value: '/users/{username}'
                 302Error:
                   description: 'Failed authentication (username or password did not match). Redirect to sign in form.'
                   value: '/sign-in'
@@ -129,12 +129,12 @@ paths:
               examples:
                 302Success:
                   description: 'Successful authentication. Redirect to edit user profile.'
-                  value: '/user/{username}/edit'
+                  value: '/users/{username}/edit'
                 302Error:
                   description: 'Account could not be created (username or email already in use). Redirect to sign up form.'
                   value: '/sign-up'
 
-  /user/{username}:
+  /users/{username}:
     get:
       operationId: R106
       summary: 'R106: View User Profile'
@@ -151,7 +151,7 @@ paths:
         '200':
           description: 'Ok. Show [UI05](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui05-user-profile)'
 
-  /user/{username}/edit:
+  /users/{username}/edit:
     get:
       operationId: R107
       summary: 'R107: Edit Profile Form'
@@ -216,12 +216,12 @@ paths:
               examples:
                 302Success:
                   description: 'Account details were changed successfully. Redirect to user profile'
-                  value: '/user/{username}'
+                  value: '/users/{username}'
                 302Error:
                   description: 'An error occurred while changing the account details. Redirect to edit profile form.'
-                  value: '/user/{username}/edit'
+                  value: '/users/{username}/edit'
 
-  /user/{username}/delete:
+  /users/{username}/delete:
     post:
       operationId: R109
       summary: 'R109: Delete Account'
@@ -258,7 +258,7 @@ paths:
                   value: '/'
                 302Error:
                   description: 'An error occurred during account deletion. Redirect to edit profile form.'
-                  value: '/user/{username}/edit'
+                  value: '/users/{username}/edit'
 
   /api/change-password:
     post:
@@ -292,14 +292,14 @@ paths:
               examples:
                 302Success:
                   description: 'Password was successfully changed. Redirect to user profile.'
-                  value: '/user/{username}'
+                  value: '/users/{username}'
                 302Error:
                   description: 'An error occurred when changing password. Redirect to edit profile form.'
-                  value: '/user/{username}/edit'
+                  value: '/users/{username}/edit'
 
   # M02: Events
 
-  /api/search-events:
+  /api/events:
     get:
       operationId: R201
       summary: 'R201: Search Events API'
@@ -403,7 +403,7 @@ paths:
                       location: null
                       maxAttendance: 40
 
-  /event/{id}:
+  /events/{id}:
     get:
       operationId: R202
       summary: 'R202: View Event'
@@ -420,7 +420,7 @@ paths:
         '200':
           description: 'Ok. Show [UI09](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui09-event)'
 
-  /event/{id}/edit:
+  /events/{id}/edit:
     get:
       operationId: R203
       summary: 'R203: Edit Event Form'
@@ -496,12 +496,12 @@ paths:
               examples:
                 302Success:
                   description: 'Event details were successfully changed. Redirect to event page.'
-                  value: '/event/{id}'
+                  value: '/events/{id}'
                 302Error:
                   description: 'An error occurred while changing event details. Redirect to edit event form.'
-                  value: '/event/{id}/edit'
+                  value: '/events/{id}/edit'
 
-  /api/event/{id}/comments:
+  /api/events/{id}/comments:
     get:
       operationId: R205
       summary: 'R205: Get Event Comments'
@@ -553,8 +553,6 @@ paths:
                       idParent: 1
                       text: 'The time control will be 10 minutes with 5 seconds increment for all matches.'
                       date: '2021-04-21 22:22:54'
-
-  /api/event/{id}/comments/new:
     post:
       operationId: R206
       summary: 'R206: Add Comment'
@@ -582,9 +580,38 @@ paths:
                 - idParent
                 - text
       responses:
-        # TODO
+        '200':
+          description: 'Success. Returns a JSON representation of the new comment.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  idAuthor:
+                    type: integer
+                  authorUsername:
+                    type: string
+                  authorName:
+                    type: string
+                  idParent:
+                    type: integer
+                  text:
+                    type: string
+                  date:
+                    type: string
+                example:
+                  - id: 5
+                    idAuthor: 4
+                    authorUsername: 'cheesepizza'
+                    authorName: 'Jack Rodgers'
+                    idParent: null
+                    text: 'Looking forward to the Daredevils vs Ascend game!'
+                    date: '2021-05-20 17:15:21'
 
-  /api/event/{id}/polls:
+
+  /api/events/{id}/polls:
     get:
       operationId: R207
       summary: 'R207: Get Event Polls'
@@ -616,11 +643,28 @@ paths:
                       question: 'What time control would you prefer for the matches?'
                     - id: 2
                       question: 'Do you prefer playing with the white pieces or the black pieces?'
-
-  /api/event/{id}/polls/{idPoll}:
-    get:
+    post:
       operationId: R208
-      summary: 'R208: Get Poll Information'
+      summary: 'R208: Add Poll'
+      description: 'Adds a new poll to the specified event. Access: OWN'
+      tags:
+        'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+      responses:
+
+  /api/events/{id}/polls/{idPoll}:
+    get:
+      operationId: R209
+      summary: 'R209: Get Poll Information'
       description: 'Returns information about a poll from the specified event (its options as well as the amount of votes each one has) in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
         - 'M02: Events'
@@ -662,29 +706,9 @@ paths:
                       option: '10 + 5'
                       voteCount: 7
 
-  /api/event/{id}/polls/new:
-    post:
-      operationId: R209
-      summary: 'R209: Add Poll'
-      description: 'Adds a new poll to the specified event. Access: OWN'
-      tags:
-        'M02: Events'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-
-      responses:
-
   # M03: Matches and Leaderboards
 
-  /event/{id}/matches:
+  /events/{id}/matches:
     get:
       operationId: R301
       summary: 'R301: Get Event Matches and Leaderboard'
@@ -701,7 +725,7 @@ paths:
         '200':
           description: 'Ok. Show [UI12](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui12-results)'
 
-  /event/{id}/update-leaderboard:
+  /api/events/{id}/update-leaderboard:
     post:
       operationId: R302
       summary: 'R302: Update Leaderboard'
@@ -737,7 +761,7 @@ paths:
                     points:
                       type: number
   
-  /event/{id}/competitor-new:
+  /api/events/{id}/competitors:
     post:
       operationId: R303
       summary: 'R303: Add competitor'
@@ -764,7 +788,7 @@ paths:
       responses:
         # TODO
   
-  /event/{id}/match/new:
+  /api/events/{id}/matches:
     post:
       operationId: R304
       summary: 'R304: Add match'
@@ -801,8 +825,8 @@ paths:
       responses:
         # TODO
   
-  /event/{id}/match/{matchId}/edit:
-    post:
+  /api/events/{id}/matches/{idMatch}:
+    put:
       operationId: R305
       summary: 'R305: Edit Match Action'
       description: 'Processes information sent through the edit match form. Access: OWN'
@@ -815,7 +839,7 @@ paths:
             type: integer
           required: true
         - in: path
-          name: matchId
+          name: idMatch
           schema:
             type: integer
           required: true
@@ -841,22 +865,15 @@ paths:
                 - competitor2
                 - result
       responses:
-        '302':
-          description: 'Redirect user after processing the form information, depending on whether an error occurred or not.'
-          headers:
-            Location:
+        '200':
+          description: 'Success. Returns a JSON representation of the edited match.'
+          content:
+            application/json:
               schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Match details were changed successfully. Redirect to matches and leaderboard.'
-                  value: '/event/{id}/matches'
-                302Error:
-                  description: 'An error occurred while changing the match details. Redirect to edit match form.'
-                  value: '/event/{id}/match/{matchId}/edit'
-
-  /event/{id}/match/{matchId}/delete:
-    post:
+                type: object
+                properties:
+                example:
+    delete:
       operationId: R306
       summary: 'R306: Delete Match'
       description: 'Deletes the specified match from the event. Access: OWN'
@@ -869,26 +886,13 @@ paths:
             type: integer
           required: true
          - in: path
-          name: matchId
+          name: idMatch
           schema:
             type: integer
           required: true
-      requestBody:
-        # TODO
       responses:
-        '302':
-          description: 'Redirect user after match deletion.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Successful match deletion. Redirect to macthes and leaderboard.'
-                  value: '/event/{id}/matches'
-                302Error:
-                  description: 'An error occurred during match deletion. Redirect to edit match form.'
-                  value: '/event/{id}/match/{matchId}/edit'
+        '200':
+          description: 'Success.'
 
   # M04: Static Pages
 
