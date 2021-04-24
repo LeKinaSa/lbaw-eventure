@@ -1,0 +1,1551 @@
+openapi: 3.0.0
+
+info:
+  version: '1.0'
+  title: 'Eventure Web API'
+  description: 'Web resources specification (A7) for Eventure'
+
+servers:
+- url: http://lbaw2136.lbaw-prod.fe.up.pt
+  description: Production server
+
+tags:
+  - name: 'M01: Authentication and User Profile'
+  - name: 'M02: Events'
+  - name: 'M03: Comments and Polls'
+  - name: 'M04: Matches and Leaderboards'
+  - name: 'M05: Static Pages'
+  - name: 'M06: Administration'
+
+paths:
+  # M01: Authentication and User Profile
+
+  /sign-in:
+    get:
+      operationId: R101
+      summary: 'R101: Sign In Form'
+      description: 'Provides a sign in form, allowing users to authenticate themselves. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      responses:
+        '200':
+          description: 'Ok. Show [UI02](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui02-sign-in)'
+    post:
+      operationId: R102
+      summary: 'R102: Sign In Action'
+      description: 'Processes information sent through the sign in form. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '302':
+          description: 'Redirect user after processing the sign in credentials, depending on whether the authentication was successful or not.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to user profile.'
+                  value: '/users/{username}'
+                302Error:
+                  description: 'Failed authentication (username or password did not match). Redirect to sign in form.'
+                  value: '/sign-in'
+
+  /sign-out:
+    post:
+      operationId: R103
+      summary: 'R103: Sign Out Action'
+      description: 'Ends the session of the currently authenticated user. Access: USR, ADM'
+      tags:
+        - 'M01: Authentication and User Profile'
+      responses:
+        '302':
+          description: 'Redirect user after signing them out.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful sign out. Redirect to sign in form.'
+                  value: '/sign-in'
+
+  /sign-up:
+    get:
+      operationId: R104
+      summary: 'R104: Sign Up Form'
+      description: 'Provides a sign up form, allowing users to create a new account. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      responses:
+        '200':
+          description: 'Ok. Show [UI03](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui03-sign-up)'
+    post:
+      operationId: R105
+      summary: 'R105: Sign Up Action'
+      description: 'Processes the information sent through the sign up form. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - name
+                - username
+                - email
+                - password
+      responses:
+        '302':
+          description: 'Redirect user after processing the sign up information, depending on whether the account was created successfully or not.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to edit user profile.'
+                  value: '/users/{username}/edit'
+                302Error:
+                  description: 'Account could not be created (username or email already in use). Redirect to sign up form.'
+                  value: '/sign-up'
+
+  /users/{username}:
+    get:
+      operationId: R106
+      summary: 'R106: View User Profile'
+      description: 'Show an individual user profile. Access: USR, ADM'
+      tags:
+        - 'M01: Authentication and User Profile'
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI05](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui05-user-profile)'
+
+  /users/{username}/edit:
+    get:
+      operationId: R107
+      summary: 'R107: Edit Profile Form'
+      description: 'Provides a form that allows users to edit their account details. Access: OWN'
+      tags:
+        - 'M01: Authentication and User Profile'
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI06](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui06-edit-profile)'
+    post:
+      operationId: R108
+      summary: 'R108: Edit Profile Action'
+      description: 'Processes information sent through the edit profile form. Access: OWN'
+      tags:
+        - 'M01: Authentication and User Profile'
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                description:
+                  type: string
+                gender:
+                  type: string
+                age:
+                  type: integer
+                location:
+                  type: string
+                website:
+                  type: string
+              required:
+                - name
+                - username
+                - email
+      responses:
+        '302':
+          description: 'Redirect user after processing the form information, depending on whether an error occurred or not.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Account details were changed successfully. Redirect to user profile'
+                  value: '/users/{username}'
+                302Error:
+                  description: 'An error occurred while changing the account details. Redirect to edit profile form.'
+                  value: '/users/{username}/edit'
+
+  /users/{username}/delete:
+    post:
+      operationId: R109
+      summary: 'R109: Delete Account'
+      description: 'Deletes the account of the currently authenticated user and signs them out. Access: OWN'
+      tags:
+        - 'M01: Authentication and User Profile'
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+              required:
+                - password
+      responses:
+        '302':
+          description: 'Redirect user after account deletion.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful account deletion. Redirect to home page.'
+                  value: '/'
+                302Error:
+                  description: 'An error occurred during account deletion. Redirect to edit profile form.'
+                  value: '/users/{username}/edit'
+
+  /api/change-password:
+    post:
+      operationId: R110
+      summary: 'R110: Change Password'
+      description: 'Changes the password of the currently authenticated user. Access: USR'
+      tags:
+        - 'M01: Authentication and User Profile'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                oldPassword:
+                  type: string
+                newPassword:
+                  type: string
+              required:
+                - oldPassword
+                - newPassword
+      responses:
+        # TODO
+        '302':
+          description: 'Redirect user after changing their password.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Password was successfully changed. Redirect to user profile.'
+                  value: '/users/{username}'
+                302Error:
+                  description: 'An error occurred when changing password. Redirect to edit profile form.'
+                  value: '/users/{username}/edit'
+
+  # M02: Events
+
+  /api/events:
+    get:
+      operationId: R201
+      summary: 'R201: Search Events'
+      description: 'Searches for events and returns the result as JSON. Several filters are available to narrow down the search. Access: PUB'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: query
+          name: query
+          description: 'String to be used in the full-text search'
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: dateFrom
+          description: 'Filters events that start at or after the specified date'
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: dateTo
+          description: 'Filters events that end at or before the specified date'
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: type
+          description: 'Filters events whose type is one of the specified types'
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+        - in: query
+          name: category
+          description: 'Filters events by their category'
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: tags
+          description: 'Filters events by their user-defined tags'
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+      responses:
+        '200':
+          description: 'Success. Contains a list of events that match the search parameters'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    idOrganizer:
+                      type: integer
+                    organizerUsername:
+                      type: string
+                    organizerName:
+                      type: string
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    startDate:
+                      type: string
+                    endDate:
+                      type: string
+                    type:
+                      type: string
+                    location:
+                      type: string
+                    maxAttendance:
+                      type: integer
+                  example:
+                    - id: 1
+                      idOrganizer: 2
+                      organizerUsername: 'rick1993'
+                      organizerName: 'Richard Stevenson'
+                      title: 'Magic: The Gathering Strixhaven Draft'
+                      description: 'Come draft the new set in a friendly environment. Players of all skill levels are welcome!'
+                      startDate: '2021-05-15 14:00'
+                      endDate: '2021-05-15 20:00'
+                      type: 'InPerson'
+                      location: 'Friendly Local Game Store, 123 John Doe Street'
+                      maxAttendance: 32
+                    - id: 3
+                      idOrganizer: 4
+                      organizerUsername: 'mattparker'
+                      organizerName: 'Matt Parker'
+                      title: 'League of Legends Tournament'
+                      description: 'Assemble an team and compete in this two-day tournament for a chance to win great prizes.'
+                      startDate: '2021-06-01 15:00'
+                      endDate: '2021-06-02 22:00'
+                      type: 'Virtual'
+                      location: null
+                      maxAttendance: 40
+
+  /events/{id}:
+    get:
+      operationId: R202
+      summary: 'R202: View Event'
+      description: 'Show a specific event. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI09](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui09-event)'
+
+  /events/{id}/edit:
+    get:
+      operationId: R203
+      summary: 'R203: Edit Event Form'
+      description: 'Provides a form that allows an organizer to edit the details of their event. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI10](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui10-create-edit-event)'
+    post:
+      operationId: R204
+      summary: 'R204: Edit Event Action'
+      description: 'Processes information sent through the edit event form. Access: OWN'
+      tags: 
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                visibility:
+                  type: string
+                type:
+                  type: string
+                address:
+                  type: string
+                startDate:
+                  type: string
+                startTime:
+                  type: string
+                finishDate:
+                  type: string
+                finishTime:
+                  type: string
+                category:
+                  type: string
+                tags:
+                  type: string
+                  description: 'Tags are separated by commas'
+                maxAttendance:
+                  type: integer
+              required:
+                - name
+                - description
+                - visibility
+                - type
+                - category
+      responses:
+        '302':
+          description: 'Redirect user after processing the form information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Event details were successfully changed. Redirect to event page.'
+                  value: '/events/{id}'
+                302Error:
+                  description: 'An error occurred while changing event details. Redirect to edit event form.'
+                  value: '/events/{id}/edit'
+
+  /events/{id}/delete:
+    post:
+      operationId: R205
+      summary: 'R205: Delete Event Action'
+      description: 'Deletes the specified event and redirects the user. Access: OWN, ADM'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '302':
+          description: 'Redirect user after deleting the event.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Event was successfully deleted. Redirect to home page.'
+                  value: '/'
+                302Error:
+                  description: 'An error occurred when deleting event. Redirect to event page.'
+                  value: '/events/{id}'
+
+  /api/events/{id}/cancel:
+    patch:
+      operationId: R206
+      summary: 'R206: Cancel Event'
+      description: 'Changes the cancellation status of an event. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                cancellationStatus:
+                  type: boolean
+              required:
+                - cancellationStatus
+      responses:
+        '200':
+          description: 'Success.'
+
+  /events/{id}/invitations:
+    get:
+      operationId: R207
+      summary: 'R207: View Invitations'
+      description: 'Show invitations for a specific event. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI11](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui11-invitations)'
+
+  /api/events/{id}/invitations:
+    post:
+      operationId: R208
+      summary: 'R208: Add Invitation'
+      description: 'Invite a user to participate in the event. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+              required:
+                - username
+      responses:
+        '200':
+          description: 'Success. Contains the new invitation in JSON format.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  idUser:
+                    type: integer
+                  username:
+                    type: string
+                  name:
+                    type: string
+                  status:
+                    type: string
+                example:
+                  - id: 1
+                    idUser: 4
+                    username: 'mattparker'
+                    name: 'Matt Parker'
+                    status: 'Invitation'
+  
+  /api/events/{id}/invitations/{idInvitation}:
+    patch:
+      operationId: R209
+      summary: 'R209: Accept / Decline Invitation'
+      description: 'Accept or decline an invitation for an event. Access: USR'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idInvitation
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: 'Status of the invitation (Accepted or Declined)'
+              required:
+                - status
+      responses:
+        '200':
+          description: 'Success. Contains information about the invitation in JSON format.'
+    delete:
+      operationId: R210
+      summary: 'R210: Cancel Invitation'
+      description: 'Cancel an invitation for an event. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idInvitation
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success.'
+
+  /users/{username}/my-events:
+    get:
+      operationId: R211
+      summary: 'R211: View Personal Events'
+      description: 'Shows a list of events the user is organizing or participating in. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI07](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui07-personal-events'
+
+  # M03: Comments and Polls
+
+  /api/events/{id}/comments:
+    get:
+      operationId: R301
+      summary: 'R301: Get Event Comments'
+      description: 'Returns the comments of the specified event in JSON format, ordered by date. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      tags:
+        - 'M03: Comments and Polls'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Contains a list of all comments from the specified event, ordered by date.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    idAuthor:
+                      type: integer
+                    authorUsername:
+                      type: string
+                    authorName:
+                      type: string
+                    idParent:
+                      type: integer
+                    text:
+                      type: string
+                    date:
+                      type: string
+                  example:
+                    - id: 1
+                      idAuthor: 2
+                      authorUsername: 'rick1993'
+                      authorName: 'Richard Stevenson'
+                      idParent: null
+                      text: 'What is the time control for the chess matches?'
+                      date: '2021-04-21 21:02:05'
+                    - id: 2
+                      idAuthor: 6
+                      authorUsername: 'sophiesmith'
+                      authorName: 'Sophie Smith'
+                      idParent: 1
+                      text: 'The time control will be 10 minutes with 5 seconds increment for all matches.'
+                      date: '2021-04-21 22:22:54'
+    post:
+      operationId: R302
+      summary: 'R302: Add Comment'
+      description: 'Adds a new comment to the specified event. Access: OWN, PAR'
+      tags:
+        - 'M03: Comments and Polls'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                idParent:
+                  type: integer
+                text:
+                  type: string
+              required:
+                - idParent
+                - text
+      responses:
+        '200':
+          description: 'Success. Returns a JSON representation of the new comment.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  idAuthor:
+                    type: integer
+                  authorUsername:
+                    type: string
+                  authorName:
+                    type: string
+                  idParent:
+                    type: integer
+                  text:
+                    type: string
+                  date:
+                    type: string
+                example:
+                  - id: 5
+                    idAuthor: 4
+                    authorUsername: 'cheesepizza'
+                    authorName: 'Jack Rodgers'
+                    idParent: null
+                    text: 'Looking forward to the Daredevils vs Ascend game!'
+                    date: '2021-05-20 17:15:21'
+
+  /api/events/{id}/comments/{idComment}:
+    delete:
+      operationId: R303
+      summary: 'R303: Delete Comment'
+      description: 'Deletes the specified comment from the event. Access: OWN (owner of the comment), ADM'
+      tags:
+        - 'M03: Comments and Polls'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idComment
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success.'
+
+  /api/events/{id}/polls:
+    get:
+      operationId: R304
+      summary: 'R304: Get Event Polls'
+      description: 'Returns information about the polls of the specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      tags:
+        - 'M03: Comments and Polls'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Contains a list of all polls from the specified event.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    question:
+                      type: string
+                    options:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          option:
+                            type: string
+                          voteCount:
+                            type: integer
+                  example:
+                    - id: 1
+                      question: 'What time control would you prefer for the matches?'
+                      options:
+                        - id: 1
+                          option: '10 + 0'
+                          voteCount: 2
+                        - id: 2
+                          option: '10 + 3'
+                          voteCount: 3
+                        - id: 3
+                          option: '10 + 5'
+                          voteCount: 7
+                    - id: 2
+                      question: 'Do you prefer playing with the white pieces or the black pieces?'
+                      options:
+                        - id: 4
+                          option: 'White'
+                          voteCount: 7
+                        - id: 5
+                          option: 'Black'
+                          voteCount: 5
+    post:
+      operationId: R305
+      summary: 'R305: Add Poll'
+      description: 'Adds a new poll to the specified event. Access: OWN'
+      tags:
+        - 'M03: Comments and Polls'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: string
+                options:
+                  type: string
+                  description: 'Options are separated by newline (\n) characters. Minimum of two options.'
+              required:
+                - question
+                - options
+      responses:
+        '200':
+          description: 'Success. Returns a JSON representation of the new poll.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  question:
+                    type: string
+                  options:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        option:
+                          type: string
+                        voteCount:
+                          type: integer
+
+  /api/events/{id}/polls/{idPoll}:
+    delete:
+      operationId: R306
+      summary: 'R306: Delete Poll'
+      description: 'Deletes the specified poll from the event. Access: OWN, ADM'
+      tags:
+        - 'M03: Comments and Polls'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idPoll
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success.'
+
+  /api/events/{id}/polls/{idPoll}/answer:
+    get:
+      operationId: R307
+      summary: 'R307: Get Poll Answer'
+      description: 'Returns the answer of the currently authenticated user to the specified poll in JSON format, if it exists. Access: PAR'
+      tags:
+        - 'M03: Comments and Polls'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idPoll
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Contains the poll answer of the user in JSON format.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                example:
+                  - id: 2
+    put:
+      operationId: R308
+      summary: 'R308: Answer Poll'
+      description: 'Adds or replaces the answer of the currently authenticated user to the specified poll. Access: PAR'
+      tags:
+        - 'M03: Comments and Polls'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idPoll
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id
+      responses:
+        '200':
+          description: 'Success.'
+    delete:
+      operationId: R309
+      summary: 'R309: Remove Answer'
+      description: 'Removes the answer of the currently authenticated user to the specified poll. Access: PAR'
+      tags:
+        - 'M03: Comments and Polls'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idPoll
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success.'
+
+  # M04: Matches and Leaderboards
+
+  /events/{id}/matches:
+    get:
+      operationId: R401
+      summary: 'R401: View Match Results'
+      description: 'Show the match results page for a specific event. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      tags:
+        - 'M04: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI12](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui12-results)'
+
+  /api/events/{id}/competitors:
+    get:
+      operationId: R402
+      summary: 'R402: Get Event Competitors'
+      description: 'Returns information about the competitors of specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      tags:
+        - 'M04: Matches and Leaderboards'
+      responses:
+        '200':
+          description: 'Success. Contains a list of competitors from the specified event.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                  example:
+                    - id: 1
+                      name: 'Daredevils'
+                    - id: 2
+                      name: 'Ascend'
+    post:
+      operationId: R403
+      summary: 'R403: Add Competitor'
+      description: 'Adds a new competitor to the specified event. Access: OWN'
+      tags:
+        - 'M04: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+      responses:
+        '200':
+          description: 'Success. Returns a JSON representation of the new competitor.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                example:
+                  - id: 3
+                    name: 'Sanctum Esports'
+
+  /api/events/{id}/matches:
+    get:
+      operationId: R404
+      summary: 'R404: Get Event Matches'
+      description: 'Returns information about the matches of the specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      tags:
+        - 'M04: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Contains a list of matches from the specified event.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    idCompetitor1:
+                      type: integer
+                    nameCompetitor1:
+                      type: string
+                    idCompetitor2:
+                      type: integer
+                    nameCompetitor2:
+                      type: string
+                    date:
+                      type: string
+                    description:
+                      type: string
+                    result:
+                      type: string
+                  example:
+                    - id: 1
+                      idCompetitor1: 3
+                      nameCompetitor1: 'Sanctum Esports'
+                      idCompetitor2: 4
+                      nameCompetitor2: 'Darkness'
+                      date: '2021-05-21 20:00'
+                      result: 'TBD'     
+    post:
+      operationId: R405
+      summary: 'R405: Add Match'
+      description: 'Adds a new match to the specified event. Access: OWN'
+      tags:
+        - 'M04: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                idCompetitor1:
+                  type: integer
+                idCompetitor2:
+                  type: integer
+                date:
+                  type: string
+                description:
+                  type: string
+                result:
+                  type: string
+              required:
+                - idCompetitor1
+                - idCompetitor2
+                - result
+      responses:
+        '200':
+          description: 'Success. Returns a JSON representation of the new match.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  idCompetitor1:
+                    type: integer
+                  nameCompetitor1:
+                    type: string
+                  idCompetitor2:
+                    type: integer
+                  nameCompetitor2:
+                    type: string
+                  date:
+                    type: string
+                  description:
+                    type: string
+                  result:
+                    type: string
+                example:
+                  - id: 2
+                    idCompetitor1: 1
+                    nameCompetitor1: 'Daredevils'
+                    idCompetitor2: 2
+                    nameCompetitor2: 'Ascend'
+                    date: '2021-05-22 20:00'
+                    result: 'TBD'
+
+  /api/events/{id}/matches/{idMatch}:
+    patch:
+      operationId: R406
+      summary: 'R406: Edit Match'
+      description: 'Processes information sent through the edit match form. Access: OWN'
+      tags:
+        - 'M04: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idMatch
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                idCompetitor1:
+                  type: integer
+                idCompetitor2:
+                  type: integer
+                date:
+                  type: string
+                description:
+                  type: string
+                result:
+                  type: string
+              required:
+                - idCompetitor1
+                - idCompetitor2
+                - result
+      responses:
+        '200':
+          description: 'Success. Returns a JSON representation of the edited match.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  idCompetitor1:
+                    type: integer
+                  nameCompetitor1:
+                    type: string
+                  idCompetitor2:
+                    type: integer
+                  nameCompetitor2:
+                    type: string
+                  date:
+                    type: string
+                  description:
+                    type: string
+                  result:
+                    type: string
+                example:
+                  - id: 2
+                    idCompetitor1: 1
+                    nameCompetitor1: 'Daredevils'
+                    idCompetitor2: 2
+                    nameCompetitor2: 'Ascend'
+                    date: '2021-05-22 20:00'
+                    description: 'Very exciting and close games. Daredevils win the best-of-five series 3-2.'
+                    result: 'Winner1'
+    delete:
+      operationId: R407
+      summary: 'R407: Delete Match'
+      description: 'Deletes the specified match from the event. Access: OWN, ADM'
+      tags:
+        - 'M04: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idMatch
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success.'
+
+  /api/events/{id}/leaderboard-settings:
+    get:
+      operationId: R408
+      summary: 'R408: Get Leaderboard Settings'
+      description: 'Returns information about the leaderboard settings in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      tags:
+        - 'M04: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Returns a JSON representation of the leaderboard settings.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  winPoints:
+                    type: number
+                  drawPoints:
+                    type: number
+                  lossPoints:
+                    type: number
+                  generateLeaderboard:
+                    type: boolean
+                example:
+                  - winPoints: 1
+                    drawPoints: 0.5
+                    lossPoints: 0
+                    generateLeaderboard: true
+    patch:
+      operationId: R409
+      summary: 'R409: Update Leaderboard Settings'
+      description: 'Updates the leaderboard settings of the specified event. Access: OWN'
+      tags:
+        - 'M04: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                winPoints:
+                  type: number
+                drawPoints:
+                  type: number
+                lossPoints:
+                  type: number
+                generateLeaderboard:
+                  type: boolean
+              required:
+                - winPoints
+                - drawPoints
+                - lossPoints
+                - generateLeaderboard
+      responses:
+        '200':
+          description: 'Success. Returns a JSON representation of the updated settings.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  winPoints:
+                    type: number
+                  drawPoints:
+                    type: number
+                  lossPoints:
+                    type: number
+                  generateLeaderboard:
+                    type: boolean
+
+  # M05: Static Pages
+
+  /:
+    get:
+      operationId: R501
+      summary: 'R501: Home'
+      description: 'Show the home page. Access: PUB'
+      tags:
+        - 'M05: Static Pages'
+      responses:
+        '200':
+          description: 'Ok. Show [UI01](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui01-home)'
+
+  /faq:
+    get:
+      operationId: R502
+      summary: 'R502: Frequent Asked Questions'
+      description: 'Show frequently asked questions and their answers. Access: PUB'
+      tags:
+        - 'M05: Static Pages'
+      responses:
+        '200':
+          description: 'Ok. Show [UI13](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui13-faq)'
+
+  /about:
+    get:
+      operationId: R503
+      summary: 'R503: About'
+      description: 'Show a page summarizing the functionality and objectives of the website. Access: PUB'
+      tags:
+        - 'M05: Static Pages'
+      responses:
+        '200':
+          description: 'Ok. Show [UI14](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui14-about)'
+
+  /contacts:
+    get:
+      operationId: R504
+      summary: 'R504: Contacts'
+      description: 'Show contact information and social media links. Access: PUB'
+      tags:
+        - 'M05: Static Pages'
+      responses:
+        '200':
+          description: 'Ok. Show [UI15](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui15-contacts)'
+
+  # M06: Administration
+
+  /admin/user-management:
+    get:
+      operationId: R601
+      summary: 'R601: User Management'
+      description: 'Show a page containing all the users that have been suspended or banned. Access: ADM'
+      tags:
+        - 'M06: Administration'
+      responses:
+        '200':
+          description: 'Ok. Show [UI16](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui16-user-management)'
+
+  /admin/user-metrics:
+    get:
+      operationId: R602
+      summary: 'R602: View User Metrics'
+      description: 'Show a page containing user-related statistics. Access: ADM'
+      tags:
+        - 'M06: Administration'
+      responses:
+        '200':
+          description: 'Ok. Show [UI17](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui17-user-metrics)'
+
+  /admin/event-metrics:
+    get:
+      operationId: R603
+      summary: 'R603: View Event Metrics'
+      description: 'Show a page containing event-related statistics. Access: ADM'
+      tags:
+        - 'M06: Administration'
+      responses:
+        '200':
+          description: 'Ok. Show [UI18](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui18-event-metrics)'
+
+  /api/suspend-user:
+    post:
+      operationId: R604
+      summary: 'R604: Suspend User'
+      description: 'Suspends the specified user, preventing them from accessing the site for a certain amount of time. Access: ADM'
+      tags:
+        - 'M06: Administration'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                duration:
+                  type: string
+                reason:
+                  type: string
+              required:
+                - id
+                - duration
+                - reason
+      responses:
+        '200': # TODO
+          description: 'User was successfully suspended'
+
+  /api/ban-user:
+    post:
+      operationId: R605
+      summary: 'R605: Ban User'
+      description: 'Bans the specified user, permanently preventing them from accessing the site. Access: ADM'
+      tags:
+        - 'M06: Administration'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                reason:
+                  type: string
+              required:
+                - id
+                - reason
+      responses:
+        '200': # TODO
+          description: 'User was successfully banned'
