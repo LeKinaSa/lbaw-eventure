@@ -743,8 +743,8 @@ paths:
   /events/{id}/matches:
     get:
       operationId: R301
-      summary: 'R301: View Matches and Leaderboard'
-      description: 'Show match results page for a specific event. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      summary: 'R301: View Match Results'
+      description: 'Show the match results page for a specific event. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
         - 'M03: Matches and Leaderboards'
       parameters:
@@ -761,9 +761,9 @@ paths:
     get:
       operationId: R302
       summary: 'R302: Get Event Competitors'
+      description: 'Returns information about the competitors of specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
         - 'M03: Matches and Leaderboards'
-      description: 'Returns information about the competitors of specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
       responses:
         '200':
           description: 'Success. Contains a list of competitors from the specified event.'
@@ -823,9 +823,55 @@ paths:
                     name: 'Sanctum Esports'
 
   /api/events/{id}/matches:
-    post:
+    get:
       operationId: R304
-      summary: 'R304: Add Match'
+      summary: 'R304: Get Event Matches'
+      description: 'Returns information about the matches of the specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      tags:
+        - 'M03: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Contains a list of matches from the specified event.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    idCompetitor1:
+                      type: integer
+                    nameCompetitor1:
+                      type: string
+                    idCompetitor2:
+                      type: integer
+                    nameCompetitor2:
+                      type: string
+                    date:
+                      type: string
+                    description:
+                      type: string
+                    result:
+                      type: string
+                  example:
+                    - id: 1
+                      idCompetitor1: 3
+                      nameCompetitor1: 'Sanctum Esports'
+                      idCompetitor2: 4
+                      nameCompetitor2: 'Darkness'
+                      date: '2021-05-21 20:00'
+                      result: 'TBD'     
+    post:
+      operationId: R305
+      summary: 'R305: Add Match'
       description: 'Adds a new match to the specified event. Access: OWN'
       tags:
         - 'M03: Matches and Leaderboards'
@@ -891,8 +937,8 @@ paths:
 
   /api/events/{id}/matches/{idMatch}:
     put:
-      operationId: R305
-      summary: 'R305: Edit Match'
+      operationId: R306
+      summary: 'R306: Edit Match'
       description: 'Processes information sent through the edit match form. Access: OWN'
       tags:
         - 'M03: Matches and Leaderboards'
@@ -962,8 +1008,8 @@ paths:
                     description: 'Very exciting and close games. Daredevils win the best-of-five series 3-2.'
                     result: 'Winner1'
     delete:
-      operationId: R306
-      summary: 'R306: Delete Match'
+      operationId: R307
+      summary: 'R307: Delete Match'
       description: 'Deletes the specified match from the event. Access: OWN'
       tags:
         - 'M03: Matches and Leaderboards'
@@ -982,11 +1028,11 @@ paths:
         '200':
           description: 'Success.'
 
-  /api/events/{id}/update-leaderboard:
-    post:
-      operationId: R307
-      summary: 'R307: Update Leaderboard'
-      description: 'Updates the leaderboard of the specified event and returns it in JSON format. Access: OWN'
+  /api/events/{id}/leaderboard-settings:
+    get:
+      operationId: R308
+      summary: 'R308: Get Leaderboard Settings'
+      description: 'Returns information about the leaderboard settings in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
         - 'M03: Matches and Leaderboards'
       parameters:
@@ -997,27 +1043,53 @@ paths:
           required: true
       responses:
         '200':
-          description: 'Success. Contains information about the leaderboard.'
+          description: 'Success. Returns a JSON representation of the leaderboard settings.'
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    games:
-                      type: integer
-                    wins:
-                      type: integer
-                    draws:
-                      type: integer
-                    losses:
-                      type: integer
-                    points:
-                      type: number
-
+                type: object
+                properties:
+                  winPoints:
+                    type: number
+                  drawPoints:
+                    type: number
+                  lossPoints:
+                    type: number
+                  generateLeaderboard:
+                    type: boolean
+                example:
+                  - winPoints: 1
+                    drawPoints: 0.5
+                    lossPoints: 0
+                    generateLeaderboard: true
+    put:
+      operationId: R309
+      summary: 'R309: Update Leaderboard Settings'
+      description: 'Updates the leaderboard settings of the specified event. Access: OWN'
+      tags:
+        - 'M03: Matches and Leaderboards'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Returns a JSON representation of the updated settings.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  winPoints:
+                    type: number
+                  drawPoints:
+                    type: number
+                  lossPoints:
+                    type: number
+                  generateLeaderboard:
+                    type: boolean
 
   # M04: Static Pages
 
