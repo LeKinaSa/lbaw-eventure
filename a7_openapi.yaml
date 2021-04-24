@@ -12,9 +12,10 @@ servers:
 tags:
   - name: 'M01: Authentication and User Profile'
   - name: 'M02: Events'
-  - name: 'M03: Matches and Leaderboards'
-  - name: 'M04: Static Pages'
-  - name: 'M05: Administration'
+  - name: 'M03: Comments and Polls'
+  - name: 'M04: Matches and Leaderboards'
+  - name: 'M05: Static Pages'
+  - name: 'M06: Administration'
 
 paths:
   # M01: Authentication and User Profile
@@ -557,13 +558,152 @@ paths:
         '200':
           description: 'Success.'
 
-  /api/events/{id}/comments:
+  /events/{id}/invitations:
     get:
       operationId: R207
-      summary: 'R207: Get Event Comments'
-      description: 'Returns the comments of the specified event in JSON format, ordered by date. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      summary: 'R207: View Invitations'
+      description: 'Show invitations for a specific event. Access: OWN'
       tags:
         - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI11](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui11-invitations)'
+
+  /api/events/{id}/invitations:
+    post:
+      operationId: R208
+      summary: 'R208: Add Invitation'
+      description: 'Invite a user to participate in the event. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+              required:
+                - username
+      responses:
+        '200':
+          description: 'Success. Contains the new invitation in JSON format.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  idUser:
+                    type: integer
+                  username:
+                    type: string
+                  name:
+                    type: string
+                  status:
+                    type: string
+                example:
+                  - id: 1
+                    idUser: 4
+                    username: 'mattparker'
+                    name: 'Matt Parker'
+                    status: 'Invitation'
+  
+  /api/events/{id}/invitations/{idInvitation}:
+    patch:
+      operationId: R209
+      summary: 'R209: Accept / Decline Invitation'
+      description: 'Accept or decline an invitation for an event. Access: USR'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idInvitation
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: 'Status of the invitation (Accepted or Declined)'
+              required:
+                - status
+      responses:
+        '200':
+          description: 'Success. Contains information about the invitation in JSON format.'
+    delete:
+      operationId: R210
+      summary: 'R210: Cancel Invitation'
+      description: 'Cancel an invitation for an event. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idInvitation
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success.'
+
+  /users/{username}/my-events:
+    get:
+      operationId: R211
+      summary: 'R211: View Personal Events'
+      description: 'Shows a list of events the user is organizing or participating in. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI07](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui07-personal-events'
+
+  # M03: Comments and Polls
+
+  /api/events/{id}/comments:
+    get:
+      operationId: R301
+      summary: 'R301: Get Event Comments'
+      description: 'Returns the comments of the specified event in JSON format, ordered by date. Access: PUB (public event); OWN, PAR, ADM (private event)'
+      tags:
+        - 'M03: Comments and Polls'
       parameters:
         - in: path
           name: id
@@ -610,11 +750,11 @@ paths:
                       text: 'The time control will be 10 minutes with 5 seconds increment for all matches.'
                       date: '2021-04-21 22:22:54'
     post:
-      operationId: R208
-      summary: 'R208: Add Comment'
+      operationId: R302
+      summary: 'R302: Add Comment'
       description: 'Adds a new comment to the specified event. Access: OWN, PAR'
       tags:
-        - 'M02: Events'
+        - 'M03: Comments and Polls'
       parameters:
         - in: path
           name: id
@@ -668,11 +808,11 @@ paths:
 
   /api/events/{id}/comments/{idComment}:
     delete:
-      operationId: R209
-      summary: 'R209: Delete Comment'
+      operationId: R303
+      summary: 'R303: Delete Comment'
       description: 'Deletes the specified comment from the event. Access: OWN (owner of the comment), ADM'
       tags:
-        - 'M02: Events'
+        - 'M03: Comments and Polls'
       parameters:
         - in: path
           name: id
@@ -690,11 +830,11 @@ paths:
 
   /api/events/{id}/polls:
     get:
-      operationId: R210
-      summary: 'R210: Get Event Polls'
+      operationId: R304
+      summary: 'R304: Get Event Polls'
       description: 'Returns information about the polls of the specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
-        - 'M02: Events'
+        - 'M03: Comments and Polls'
       parameters:
         - in: path
           name: id
@@ -749,11 +889,11 @@ paths:
                           option: 'Black'
                           voteCount: 5
     post:
-      operationId: R211
-      summary: 'R211: Add Poll'
+      operationId: R305
+      summary: 'R305: Add Poll'
       description: 'Adds a new poll to the specified event. Access: OWN'
       tags:
-        - 'M02: Events'
+        - 'M03: Comments and Polls'
       parameters:
         - in: path
           name: id
@@ -801,11 +941,11 @@ paths:
 
   /api/events/{id}/polls/{idPoll}:
     delete:
-      operationId: R212
-      summary: 'R212: Delete Poll'
+      operationId: R306
+      summary: 'R306: Delete Poll'
       description: 'Deletes the specified poll from the event. Access: OWN, ADM'
       tags:
-        - 'M02: Events'
+        - 'M03: Comments and Polls'
       parameters:
         - in: path
           name: id
@@ -823,11 +963,11 @@ paths:
 
   /api/events/{id}/polls/{idPoll}/answer:
     get:
-      operationId: R213
-      summary: 'R213: Get Poll Answer'
+      operationId: R307
+      summary: 'R307: Get Poll Answer'
       description: 'Returns the answer of the currently authenticated user to the specified poll in JSON format, if it exists. Access: PAR'
       tags:
-        - 'M02: Events'
+        - 'M03: Comments and Polls'
       parameters:
         - in: path
           name: id
@@ -852,11 +992,11 @@ paths:
                 example:
                   - id: 2
     put:
-      operationId: R214
-      summary: 'R214: Answer Poll'
+      operationId: R308
+      summary: 'R308: Answer Poll'
       description: 'Adds or replaces the answer of the currently authenticated user to the specified poll. Access: PAR'
       tags:
-        - 'M02: Events'
+        - 'M03: Comments and Polls'
       parameters:
         - in: path
           name: id
@@ -883,11 +1023,11 @@ paths:
         '200':
           description: 'Success.'
     delete:
-      operationId: R215
-      summary: 'R215: Remove Answer'
+      operationId: R309
+      summary: 'R309: Remove Answer'
       description: 'Removes the answer of the currently authenticated user to the specified poll. Access: PAR'
       tags:
-        - 'M02: Events'
+        - 'M03: Comments and Polls'
       parameters:
         - in: path
           name: id
@@ -903,152 +1043,15 @@ paths:
         '200':
           description: 'Success.'
 
-  /events/{id}/invitations:
-    get:
-      operationId: R216
-      summary: 'R216: View Invitations'
-      description: 'Show invitations for a specific event. Access: OWN'
-      tags:
-        - 'M02: Events'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      responses:
-        '200':
-          description: 'Ok. Show [UI11](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui11-invitations)'
-
-  /api/events/{id}/invitations:
-    post:
-      operationId: R217
-      summary: 'R217: Add Invitation'
-      description: 'Invite a user to participate in the event. Access: OWN'
-      tags:
-        - 'M02: Events'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-              required:
-                - username
-      responses:
-        '200':
-          description: 'Success. Contains the new invitation in JSON format.'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  idUser:
-                    type: integer
-                  username:
-                    type: string
-                  name:
-                    type: string
-                  status:
-                    type: string
-                example:
-                  - id: 1
-                    idUser: 4
-                    username: 'mattparker'
-                    name: 'Matt Parker'
-                    status: 'Invitation'
-  
-  /api/events/{id}/invitations/{idInvitation}:
-    patch:
-      operationId: R218
-      summary: 'R218: Accept / Decline Invitation'
-      description: 'Accept or decline an invitation for an event. Access: USR'
-      tags:
-        - 'M02: Events'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-        - in: path
-          name: idInvitation
-          schema:
-            type: integer
-          required: true
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                status:
-                  type: string
-                  description: 'Status of the invitation (Accepted or Declined)'
-              required:
-                - status
-      responses:
-        '200':
-          description: 'Success. Contains information about the invitation in JSON format.'
-    delete:
-      operationId: R219
-      summary: 'R219: Cancel Invitation'
-      description: 'Cancel an invitation for an event. Access: OWN'
-      tags:
-        - 'M02: Events'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-        - in: path
-          name: idInvitation
-          schema:
-            type: integer
-          required: true
-      responses:
-        '200':
-          description: 'Success.'
-
-  /users/{username}/my-events:
-    get:
-      operationId: R220
-      summary: 'R220: View Personal Events'
-      description: 'Shows a list of events the user is organizing or participating in. Access: OWN'
-      tags:
-        - 'M02: Events'
-      parameters:
-        - in: path
-          name: username
-          schema:
-            type: string
-          required: true
-      responses:
-        '200':
-          description: 'Ok. Show [UI07](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui07-personal-events'
-
-  # M03: Matches and Leaderboards
+  # M04: Matches and Leaderboards
 
   /events/{id}/matches:
     get:
-      operationId: R301
-      summary: 'R301: View Match Results'
+      operationId: R401
+      summary: 'R401: View Match Results'
       description: 'Show the match results page for a specific event. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
-        - 'M03: Matches and Leaderboards'
+        - 'M04: Matches and Leaderboards'
       parameters:
         - in: path
           name: id
@@ -1061,11 +1064,11 @@ paths:
 
   /api/events/{id}/competitors:
     get:
-      operationId: R302
-      summary: 'R302: Get Event Competitors'
+      operationId: R402
+      summary: 'R402: Get Event Competitors'
       description: 'Returns information about the competitors of specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
-        - 'M03: Matches and Leaderboards'
+        - 'M04: Matches and Leaderboards'
       responses:
         '200':
           description: 'Success. Contains a list of competitors from the specified event.'
@@ -1086,11 +1089,11 @@ paths:
                     - id: 2
                       name: 'Ascend'
     post:
-      operationId: R303
-      summary: 'R303: Add Competitor'
+      operationId: R403
+      summary: 'R403: Add Competitor'
       description: 'Adds a new competitor to the specified event. Access: OWN'
       tags:
-        - 'M03: Matches and Leaderboards'
+        - 'M04: Matches and Leaderboards'
       parameters:
         - in: path
           name: id
@@ -1126,11 +1129,11 @@ paths:
 
   /api/events/{id}/matches:
     get:
-      operationId: R304
-      summary: 'R304: Get Event Matches'
+      operationId: R404
+      summary: 'R404: Get Event Matches'
       description: 'Returns information about the matches of the specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
-        - 'M03: Matches and Leaderboards'
+        - 'M04: Matches and Leaderboards'
       parameters:
         - in: path
           name: id
@@ -1172,11 +1175,11 @@ paths:
                       date: '2021-05-21 20:00'
                       result: 'TBD'     
     post:
-      operationId: R305
-      summary: 'R305: Add Match'
+      operationId: R405
+      summary: 'R405: Add Match'
       description: 'Adds a new match to the specified event. Access: OWN'
       tags:
-        - 'M03: Matches and Leaderboards'
+        - 'M04: Matches and Leaderboards'
       parameters:
         - in: path
           name: id
@@ -1239,11 +1242,11 @@ paths:
 
   /api/events/{id}/matches/{idMatch}:
     patch:
-      operationId: R306
-      summary: 'R306: Edit Match'
+      operationId: R406
+      summary: 'R406: Edit Match'
       description: 'Processes information sent through the edit match form. Access: OWN'
       tags:
-        - 'M03: Matches and Leaderboards'
+        - 'M04: Matches and Leaderboards'
       parameters:
         - in: path
           name: id
@@ -1310,11 +1313,11 @@ paths:
                     description: 'Very exciting and close games. Daredevils win the best-of-five series 3-2.'
                     result: 'Winner1'
     delete:
-      operationId: R307
-      summary: 'R307: Delete Match'
+      operationId: R407
+      summary: 'R407: Delete Match'
       description: 'Deletes the specified match from the event. Access: OWN, ADM'
       tags:
-        - 'M03: Matches and Leaderboards'
+        - 'M04: Matches and Leaderboards'
       parameters:
         - in: path
           name: id
@@ -1332,11 +1335,11 @@ paths:
 
   /api/events/{id}/leaderboard-settings:
     get:
-      operationId: R308
-      summary: 'R308: Get Leaderboard Settings'
+      operationId: R408
+      summary: 'R408: Get Leaderboard Settings'
       description: 'Returns information about the leaderboard settings in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
-        - 'M03: Matches and Leaderboards'
+        - 'M04: Matches and Leaderboards'
       parameters:
         - in: path
           name: id
@@ -1365,11 +1368,11 @@ paths:
                     lossPoints: 0
                     generateLeaderboard: true
     patch:
-      operationId: R309
-      summary: 'R309: Update Leaderboard Settings'
+      operationId: R409
+      summary: 'R409: Update Leaderboard Settings'
       description: 'Updates the leaderboard settings of the specified event. Access: OWN'
       tags:
-        - 'M03: Matches and Leaderboards'
+        - 'M04: Matches and Leaderboards'
       parameters:
         - in: path
           name: id
@@ -1413,94 +1416,94 @@ paths:
                   generateLeaderboard:
                     type: boolean
 
-  # M04: Static Pages
+  # M05: Static Pages
 
   /:
     get:
-      operationId: R401
-      summary: 'R401: Home'
+      operationId: R501
+      summary: 'R501: Home'
       description: 'Show the home page. Access: PUB'
       tags:
-        - 'M04: Static Pages'
+        - 'M05: Static Pages'
       responses:
         '200':
           description: 'Ok. Show [UI01](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui01-home)'
 
   /faq:
     get:
-      operationId: R402
-      summary: 'R402: Frequent Asked Questions'
+      operationId: R502
+      summary: 'R502: Frequent Asked Questions'
       description: 'Show frequently asked questions and their answers. Access: PUB'
       tags:
-        - 'M04: Static Pages'
+        - 'M05: Static Pages'
       responses:
         '200':
           description: 'Ok. Show [UI13](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui13-faq)'
 
   /about:
     get:
-      operationId: R403
-      summary: 'R403: About'
+      operationId: R503
+      summary: 'R503: About'
       description: 'Show a page summarizing the functionality and objectives of the website. Access: PUB'
       tags:
-        - 'M04: Static Pages'
+        - 'M05: Static Pages'
       responses:
         '200':
           description: 'Ok. Show [UI14](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui14-about)'
 
   /contacts:
     get:
-      operationId: R404
-      summary: 'R404: Contacts'
+      operationId: R504
+      summary: 'R504: Contacts'
       description: 'Show contact information and social media links. Access: PUB'
       tags:
-        - 'M04: Static Pages'
+        - 'M05: Static Pages'
       responses:
         '200':
           description: 'Ok. Show [UI15](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui15-contacts)'
 
-  # M05: Administration
+  # M06: Administration
 
   /admin/user-management:
     get:
-      operationId: R501
-      summary: 'R501: User Management'
+      operationId: R601
+      summary: 'R601: User Management'
       description: 'Show a page containing all the users that have been suspended or banned. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M06: Administration'
       responses:
         '200':
           description: 'Ok. Show [UI16](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui16-user-management)'
 
   /admin/user-metrics:
     get:
-      operationId: R502
-      summary: 'R502: View User Metrics'
+      operationId: R602
+      summary: 'R602: View User Metrics'
       description: 'Show a page containing user-related statistics. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M06: Administration'
       responses:
         '200':
           description: 'Ok. Show [UI17](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui17-user-metrics)'
 
   /admin/event-metrics:
     get:
-      operationId: R503
-      summary: 'R503: View Event Metrics'
+      operationId: R603
+      summary: 'R603: View Event Metrics'
       description: 'Show a page containing event-related statistics. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M06: Administration'
       responses:
         '200':
           description: 'Ok. Show [UI18](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui18-event-metrics)'
 
   /api/suspend-user:
     post:
-      operationId: R504
-      summary: 'R504: Suspend User'
+      operationId: R604
+      summary: 'R604: Suspend User'
       description: 'Suspends the specified user, preventing them from accessing the site for a certain amount of time. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M06: Administration'
       requestBody:
         required: true
         content:
@@ -1524,11 +1527,11 @@ paths:
 
   /api/ban-user:
     post:
-      operationId: R505
-      summary: 'R505: Ban User'
+      operationId: R605
+      summary: 'R605: Ban User'
       description: 'Bans the specified user, permanently preventing them from accessing the site. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M06: Administration'
       requestBody:
         required: true
         content:
