@@ -302,7 +302,7 @@ paths:
   /api/events:
     get:
       operationId: R201
-      summary: 'R201: Search Events API'
+      summary: 'R201: Search Events'
       description: 'Searches for events and returns the result as JSON. Several filters are available to narrow down the search. Access: PUB'
       tags:
         - 'M02: Events'
@@ -501,10 +501,66 @@ paths:
                   description: 'An error occurred while changing event details. Redirect to edit event form.'
                   value: '/events/{id}/edit'
 
+  /events/{id}/delete:
+    post:
+      operationId: R205
+      summary: 'R205: Delete Event Action'
+      description: 'Deletes the specified event and redirects the user. Access: OWN, ADM'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '302':
+          description: 'Redirect user after deleting the event.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Event was successfully deleted. Redirect to home page.'
+                  value: '/'
+                302Error:
+                  description: 'An error occurred when deleting event. Redirect to event page.'
+                  value: '/events/{id}'
+
+  /api/events/{id}/cancel:
+    patch:
+      operationId: R206
+      summary: 'R206: Cancel Event'
+      description: 'Changes the cancellation status of an event. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                cancellationStatus:
+                  type: boolean
+              required:
+                - cancellationStatus
+      responses:
+        '200':
+          description: 'Success.'
+
   /api/events/{id}/comments:
     get:
-      operationId: R205
-      summary: 'R205: Get Event Comments'
+      operationId: R207
+      summary: 'R207: Get Event Comments'
       description: 'Returns the comments of the specified event in JSON format, ordered by date. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
         - 'M02: Events'
@@ -554,8 +610,8 @@ paths:
                       text: 'The time control will be 10 minutes with 5 seconds increment for all matches.'
                       date: '2021-04-21 22:22:54'
     post:
-      operationId: R206
-      summary: 'R206: Add Comment'
+      operationId: R208
+      summary: 'R208: Add Comment'
       description: 'Adds a new comment to the specified event. Access: OWN, PAR'
       tags:
         - 'M02: Events'
@@ -610,10 +666,32 @@ paths:
                     text: 'Looking forward to the Daredevils vs Ascend game!'
                     date: '2021-05-20 17:15:21'
 
+  /api/events/{id}/comments/{idComment}:
+    delete:
+      operationId: R209
+      summary: 'R209: Delete Comment'
+      description: 'Deletes the specified comment from the event. Access: OWN (owner of the comment), ADM'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idComment
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success.'
+
   /api/events/{id}/polls:
     get:
-      operationId: R207
-      summary: 'R207: Get Event Polls'
+      operationId: R210
+      summary: 'R210: Get Event Polls'
       description: 'Returns information about the polls of the specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
         - 'M02: Events'
@@ -637,14 +715,42 @@ paths:
                       type: integer
                     question:
                       type: string
+                    options:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          option:
+                            type: string
+                          voteCount:
+                            type: integer
                   example:
                     - id: 1
                       question: 'What time control would you prefer for the matches?'
+                      options:
+                        - id: 1
+                          option: '10 + 0'
+                          voteCount: 2
+                        - id: 2
+                          option: '10 + 3'
+                          voteCount: 3
+                        - id: 3
+                          option: '10 + 5'
+                          voteCount: 7
                     - id: 2
                       question: 'Do you prefer playing with the white pieces or the black pieces?'
+                      options:
+                        - id: 4
+                          option: 'White'
+                          voteCount: 7
+                        - id: 5
+                          option: 'Black'
+                          voteCount: 5
     post:
-      operationId: R208
-      summary: 'R208: Add Poll'
+      operationId: R211
+      summary: 'R211: Add Poll'
       description: 'Adds a new poll to the specified event. Access: OWN'
       tags:
         - 'M02: Events'
@@ -694,10 +800,10 @@ paths:
                           type: integer
 
   /api/events/{id}/polls/{idPoll}:
-    get:
-      operationId: R209
-      summary: 'R209: Get Poll Information'
-      description: 'Returns information about a poll from the specified event (its options as well as the amount of votes each one has) in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
+    delete:
+      operationId: R212
+      summary: 'R212: Delete Poll'
+      description: 'Deletes the specified poll from the event. Access: OWN, ADM'
       tags:
         - 'M02: Events'
       parameters:
@@ -713,30 +819,90 @@ paths:
           required: true
       responses:
         '200':
-          description: 'Success. Contains information about the specified poll.'
+          description: 'Success.'
+
+  /api/events/{id}/polls/{idPoll}/answer:
+    get:
+      operationId: R213
+      summary: 'R213: Get Poll Answer'
+      description: 'Returns the answer of the currently authenticated user to the specified poll in JSON format, if it exists. Access: PAR'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idPoll
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Contains the poll answer of the user in JSON format.'
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    option:
-                      type: string
-                    voteCount:
-                      type: integer
-                  example:
-                    - id: 1
-                      option: '10 + 0'
-                      voteCount: 2
-                    - id: 2
-                      option: '10 + 3'
-                      voteCount: 3
-                    - id: 3
-                      option: '10 + 5'
-                      voteCount: 7
+                type: object
+                properties:
+                  id:
+                    type: integer
+                example:
+                  - id: 2
+    put:
+      operationId: R214
+      summary: 'R214: Answer Poll'
+      description: 'Adds or replaces the answer of the currently authenticated user to the specified poll. Access: PAR'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idPoll
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id
+      responses:
+        '200':
+          description: 'Success.'
+    delete:
+      operationId: R215
+      summary: 'R215: Remove Answer'
+      description: 'Removes the answer of the currently authenticated user to the specified poll. Access: PAR'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idPoll
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success.'
+
 
   # M03: Matches and Leaderboards
 
@@ -1010,7 +1176,7 @@ paths:
     delete:
       operationId: R307
       summary: 'R307: Delete Match'
-      description: 'Deletes the specified match from the event. Access: OWN'
+      description: 'Deletes the specified match from the event. Access: OWN, ADM'
       tags:
         - 'M03: Matches and Leaderboards'
       parameters:
@@ -1195,7 +1361,7 @@ paths:
   /api/suspend-user:
     post:
       operationId: R504
-      summary: 'R504: Suspend User API'
+      summary: 'R504: Suspend User'
       description: 'Suspends the specified user, preventing them from accessing the site for a certain amount of time. Access: ADM'
       tags:
         - 'M05: Administration'
@@ -1223,7 +1389,7 @@ paths:
   /api/ban-user:
     post:
       operationId: R505
-      summary: 'R505: Ban User API'
+      summary: 'R505: Ban User'
       description: 'Bans the specified user, permanently preventing them from accessing the site. Access: ADM'
       tags:
         - 'M05: Administration'
