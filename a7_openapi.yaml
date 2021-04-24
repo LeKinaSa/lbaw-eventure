@@ -903,6 +903,142 @@ paths:
         '200':
           description: 'Success.'
 
+  /events/{id}/invitations:
+    get:
+      operationId: R216
+      summary: 'R216: View Invitations'
+      description: 'Show invitations for a specific event. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI11](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui11-invitations)'
+
+  /api/events/{id}/invitations:
+    post:
+      operationId: R217
+      summary: 'R217: Add Invitation'
+      description: 'Invite a user to participate in the event. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+              required:
+                - username
+      responses:
+        '200':
+          description: 'Success. Contains the new invitation in JSON format.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  idUser:
+                    type: integer
+                  username:
+                    type: string
+                  name:
+                    type: string
+                  status:
+                    type: string
+                example:
+                  - id: 1
+                    idUser: 4
+                    username: 'mattparker'
+                    name: 'Matt Parker'
+                    status: 'Invitation'
+  
+  /api/events/{id}/invitations/{idInvitation}:
+    patch:
+      operationId: R218
+      summary: 'R218: Accept / Decline Invitation'
+      description: 'Accept or decline an invitation for an event. Access: USR'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idInvitation
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: 'Status of the invitation (Accepted or Declined)'
+              required:
+                - status
+      responses:
+        '200':
+          description: 'Success. Contains information about the invitation in JSON format.'
+    delete:
+      operationId: R219
+      summary: 'R219: Cancel Invitation'
+      description: 'Cancel an invitation for an event. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idInvitation
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success.'
+
+  /users/{username}/my-events:
+    get:
+      operationId: R220
+      summary: 'R220: View Personal Events'
+      description: 'Shows a list of events the user is organizing or participating in. Access: OWN'
+      tags:
+        - 'M02: Events'
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show [UI07](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui07-personal-events'
 
   # M03: Matches and Leaderboards
 
