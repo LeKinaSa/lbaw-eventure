@@ -936,7 +936,7 @@ paths:
                     result: 'TBD'
 
   /api/events/{id}/matches/{idMatch}:
-    put:
+    patch:
       operationId: R306
       summary: 'R306: Edit Match'
       description: 'Processes information sent through the edit match form. Access: OWN'
@@ -1062,7 +1062,7 @@ paths:
                     drawPoints: 0.5
                     lossPoints: 0
                     generateLeaderboard: true
-    put:
+    patch:
       operationId: R309
       summary: 'R309: Update Leaderboard Settings'
       description: 'Updates the leaderboard settings of the specified event. Access: OWN'
@@ -1074,6 +1074,26 @@ paths:
           schema:
             type: integer
           required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                winPoints:
+                  type: number
+                drawPoints:
+                  type: number
+                lossPoints:
+                  type: number
+                generateLeaderboard:
+                  type: boolean
+              required:
+                - winPoints
+                - drawPoints
+                - lossPoints
+                - generateLeaderboard
       responses:
         '200':
           description: 'Success. Returns a JSON representation of the updated settings.'
