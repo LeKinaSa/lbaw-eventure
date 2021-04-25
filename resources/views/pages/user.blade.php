@@ -16,7 +16,7 @@
             </a>
             <h1>{{ $user->name }}</h1>
             <h4 class="text-primary">&commat;{{ $user->username }}</h4>
-            </p>{{ $user->description }}</p>
+            <p class="text-break">{{ $user->description }}</p>
             <ul class="list-unstyled">
                 <li class="h5" aria-label="Email"><i class="col-1 fa fa-envelope"></i> {{ $user->email }}</li>
                 @if (!is_null($user->address))
