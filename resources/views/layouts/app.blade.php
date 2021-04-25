@@ -11,26 +11,75 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/milligram.min.css') }}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <script type="text/javascript">
-        // Fix for Firefox autofocus CSS bug
-        // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
+      // Fix for Firefox autofocus CSS bug
+      // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
     </script>
     <script type="text/javascript" src={{ asset('js/app.js') }} defer>
 </script>
   </head>
-  <body>
+  <body class="d-flex flex-column min-vh-100">
+    <header>
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand fs-3" href="homepage.php">EVENTURE</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse mt-3 mt-md-0" id="navbarContent">
+            <div class="col d-flex flex-column flex-md-row justify-content-end gap-2">
+              <form>
+                <div class="input-group">
+                  <input type="search" class="form-control" placeholder="Search" aria-label="Search" required>
+                  <button type="submit" class="btn btn-outline-light"><i class="fa fa-search"></i></button>
+                </div>
+              </form>
+              @if (Auth::check())
+              <a href="{{ url('/sign-out') }}" role="button" class="btn btn-outline-light">Sign out</a>
+              @else
+              <a href="{{ url('/sign-in') }}" role="button" class="btn btn-outline-light">Sign in</a>
+              <a href="{{ url('/sign-up') }}" role="button" class="btn btn-outline-light">Sign up</a>
+              @endif
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
     <main>
-      <header>
-        <h1><a href="{{ url('/cards') }}">Thingy!</a></h1>
-        @if (Auth::check())
-        <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
-        @endif
-      </header>
       <section id="content">
         @yield('content')
       </section>
     </main>
+
+    <footer class="mt-auto bg-light">
+      <div class="container p-3">
+        <div class="row">
+          <div class="col-md mb-2">
+            <span>© Copyright 2021 Eventure</span>
+          </div>
+          <div class="col-md mb-2">
+            <h5 class="text-uppercase">Help</h5>
+            <ul class="list-unstyled">
+              <li><a class="text-primary" href="about.php">About</a></li>
+              <li><a class="text-primary" href="contacts.php">Contacts</a></li>
+              <li><a class="text-primary" href="faq.php">FAQ</a></li>
+            </ul>
+          </div>
+          <!-- TODO: Only show this section if authenticated as admin -->
+          <div class="col-md">
+            <h5 class="text-uppercase">Administration</h5>
+            <ul class="list-unstyled">
+              <li><a class="text-primary" href="user_management.php">User management</a></li>
+              <li><a class="text-primary" href="user_metrics.php">User metrics</a></li>
+              <li><a class="text-primary" href="event_metrics.php">Event metrics</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

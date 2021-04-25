@@ -25,8 +25,8 @@ Route::post('api/item/{id}', 'ItemController@update');
 Route::delete('api/item/{id}', 'ItemController@delete');
 
 // Authentication
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('register', 'Auth\RegisterController@register');
+Route::get('/sign-in', 'Auth\LoginController@showLoginForm')->name('sign-in');
+Route::post('/sign-in', 'Auth\LoginController@login');
+Route::get('/sign-out', 'Auth\LoginController@logout')->name('sign-out');
+Route::get('/sign-up', 'Auth\RegisterController@showRegistrationForm')->name('sign-up');
+Route::post('/sign-up', 'Auth\RegisterController@register');
