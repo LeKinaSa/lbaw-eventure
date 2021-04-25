@@ -13,9 +13,14 @@
 // Home
 Route::view('/', 'pages.home');
 
-// Cards
+// User Profile
+Route::get('/users/{username}', 'UserController@show')->name('users.profile');
+Route::get('/users/{username}/edit', 'UserController@edit')->name('users.profile.edit');
+Route::post('/users/{username}/edit', 'UserController@update');
+/*
 Route::get('cards', 'CardController@list');
 Route::get('cards/{id}', 'CardController@show');
+*/
 
 // API
 Route::put('api/cards', 'CardController@create');

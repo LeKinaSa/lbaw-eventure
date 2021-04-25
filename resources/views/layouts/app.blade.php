@@ -39,6 +39,7 @@
                 </div>
               </form>
               @if (Auth::check())
+              <a href="#" role="button" class="btn btn-primary d-flex gap-2 align-items-center">Create event <i class="fa fa-plus"></i></a>
               <a href="{{ url('/sign-out') }}" role="button" class="btn btn-outline-light">Sign out</a>
               @else
               <a href="{{ url('/sign-in') }}" role="button" class="btn btn-outline-light">Sign in</a>
