@@ -178,3 +178,28 @@ function createItem(item) {
 }
 
 addEventListeners();
+
+function onWindowResize(event) {
+    let dropdownList = document.getElementById('dropdownUserItems');
+    let dropdownLinks = dropdownList.getElementsByTagName('a');
+
+    if (window.innerWidth < 768) {
+        dropdownList.classList.remove('dropdown-menu', 'dropdown-menu-end');
+        
+        for (let link of dropdownLinks) {
+            link.classList.remove('dropdown-item');
+            link.classList.add('btn', 'btn-outline-light');
+        }
+    }
+    else {
+        dropdownList.classList.add('dropdown-menu', 'dropdown-menu-end');
+
+        for (let link of dropdownLinks) {
+            link.classList.add('dropdown-item');
+            link.classList.remove('btn', 'btn-outline-light');
+        }
+    }
+}
+
+onWindowResize();
+window.addEventListener('resize', onWindowResize);

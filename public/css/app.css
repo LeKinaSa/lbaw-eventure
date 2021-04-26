@@ -34,15 +34,31 @@ img.google {
     box-shadow: 0 0 0 0.2rem rgba(250, 180, 40, 0.5);
 }
 
+#homepageCarousel img {
+    width: 100%;
+    object-fit: cover;
+    min-height: 30em;
+    max-height: 50vh;
+}
+
+.avatar-small {
+    max-height: 2.5em;
+}
+
 @media (min-width: 768px) {
     .card-profile {
         max-width: 250px;
     }
 }
 
-#homepageCarousel img {
-    width: 100%;
-    object-fit: cover;
-    min-height: 30em;
-    max-height: 50vh;
+@media (max-width: 767.98px) {
+    #dropdownUserItems {
+        align-items: stretch;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #dropdownUser {
+        display: none;
+    }
 }

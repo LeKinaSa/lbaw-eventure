@@ -6,7 +6,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a class="text-primary" href="{{ url('/') }}">Home</a></li>
             <li class="breadcrumb-item"><a class="text-primary" href="{{ route('users.profile', ['username' => $user->username]) }}">Profile</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
+            <li class="breadcrumb-item active" aria-current="page">Edit</li>
         </ol>
     </nav>
     

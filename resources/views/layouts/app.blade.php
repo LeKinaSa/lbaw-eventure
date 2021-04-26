@@ -24,14 +24,14 @@
   </head>
   <body class="d-flex flex-column min-vh-100">
     <header>
-      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark px-2">
         <div class="container-fluid">
           <a class="navbar-brand fs-3" href="{{ url('/') }}">EVENTURE</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse mt-3 mt-md-0" id="navbarContent">
-            <div class="col d-flex flex-column flex-md-row justify-content-end gap-2">
+            <div class="col d-flex flex-column flex-md-row align-items-stretch align-items-md-center justify-content-end gap-2 gap-md-3">
               <form>
                 <div class="input-group">
                   <input type="search" class="form-control" placeholder="Search" aria-label="Search" required>
@@ -39,11 +39,21 @@
                 </div>
               </form>
               @if (Auth::check())
-              <a href="#" role="button" class="btn btn-primary d-flex gap-2 align-items-center">Create event <i class="fa fa-plus"></i></a>
-              <a href="{{ url('/sign-out') }}" role="button" class="btn btn-outline-light">Sign out</a>
+                <a href="#" role="button" class="btn btn-primary d-flex gap-2 justify-content-center align-items-center">Create event <i class="fa fa-plus"></i></a>
+                @php $user = Auth::user() @endphp
+                <div class="dropdown">
+                  <a href="#" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img class="rounded-circle avatar-small" src="{{ is_null($user->picture) ? asset('img/profile_default.png') : 'data:image/jpeg;base64, ' . $user->picture }}">
+                  </a>
+                  <ul id="dropdownUserItems" class="dropdown-menu dropdown-menu-end ps-0 gap-2" aria-labelledby="dropdownUser">
+                    <li><a href="{{ route('users.profile', ['username' => $user->username]) }}" class="dropdown-item d-flex justify-content-center justify-content-md-start">My Profile</a></li>
+                    <li><a href="{{ route('users.profile.edit', ['username' => $user->username]) }}" class="dropdown-item d-flex justify-content-center justify-content-md-start">Edit Profile</a></li>
+                    <li><a href="{{ url('/sign-out') }}" role="button" class="dropdown-item d-flex justify-content-center justify-content-md-start">Sign out</a></li>
+                  </ul>
+                </div>
               @else
-              <a href="{{ url('/sign-in') }}" role="button" class="btn btn-outline-light">Sign in</a>
-              <a href="{{ url('/sign-up') }}" role="button" class="btn btn-outline-light">Sign up</a>
+                <a href="{{ url('/sign-in') }}" role="button" class="btn btn-outline-light">Sign in</a>
+                <a href="{{ url('/sign-up') }}" role="button" class="btn btn-outline-light">Sign up</a>
               @endif
             </div>
           </div>
