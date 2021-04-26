@@ -404,10 +404,79 @@ paths:
                       location: null
                       maxAttendance: 40
 
-  /events/{id}:
+  /events/new:
     get:
       operationId: R202
-      summary: 'R202: View Event'
+      summary: 'R202: Create Event Form'
+      description: 'Provides a form that allows a user to create a new event. Access: USR'
+      tags:
+        - 'M02: Events'
+      responses:
+        '200':
+          description: 'Ok. Show [UI10](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui10-create-edit-event)'
+    post:
+      operationId: R203
+      summary: 'R203: Create Event Action'
+      description: 'Processes information sent through the edit event form. Access: USR'
+      tags: 
+        - 'M02: Events'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                visibility:
+                  type: string
+                type:
+                  type: string
+                address:
+                  type: string
+                startDate:
+                  type: string
+                startTime:
+                  type: string
+                finishDate:
+                  type: string
+                finishTime:
+                  type: string
+                category:
+                  type: string
+                tags:
+                  type: string
+                  description: 'Tags are separated by commas'
+                maxAttendance:
+                  type: integer
+              required:
+                - name
+                - description
+                - visibility
+                - type
+                - category
+      responses:
+        '302':
+          description: 'Redirect user after processing the form information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Event was successfully created. Redirect to event page.'
+                  value: '/events/{id}'
+                302Error:
+                  description: 'An error occurred while creating event. Redirect to create event form.'
+                  value: '/events/new'
+
+  /events/{id}:
+    get:
+      operationId: R204
+      summary: 'R204: View Event'
       description: 'Show a specific event. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
         - 'M02: Events'
@@ -423,8 +492,8 @@ paths:
 
   /events/{id}/edit:
     get:
-      operationId: R203
-      summary: 'R203: Edit Event Form'
+      operationId: R205
+      summary: 'R205: Edit Event Form'
       description: 'Provides a form that allows an organizer to edit the details of their event. Access: OWN'
       tags:
         - 'M02: Events'
@@ -438,8 +507,8 @@ paths:
         '200':
           description: 'Ok. Show [UI10](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui10-create-edit-event)'
     post:
-      operationId: R204
-      summary: 'R204: Edit Event Action'
+      operationId: R206
+      summary: 'R206: Edit Event Action'
       description: 'Processes information sent through the edit event form. Access: OWN'
       tags: 
         - 'M02: Events'
@@ -504,8 +573,8 @@ paths:
 
   /events/{id}/delete:
     post:
-      operationId: R205
-      summary: 'R205: Delete Event Action'
+      operationId: R207
+      summary: 'R207: Delete Event Action'
       description: 'Deletes the specified event and redirects the user. Access: OWN, ADM'
       tags:
         - 'M02: Events'
@@ -532,8 +601,8 @@ paths:
 
   /api/events/{id}/cancel:
     patch:
-      operationId: R206
-      summary: 'R206: Cancel Event'
+      operationId: R208
+      summary: 'R208: Cancel Event'
       description: 'Changes the cancellation status of an event. Access: OWN'
       tags:
         - 'M02: Events'
@@ -560,8 +629,8 @@ paths:
 
   /events/{id}/invitations:
     get:
-      operationId: R207
-      summary: 'R207: View Invitations'
+      operationId: R209
+      summary: 'R209: View Invitations'
       description: 'Show invitations for a specific event. Access: OWN'
       tags:
         - 'M02: Events'
@@ -577,8 +646,8 @@ paths:
 
   /api/events/{id}/invitations:
     post:
-      operationId: R208
-      summary: 'R208: Add Invitation'
+      operationId: R210
+      summary: 'R210: Add Invitation'
       description: 'Invite a user to participate in the event. Access: OWN'
       tags:
         - 'M02: Events'
@@ -626,8 +695,8 @@ paths:
   
   /api/events/{id}/invitations/{idInvitation}:
     patch:
-      operationId: R209
-      summary: 'R209: Accept / Decline Invitation'
+      operationId: R211
+      summary: 'R211: Accept / Decline Invitation'
       description: 'Accept or decline an invitation for an event. Access: USR'
       tags:
         - 'M02: Events'
@@ -658,8 +727,8 @@ paths:
         '200':
           description: 'Success. Contains information about the invitation in JSON format.'
     delete:
-      operationId: R210
-      summary: 'R210: Cancel Invitation'
+      operationId: R212
+      summary: 'R212: Cancel Invitation'
       description: 'Cancel an invitation for an event. Access: OWN'
       tags:
         - 'M02: Events'
@@ -680,8 +749,8 @@ paths:
 
   /users/{username}/my-events:
     get:
-      operationId: R211
-      summary: 'R211: View Personal Events'
+      operationId: R213
+      summary: 'R213: View Personal Events'
       description: 'Shows a list of events the user is organizing or participating in. Access: OWN'
       tags:
         - 'M02: Events'
