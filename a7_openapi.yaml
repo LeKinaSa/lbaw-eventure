@@ -12,7 +12,7 @@ servers:
 tags:
   - name: 'M01: Authentication and User Profile'
   - name: 'M02: Events'
-  - name: 'M03: Comments and Polls'
+  - name: 'M03: Comments, Polls and Files'
   - name: 'M04: Matches and Leaderboards'
   - name: 'M05: Static Pages'
   - name: 'M06: Administration'
@@ -693,9 +693,9 @@ paths:
           required: true
       responses:
         '200':
-          description: 'Ok. Show [UI07](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui07-personal-events'
+          description: 'Ok. Show [UI07](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui07-personal-events)'
 
-  # M03: Comments and Polls
+  # M03: Comments, Polls and Files
 
   /api/events/{id}/comments:
     get:
@@ -703,7 +703,7 @@ paths:
       summary: 'R301: Get Event Comments'
       description: 'Returns the comments of the specified event in JSON format, ordered by date. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
-        - 'M03: Comments and Polls'
+        - 'M03: Comments, Polls and Files'
       parameters:
         - in: path
           name: id
@@ -754,7 +754,7 @@ paths:
       summary: 'R302: Add Comment'
       description: 'Adds a new comment to the specified event. Access: OWN, PAR'
       tags:
-        - 'M03: Comments and Polls'
+        - 'M03: Comments, Polls and Files'
       parameters:
         - in: path
           name: id
@@ -812,7 +812,7 @@ paths:
       summary: 'R303: Delete Comment'
       description: 'Deletes the specified comment from the event. Access: OWN (owner of the comment), ADM'
       tags:
-        - 'M03: Comments and Polls'
+        - 'M03: Comments, Polls and Files'
       parameters:
         - in: path
           name: id
@@ -834,7 +834,7 @@ paths:
       summary: 'R304: Get Event Polls'
       description: 'Returns information about the polls of the specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
       tags:
-        - 'M03: Comments and Polls'
+        - 'M03: Comments, Polls and Files'
       parameters:
         - in: path
           name: id
@@ -893,7 +893,7 @@ paths:
       summary: 'R305: Add Poll'
       description: 'Adds a new poll to the specified event. Access: OWN'
       tags:
-        - 'M03: Comments and Polls'
+        - 'M03: Comments, Polls and Files'
       parameters:
         - in: path
           name: id
@@ -945,7 +945,7 @@ paths:
       summary: 'R306: Delete Poll'
       description: 'Deletes the specified poll from the event. Access: OWN, ADM'
       tags:
-        - 'M03: Comments and Polls'
+        - 'M03: Comments, Polls and Files'
       parameters:
         - in: path
           name: id
@@ -967,7 +967,7 @@ paths:
       summary: 'R307: Get Poll Answer'
       description: 'Returns the answer of the currently authenticated user to the specified poll in JSON format, if it exists. Access: PAR'
       tags:
-        - 'M03: Comments and Polls'
+        - 'M03: Comments, Polls and Files'
       parameters:
         - in: path
           name: id
@@ -996,7 +996,7 @@ paths:
       summary: 'R308: Answer Poll'
       description: 'Adds or replaces the answer of the currently authenticated user to the specified poll. Access: PAR'
       tags:
-        - 'M03: Comments and Polls'
+        - 'M03: Comments, Polls and Files'
       parameters:
         - in: path
           name: id
@@ -1027,7 +1027,7 @@ paths:
       summary: 'R309: Remove Answer'
       description: 'Removes the answer of the currently authenticated user to the specified poll. Access: PAR'
       tags:
-        - 'M03: Comments and Polls'
+        - 'M03: Comments, Polls and Files'
       parameters:
         - in: path
           name: id
@@ -1036,6 +1036,84 @@ paths:
           required: true
         - in: path
           name: idPoll
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success.'
+
+  /api/events/{id}/files/:
+    post:
+      operationId: R310
+      summary: 'R310: Add File'
+      description: 'Uploads a new file to the specified event. Access: OWN'
+      tags:
+        - 'M03: Comments, Polls and Files'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Returns a JSON representation of the new file.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  dateUploaded:
+                    type: string
+                example:
+                  - id: 1
+                    name: 'rules.pdf'
+                    dateUploaded: '2021-05-22 12:57'
+
+  /events/{id}/files/{idFile}:
+    get:
+      operationId: R311
+      summary: 'R311: Download File'
+      description: 'Downloads a file uploaded by the organizer of the event. Access: OWN, PAR, ADM'
+      tags:
+        - 'M03: Comments, Polls and Files'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idFile
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Contains the file as an octet stream.'
+          content:
+            application/octet-stream: {}
+
+  /api/events/{id}/files/{idFile}:
+    delete:
+      operationId: R312
+      summary: 'R312: Delete File'
+      description: 'Deletes the specified file from the event. Access: OWN, ADM'
+      tags:
+        - 'M03: Comments, Polls and Files'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: idFile
           schema:
             type: integer
           required: true
