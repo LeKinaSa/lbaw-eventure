@@ -32,6 +32,6 @@ Route::delete('api/item/{id}', 'ItemController@delete');
 // Authentication
 Route::get('/sign-in', 'Auth\LoginController@showLoginForm')->name('sign-in');
 Route::post('/sign-in', 'Auth\LoginController@login');
-Route::get('/sign-out', 'Auth\LoginController@logout')->name('sign-out');
+Route::post('/sign-out', 'Auth\LoginController@logout')->name('sign-out');
 Route::get('/sign-up', 'Auth\RegisterController@showRegistrationForm')->name('sign-up');
 Route::post('/sign-up', 'Auth\RegisterController@register');

@@ -48,7 +48,12 @@
                   <ul id="dropdownUserItems" class="dropdown-menu dropdown-menu-end ps-0 gap-2" aria-labelledby="dropdownUser">
                     <li><a href="{{ route('users.profile', ['username' => $user->username]) }}" class="dropdown-item d-flex justify-content-center justify-content-md-start">My Profile</a></li>
                     <li><a href="{{ route('users.profile.edit', ['username' => $user->username]) }}" class="dropdown-item d-flex justify-content-center justify-content-md-start">Edit Profile</a></li>
-                    <li><a href="{{ url('/sign-out') }}" role="button" class="dropdown-item d-flex justify-content-center justify-content-md-start">Sign out</a></li>
+                    <li>
+                      <form method="POST" action="{{ route('sign-out') }}">
+                        {{ csrf_field() }}
+                        <button type="submit" class="dropdown-item d-flex justify-content-center justify-content-md-start">Sign out</button>
+                      </form>
+                    </li>
                   </ul>
                 </div>
               @else
