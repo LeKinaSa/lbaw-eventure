@@ -2,86 +2,111 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Event;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\Event;
-
-class EventController extends Controller {
+class EventController extends Controller
+{
     /**
-     * Shows the event for a given id.
+     * Display a listing of the resource.
      *
-     * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
-    public function show($id) {
-        $event = Event::find($id);
-        //$this->authorize('show', $event);
-        return view('pages.event', ['event' => $event]);
+    public function index() {
+        //
     }
 
     /**
-     * Creates a new event.
+     * Show the form for creating a new resource.
      *
-     * @return Event The event created.
+     * @return \Illuminate\Http\Response
      */
-    public function create(Request $request) {
-        $event = new Event();
+    public function create() {
+        $this->authorize('create', Event::class);
+        $categories = Category::get();
         
-        $this->authorize('create', $event);
+        return view('pages.event_edit', ['categories' => $categories]);
+    }
 
-        $event->id_organizer = Auth::user()->id;
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request) {
+        $this->authorize('create', Event::class);
 
-        $event->title          = $request->input('title');
-        $event->visibility     = $request->input('visibility');
-        $event->description    = $request->input('description');
-        $event->picture        = $request->input('image');
-        $event->start_date     = $request->input('startDate');  // TODO  startDate +  startTime
-        $event->end_date       = $request->input('finishDate'); // TODO finishDate + finishTime
-        $event->type           = $request->input('type');
-        $event->location       = $request->input('location');
-        $event->max_attendance = NULL;
-        if ($request->input('switchLimitedAttendance')) {
-            $event->max_attendance = $request->input('maxAttendance');
+        try {
+            $event = Event::create([
+                'title' => $request->input('title'),
+                'id_organizer' => Auth::id(),
+                'visibility' => $request->input('visibility'),
+                'picture' => $request->input('image'),
+                'description' => $request->input('description'),
+                'type' => $request->input('type'),
+                'location' => $request->input('location'),
+                'max_attendance' => $request->input('switchLimitedAttendance') ? $request->input('maxAttendance') : NULL,
+                'id_category' => $request->input('category'),
+            ]);
         }
-        $event->cancelled      = false;
-        $event->id_category    = $request->input('category');
-        $event->win_points     = 1;
-        $event->draw_points    = 0.5;
-        $event->loss_points    = 0;
-        $event->leaderboard    = false;
-        
-        // TODO: event keywords
-        //$event->keywords       = ''; // TODO
+        catch (QueryException $ex) {
+            return redirect(route('events.new'));
+        }
+
+        //$event->picture      = $request->input('image');
+        //$event->start_date     = $request->input('startDate');  // TODO  startDate +  startTime
+        //$event->end_date       = $request->input('finishDate'); // TODO finishDate + finishTime
         
         // TODO: Event Tags
 
         $event->save();
-        return view('pages.event', ['id' => $event->id]);
+        return redirect(route('events.event', ['id' => $event->id]));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('view', $event);
+        return view('pages.event', ['event' => $event]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  string  $id
+     * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
-        if ($id != 'new') {
-            $event = Event::where('id', $id)->firstOrFail();
-            $this->authorize('edit', $event);
-            return view('pages.event_edit', ['id' => $event->id]);
-        }
-        return view('pages.event_edit', ['id' => $id]);
+    public function edit(Event $event) {
+        //
     }
 
-    public function delete(Request $request, $id) {
-      $event = Event::find($id);
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Event  $event
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Event $event) {
+        //
+    }
 
-      $this->authorize('delete', $event);
-      
-      $event->delete();
-      return $event;
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Event  $event
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Event $event) {
+        //
     }
 }

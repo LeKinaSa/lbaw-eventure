@@ -379,3 +379,12 @@ CREATE INDEX event_id_category_idx ON "event" USING hash(id_category);
 -- Full-text search indices
 
 CREATE INDEX search_idx ON "event" USING GIST (keywords);
+
+
+-- POPULATION
+
+-- R05
+INSERT INTO "category" (id,"name") VALUES (1,'Board Games');
+INSERT INTO "category" (id,"name") VALUES (2,'Video Games');
+INSERT INTO "category" (id,"name") VALUES (3,'Card Games');
+INSERT INTO "category" (id,"name") VALUES (4,'Role-Playing Games');

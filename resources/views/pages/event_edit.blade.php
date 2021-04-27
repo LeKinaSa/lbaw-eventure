@@ -10,9 +10,7 @@
     </nav>
     
     <div class="row justify-content-md-center">
-        <form class="col-md-8" action="{{ route('events.event', ['id' => $id]) }}">
-        <!-- TODO: id probably doesnt work before creating the event -->
-        <!-- TODO: new is just to know the event isnt created, here it should create and then it should replace the id -->
+        <form method="POST" class="col-md-8" action="{{ isset($event) ? route('events.event.edit', ['id' => $event->id]) : route('events.new') }}">
             {{ csrf_field() }}
 
             <h1 class="text-center">Create Event</h1>
@@ -30,12 +28,12 @@
             <div class="mb-3">
                 <h5>Visibility</h5>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" id="visibilityPublic" name="visibility" aria-describedby="visibilityPublicHelp" checked required>
+                    <input class="form-check-input" type="radio" id="visibilityPublic" name="visibility" value="Public" aria-describedby="visibilityPublicHelp" checked required>
                     <label for="visibilityPublic" class="form-check-label"><i class="fa fa-globe"></i> Public</label>
                     <div id="visibilityPublicHelp" class="form-text">Public events will show up in search results and users can ask to join them</div>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" id="visibilityPrivate" name="visibility" aria-describedby="visibilityPrivateHelp">
+                    <input class="form-check-input" type="radio" id="visibilityPrivate" name="visibility" value="Private" aria-describedby="visibilityPrivateHelp">
                     <label for="visibilityPrivate" class="form-check-label"><i class="fa fa-lock"></i> Private</label>
                     <div id="visibilityPrivateHelp" class="form-text">Private events will not show up in search results and users must be invited in order to participate</div>
                 </div>
@@ -44,21 +42,14 @@
             <div class="row mb-3">
                 <div class="col-md-3">
                     <h5>Type</h5>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" id="typeInPerson" name="type" checked required>
-                        <label for="typeInPerson" class="form-check-label">In person</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" id="typeMixed" name="type">
-                        <label for="typeMixed" class="form-check-label">Mixed</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" id="typeVirtual" name="type">
-                        <label for="typeVirtual" class="form-check-label">Virtual</label>
-                    </div>
+                    
+                    @php use App\Models\Event; @endphp
+                    @foreach (Event::FORMATTED_TYPES as $type => $formatted)
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="type{{ $type }}" name="type" value="{{ $type }}" checked required>
+                            <label for="type{{ $type }}" class="form-check-label">{{ $formatted }}</label>
+                        </div>
+                    @endforeach
                 </div>
                 <div class="col-md-9">
                     <label for="location" class="h5 form-label">Address</label>
@@ -69,34 +60,33 @@
             <div class="row mb-3">
                 <div class="col">
                     <label for="startDate" class="h5 form-label">Start date</label>
-                    <input type="date" class="form-control" id="startDate" name="startDate" required>
+                    <input type="date" class="form-control" id="startDate" name="startDate">
                 </div>
 
                 <div class="col">
                     <label for="startTime" class="h5 form-label">Start time</label>
-                    <input type="time" class="form-control" id="startTime" name="startTime" required>
+                    <input type="time" class="form-control" id="startTime" name="startTime">
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col">
                     <label for="finishDate" class="h5 form-label">Finish date</label>
-                    <input type="date" class="form-control" id="finishDate" name="finishDate" required>
+                    <input type="date" class="form-control" id="finishDate" name="finishDate">
                 </div>
 
                 <div class="col">
                     <label for="finishTime" class="h5 form-label">Finish time</label>
-                    <input type="time" class="form-control" id="finishTime" name="finishTime" required>
+                    <input type="time" class="form-control" id="finishTime" name="finishTime">
                 </div>
             </div>
 
             <div class="mb-3">
                 <label for="category" class="h5 form-label">Category</label>
                 <select class="form-select" id="category" name="category">
-                    <option selected>Video games</option>
-                    <option>Board games</option>
-                    <option>Card games</option>
-                    <option>Other</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
                 </select>
             </div>
 

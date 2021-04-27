@@ -20,11 +20,17 @@
                 <div class="mb-3">
                     <label for="name" class="h5 form-label">Name *</label>
                     <input type="text" id="name" name="name" class="form-control" value="{{ $user->name }}" required>
+                    @if ($errors->has('name'))
+                        <span class="text-danger">{{ $errors->first('name') }}</span>
+                    @endif
                 </div>
 
                 <div class="mb-3">
                     <label for="username" class="h5 form-label">Username *</label>
                     <input type="text" id="name" name="username" class="form-control" value="{{ $user->username }}" required>
+                    @if ($errors->has('username'))
+                        <span class="text-danger">{{ $errors->first('username') }}</span>
+                    @endif
                 </div>
 
                 <div class="mb-3">
@@ -36,11 +42,17 @@
                         </div> --}}
                     </div>
                     <input type="email" id="email" name="email" class="form-control" value="{{ $user->email }}" required>
+                    @if ($errors->has('email'))
+                        <span class="text-danger">{{ $errors->first('email') }}</span>
+                    @endif
                 </div>
 
                 <div class="mb-3">
                     <label for="description" class="h5 form-label">Description</label>
                     <textarea class="form-control" id="description" name="description" rows="4" placeholder="Tell us a bit about yourself">{{ $user->description }}</textarea>
+                    @if ($errors->has('description'))
+                        <span class="text-danger">{{ $errors->first('description') }}</span>
+                    @endif
                 </div>
 
                 <div class="row mb-3">
@@ -57,22 +69,35 @@
                             <input class="form-check-input" type="radio" id="unspecified" name="gender" value="Unspecified" {{ is_null($user->gender) ? 'checked' : '' }}>
                             <label for="unspecified" class="form-check-label">Prefer not to say</label>
                         </div>
+
+                        @if ($errors->has('gender'))
+                            <span class="text-danger">{{ $errors->first('gender') }}</span>
+                        @endif
                     </div>
 
                     <div class="col-md-9">
                         <label for="age" class="h5 form-label">Age</label>
                         <input type="number" id="age" name="age" class="form-control" value="{{ $user->age }}" min="13" max="150">
+                        @if ($errors->has('age'))
+                            <span class="text-danger">{{ $errors->first('age') }}</span>
+                        @endif
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label for="location" class="h5 form-label">Location</label>
                     <input type="text" id="location" name="location" class="form-control" value="{{ $user->address }}">
+                    @if ($errors->has('location'))
+                        <span class="text-danger">{{ $errors->first('location') }}</span>
+                    @endif
                 </div>
 
                 <div class="mb-3">
                     <label for="website" class="h5 form-label">Website</label>
                     <input type="text" id="website" name="website" class="form-control" value="{{ $user->website }}">
+                    @if ($errors->has('website'))
+                        <span class="text-danger">{{ $errors->first('website') }}</span>
+                    @endif
                 </div>
 
                 <div class="mb-3">

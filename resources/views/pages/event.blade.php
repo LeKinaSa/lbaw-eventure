@@ -13,15 +13,15 @@
 
     <div class="row mb-3">
         <div class="col-md-5">
-            <img src="{{ is_null($event->picture) ? asset('img/event_default.png') : 'data:image/jpeg;base64, ' . $event->picture }}" class="img-fluid rounded" alt="Event's image">
+            <img src="{{ is_null($event->picture) ? asset('img/event_default.png') : 'data:image/jpeg;base64, ' . $event->picture }}" class="img-fluid rounded" alt="Event image">
         </div>
         <div class="col-md-7 p-3">
             <div class="d-flex justify-content-between mb-2">
                 <div class="d-flex gap-2">
-                    <a href="{{ route('events.event.matches', ['event' => $event->id]) }}" role="button" class="btn btn-primary">Results</a>
-                    <a href="{{ route('events.event.invitations', ['event' => $event->id]) }}" role="button" class="btn btn-primary">Invitations</a>
+                    <a href="#" role="button" class="btn btn-primary">Results</a>
+                    <a href="#" role="button" class="btn btn-primary">Invitations</a>
                 </div>
-                <a class="btn btn-secondary" href="{{ route('events.event.edit', ['event' => $event->id]) }}"><i class="fa fa-pencil"></i></a>
+                <a class="btn btn-secondary" href="{{ route('events.event.edit', ['id' => $event->id]) }}"><i class="fa fa-pencil"></i></a>
             </div>
             <hr>
             
@@ -34,19 +34,20 @@
                     <div class="mb-2">
                         <h5>Start date</h5>
                         <div class="border border-2 rounded px-3 py-2">
-                            <i class="fa fa-calendar"></i> {{ is_null($event->start_date) ? "Undefined" : $event->start_date }} 
+                            <i class="fa fa-calendar"></i> {{ is_null($event->start_date) ? "Not defined" : $event->start_date }} 
                         </div>
                     </div>
                     <div class="mb-2">
                         <h5>Type</h5>
                         <div class="border border-2 rounded px-3 py-2">
-                            {{ $event->type }}
+                            @php use App\Models\Event; @endphp
+                            {{ Event::FORMATTED_TYPES[$event->type] }}
                         </div>
                     </div>
                     <div class="mb-2">
                         <h5>Category</h5>
                         <div class="border border-2 rounded px-3 py-2">
-                            {{ $event->id_category }}
+                            {{ $event->category->name }}
                         </div>
                     </div>
                 </div>
@@ -55,13 +56,13 @@
                     <div class="mb-2">
                         <h5>End date</h5>
                         <div class="border border-2 rounded px-3 py-2">
-                            <i class="fa fa-calendar"></i> {{ is_null($event->end_date) ? "Undefined" : $event->end_date }}
+                            <i class="fa fa-calendar"></i> {{ is_null($event->end_date) ? "Not defined" : $event->end_date }}
                         </div>
                     </div>
                     <div class="mb-2">
                         <h5>Location</h5>
                         <div class="border border-2 rounded px-3 py-2">
-                            <i class="fa fa-map-marker"></i> {{ is_null($event->location) ? "Undefined" : $event->location }}
+                            <i class="fa fa-map-marker"></i> {{ is_null($event->location) ? "Not defined" : $event->location }}
                         </div>
                     </div>
                     <div class="mb-2">
