@@ -22,6 +22,16 @@ Route::get('cards', 'CardController@list');
 Route::get('cards/{id}', 'CardController@show');
 */
 
+// Event
+Route::get('/events/{id}', 'EventController@show')->name('events.event');
+Route::get('/events/{id}/edit', 'EventController@edit')->name('events.event.edit');
+Route::post('/events/{id}/edit', 'EventController@create');
+// TODO: do we need a different route to create and edit events?
+
+// TODO: next 2 routes are not complete
+Route::get('/events/{id}/matches', 'EventController@show')->name('events.event.matches');
+Route::get('/events/{id}/invitations', 'EventController@show')->name('events.event.invitations');
+
 // API
 Route::put('api/cards', 'CardController@create');
 Route::delete('api/cards/{card_id}', 'CardController@delete');

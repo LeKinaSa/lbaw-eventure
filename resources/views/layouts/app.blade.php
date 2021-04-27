@@ -39,7 +39,7 @@
                 </div>
               </form>
               @if (Auth::check())
-                <a href="#" role="button" class="btn btn-primary d-flex gap-2 justify-content-center align-items-center">Create event <i class="fa fa-plus"></i></a>
+                <a href="{{ route('events.event.edit', ['id' => 'new']) }}" role="button" class="btn btn-primary d-flex gap-2 justify-content-center align-items-center">Create event <i class="fa fa-plus"></i></a>
                 @php $user = Auth::user() @endphp
                 <div class="dropdown">
                   <a href="#" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">

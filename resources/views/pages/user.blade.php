@@ -23,7 +23,7 @@
                 <li class="h5" aria-label="Location"><i class="col-1 fa fa-map-marker"></i> {{ $user->address }}</li>
                 @endif
                 @if (!is_null($user->gender))
-                <li class="h5" aria-label="Gender"><i class="col-1 fa fa-user"></i> Male</li>
+                <li class="h5" aria-label="Gender"><i class="col-1 fa fa-user"></i> {{ $user->gender }}</li>
                 @endif
                 @if (!is_null($user->age))
                 <li class="h5" aria-label="Age"><i class="col-1 fa fa-calendar"></i> {{ $user->age }} years old</li>
