@@ -767,60 +767,9 @@ paths:
   # M03: Comments, Polls and Files
 
   /api/events/{id}/comments:
-    get:
-      operationId: R301
-      summary: 'R301: Get Event Comments'
-      description: 'Returns the comments of the specified event in JSON format, ordered by date. Access: PUB (public event); OWN, PAR, ADM (private event)'
-      tags:
-        - 'M03: Comments, Polls and Files'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      responses:
-        '200':
-          description: 'Success. Contains a list of all comments from the specified event, ordered by date.'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    idAuthor:
-                      type: integer
-                    authorUsername:
-                      type: string
-                    authorName:
-                      type: string
-                    idParent:
-                      type: integer
-                    text:
-                      type: string
-                    date:
-                      type: string
-                  example:
-                    - id: 1
-                      idAuthor: 2
-                      authorUsername: 'rick1993'
-                      authorName: 'Richard Stevenson'
-                      idParent: null
-                      text: 'What is the time control for the chess matches?'
-                      date: '2021-04-21 21:02:05'
-                    - id: 2
-                      idAuthor: 6
-                      authorUsername: 'sophiesmith'
-                      authorName: 'Sophie Smith'
-                      idParent: 1
-                      text: 'The time control will be 10 minutes with 5 seconds increment for all matches.'
-                      date: '2021-04-21 22:22:54'
     post:
-      operationId: R302
-      summary: 'R302: Add Comment'
+      operationId: R301
+      summary: 'R301: Add Comment'
       description: 'Adds a new comment to the specified event. Access: OWN, PAR'
       tags:
         - 'M03: Comments, Polls and Files'
@@ -877,8 +826,8 @@ paths:
 
   /api/events/{id}/comments/{idComment}:
     delete:
-      operationId: R303
-      summary: 'R303: Delete Comment'
+      operationId: R302
+      summary: 'R302: Delete Comment'
       description: 'Deletes the specified comment from the event. Access: OWN (owner of the comment), ADM'
       tags:
         - 'M03: Comments, Polls and Files'
@@ -898,68 +847,9 @@ paths:
           description: 'Success.'
 
   /api/events/{id}/polls:
-    get:
-      operationId: R304
-      summary: 'R304: Get Event Polls'
-      description: 'Returns information about the polls of the specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
-      tags:
-        - 'M03: Comments, Polls and Files'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      responses:
-        '200':
-          description: 'Success. Contains a list of all polls from the specified event.'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    question:
-                      type: string
-                    options:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                          option:
-                            type: string
-                          voteCount:
-                            type: integer
-                  example:
-                    - id: 1
-                      question: 'What time control would you prefer for the matches?'
-                      options:
-                        - id: 1
-                          option: '10 + 0'
-                          voteCount: 2
-                        - id: 2
-                          option: '10 + 3'
-                          voteCount: 3
-                        - id: 3
-                          option: '10 + 5'
-                          voteCount: 7
-                    - id: 2
-                      question: 'Do you prefer playing with the white pieces or the black pieces?'
-                      options:
-                        - id: 4
-                          option: 'White'
-                          voteCount: 7
-                        - id: 5
-                          option: 'Black'
-                          voteCount: 5
     post:
-      operationId: R305
-      summary: 'R305: Add Poll'
+      operationId: R303
+      summary: 'R303: Add Poll'
       description: 'Adds a new poll to the specified event. Access: OWN'
       tags:
         - 'M03: Comments, Polls and Files'
@@ -1007,11 +897,24 @@ paths:
                           type: string
                         voteCount:
                           type: integer
+                example:
+                  - id: 1
+                    question: 'What time control would you prefer for the matches?'
+                    options:
+                      - id: 1
+                        option: '10 + 0'
+                        voteCount: 2
+                      - id: 2
+                        option: '10 + 3'
+                        voteCount: 3
+                      - id: 3
+                        option: '10 + 5'
+                        voteCount: 7
 
   /api/events/{id}/polls/{idPoll}:
     delete:
-      operationId: R306
-      summary: 'R306: Delete Poll'
+      operationId: R304
+      summary: 'R304: Delete Poll'
       description: 'Deletes the specified poll from the event. Access: OWN, ADM'
       tags:
         - 'M03: Comments, Polls and Files'
@@ -1031,38 +934,9 @@ paths:
           description: 'Success.'
 
   /api/events/{id}/polls/{idPoll}/answer:
-    get:
-      operationId: R307
-      summary: 'R307: Get Poll Answer'
-      description: 'Returns the answer of the currently authenticated user to the specified poll in JSON format, if it exists. Access: PAR'
-      tags:
-        - 'M03: Comments, Polls and Files'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-        - in: path
-          name: idPoll
-          schema:
-            type: integer
-          required: true
-      responses:
-        '200':
-          description: 'Success. Contains the poll answer of the user in JSON format.'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                example:
-                  - id: 2
     put:
-      operationId: R308
-      summary: 'R308: Answer Poll'
+      operationId: R305
+      summary: 'R305: Answer Poll'
       description: 'Adds or replaces the answer of the currently authenticated user to the specified poll. Access: PAR'
       tags:
         - 'M03: Comments, Polls and Files'
@@ -1092,8 +966,8 @@ paths:
         '200':
           description: 'Success.'
     delete:
-      operationId: R309
-      summary: 'R309: Remove Answer'
+      operationId: R306
+      summary: 'R306: Remove Answer'
       description: 'Removes the answer of the currently authenticated user to the specified poll. Access: PAR'
       tags:
         - 'M03: Comments, Polls and Files'
@@ -1114,8 +988,8 @@ paths:
 
   /api/events/{id}/files/:
     post:
-      operationId: R310
-      summary: 'R310: Add File'
+      operationId: R307
+      summary: 'R307: Add File'
       description: 'Uploads a new file to the specified event. Access: OWN'
       tags:
         - 'M03: Comments, Polls and Files'
@@ -1146,8 +1020,8 @@ paths:
 
   /events/{id}/files/{idFile}:
     get:
-      operationId: R311
-      summary: 'R311: Download File'
+      operationId: R308
+      summary: 'R308: Download File'
       description: 'Downloads a file uploaded by the organizer of the event. Access: OWN, PAR, ADM'
       tags:
         - 'M03: Comments, Polls and Files'
@@ -1170,8 +1044,8 @@ paths:
 
   /api/events/{id}/files/{idFile}:
     delete:
-      operationId: R312
-      summary: 'R312: Delete File'
+      operationId: R309
+      summary: 'R309: Delete File'
       description: 'Deletes the specified file from the event. Access: OWN, ADM'
       tags:
         - 'M03: Comments, Polls and Files'
@@ -1210,34 +1084,9 @@ paths:
           description: 'Ok. Show [UI12](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui12-results)'
 
   /api/events/{id}/competitors:
-    get:
-      operationId: R402
-      summary: 'R402: Get Event Competitors'
-      description: 'Returns information about the competitors of specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
-      tags:
-        - 'M04: Matches and Leaderboards'
-      responses:
-        '200':
-          description: 'Success. Contains a list of competitors from the specified event.'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    name:
-                      type: string
-                  example:
-                    - id: 1
-                      name: 'Daredevils'
-                    - id: 2
-                      name: 'Ascend'
     post:
-      operationId: R403
-      summary: 'R403: Add Competitor'
+      operationId: R402
+      summary: 'R402: Add Competitor'
       description: 'Adds a new competitor to the specified event. Access: OWN'
       tags:
         - 'M04: Matches and Leaderboards'
@@ -1274,56 +1123,10 @@ paths:
                   - id: 3
                     name: 'Sanctum Esports'
 
-  /api/events/{id}/matches:
-    get:
-      operationId: R404
-      summary: 'R404: Get Event Matches'
-      description: 'Returns information about the matches of the specified event in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
-      tags:
-        - 'M04: Matches and Leaderboards'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      responses:
-        '200':
-          description: 'Success. Contains a list of matches from the specified event.'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    idCompetitor1:
-                      type: integer
-                    nameCompetitor1:
-                      type: string
-                    idCompetitor2:
-                      type: integer
-                    nameCompetitor2:
-                      type: string
-                    date:
-                      type: string
-                    description:
-                      type: string
-                    result:
-                      type: string
-                  example:
-                    - id: 1
-                      idCompetitor1: 3
-                      nameCompetitor1: 'Sanctum Esports'
-                      idCompetitor2: 4
-                      nameCompetitor2: 'Darkness'
-                      date: '2021-05-21 20:00'
-                      result: 'TBD'     
+  /api/events/{id}/matches:  
     post:
-      operationId: R405
-      summary: 'R405: Add Match'
+      operationId: R403
+      summary: 'R403: Add Match'
       description: 'Adds a new match to the specified event. Access: OWN'
       tags:
         - 'M04: Matches and Leaderboards'
@@ -1389,8 +1192,8 @@ paths:
 
   /api/events/{id}/matches/{idMatch}:
     patch:
-      operationId: R406
-      summary: 'R406: Edit Match'
+      operationId: R404
+      summary: 'R404: Edit Match'
       description: 'Processes information sent through the edit match form. Access: OWN'
       tags:
         - 'M04: Matches and Leaderboards'
@@ -1460,8 +1263,8 @@ paths:
                     description: 'Very exciting and close games. Daredevils win the best-of-five series 3-2.'
                     result: 'Winner1'
     delete:
-      operationId: R407
-      summary: 'R407: Delete Match'
+      operationId: R405
+      summary: 'R405: Delete Match'
       description: 'Deletes the specified match from the event. Access: OWN, ADM'
       tags:
         - 'M04: Matches and Leaderboards'
@@ -1481,42 +1284,9 @@ paths:
           description: 'Success.'
 
   /api/events/{id}/leaderboard-settings:
-    get:
-      operationId: R408
-      summary: 'R408: Get Leaderboard Settings'
-      description: 'Returns information about the leaderboard settings in JSON format. Access: PUB (public event); OWN, PAR, ADM (private event)'
-      tags:
-        - 'M04: Matches and Leaderboards'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      responses:
-        '200':
-          description: 'Success. Returns a JSON representation of the leaderboard settings.'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  winPoints:
-                    type: number
-                  drawPoints:
-                    type: number
-                  lossPoints:
-                    type: number
-                  generateLeaderboard:
-                    type: boolean
-                example:
-                  - winPoints: 1
-                    drawPoints: 0.5
-                    lossPoints: 0
-                    generateLeaderboard: true
     patch:
-      operationId: R409
-      summary: 'R409: Update Leaderboard Settings'
+      operationId: R406
+      summary: 'R406: Update Leaderboard Settings'
       description: 'Updates the leaderboard settings of the specified event. Access: OWN'
       tags:
         - 'M04: Matches and Leaderboards'
@@ -1562,6 +1332,11 @@ paths:
                     type: number
                   generateLeaderboard:
                     type: boolean
+                example:
+                  - winPoints: 1
+                    drawPoints: 0.5
+                    lossPoints: 0
+                    generateLeaderboard: true
 
   # M05: Static Pages
 
