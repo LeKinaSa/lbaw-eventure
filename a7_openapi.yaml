@@ -183,7 +183,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -203,6 +203,9 @@ paths:
                   type: string
                 website:
                   type: string
+                picture:
+                  type: string
+                  format: binary
               required:
                 - name
                 - username
@@ -417,13 +420,13 @@ paths:
     post:
       operationId: R203
       summary: 'R203: Create Event Action'
-      description: 'Processes information sent through the edit event form. Access: USR'
+      description: 'Processes information sent through the create event form. Access: USR'
       tags: 
         - 'M02: Events'
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -452,6 +455,9 @@ paths:
                   description: 'Tags are separated by commas'
                 maxAttendance:
                   type: integer
+                picture:
+                  type: string
+                  format: binary
               required:
                 - name
                 - description
@@ -521,7 +527,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -550,6 +556,9 @@ paths:
                   description: 'Tags are separated by commas'
                 maxAttendance:
                   type: integer
+                picture:
+                  type: string
+                  format: binary
               required:
                 - name
                 - description
@@ -999,6 +1008,10 @@ paths:
           schema:
             type: integer
           required: true
+      requestBody:
+        required: true
+        content:
+          application/octet-stream: {}
       responses:
         '200':
           description: 'Success. Returns a JSON representation of the new file.'
