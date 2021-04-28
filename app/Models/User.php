@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
-{
+class User extends Authenticatable {
     use Notifiable;
 
     // Don't add create and update timestamps in database.
@@ -31,4 +30,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    /**
+     * Returns all the events that have an entry in the participation table for this user, regardless of whether
+     * the user is actually participating in the event (they can be simply invited or attempting to join).
+     */
+    public function eventsRelatedTo() {
+        return $this->belongsToMany(Event::class, 'participation', 'id_user', 'id_event')->withPivot('status');
+    }
 }

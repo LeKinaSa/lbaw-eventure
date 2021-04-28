@@ -9,7 +9,7 @@
         </ol>
     </nav>
 
-    <h1 class="text-center mb-3">{{ $event->title }}</h1>
+    <h1 class="text-center mb-3">{{ $event->title }} <i class="fa {{ $event->visibility === 'Public' ? "fa-globe" : "fa-lock" }}"></i></h1>
 
     <div class="row mb-3">
         <div class="col-md-5">

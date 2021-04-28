@@ -29,17 +29,22 @@ class EventPolicy {
      */
     public function view(User $user, Event $event) {
         if ($event->visibility == 'Public') {
-            // Public event can be seen by everyone
+            // Public events can be seen by everyone
             return true;
         }
 
         if ($user->id == $event->id_organizer) {
-            // Organizer can see their own event
+            // Organizer can see their own events
             return true;
         }
 
-        // TODO: private events can be seen by administrators and participants
-        return true;
+        if ($event->participants()->wherePivot('id_user', $user->id)->first() !== null) {
+            // Users can see private events they are participating in
+            return true;
+        }
+
+        // TODO: private events can be seen by administrators
+        return false;
     }
 
     /**
@@ -61,7 +66,8 @@ class EventPolicy {
      * @return mixed
      */
     public function update(User $user, Event $event) {
-        //
+        // Only organizers can update the details of their events
+        return $user->id == $event->id_organizer;
     }
 
     /**
@@ -72,7 +78,7 @@ class EventPolicy {
      * @return mixed
      */
     public function delete(User $user, Event $event) {
-        // Only a event organizer can delete it
+        // Organizers can delete their events
         // TODO: and admin
         return $user->id == $event->id_organizer;
     }

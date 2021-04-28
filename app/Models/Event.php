@@ -41,7 +41,15 @@ class Event extends Model {
         return $this->belongsTo(Category::class, 'id_category');
     }
 
+    /**
+     * Returns all the users that have an entry in the participation table for this event, regardless of whether
+     * they are actually participants in the event (they can be simply invited or attempting to join).
+     */
+    public function usersRelatedTo() {
+        return $this->belongsToMany(User::class, 'participation', 'id_event', 'id_user')->withPivot('status');
+    }
+
     public function participants() {
-        
+        return $this->usersRelatedTo()->where('status', 'Accepted');
     }
 }
