@@ -27,13 +27,13 @@ class EventPolicy {
      * @param  \App\Models\Event  $event
      * @return mixed
      */
-    public function view(User $user, Event $event) {
-        if ($event->visibility == 'Public') {
+    public function view(?User $user, Event $event) {
+        if ($event->visibility === 'Public') {
             // Public events can be seen by everyone
             return true;
         }
 
-        if ($user->id == $event->id_organizer) {
+        if ($user->id === $event->id_organizer) {
             // Organizer can see their own events
             return true;
         }
@@ -67,7 +67,7 @@ class EventPolicy {
      */
     public function update(User $user, Event $event) {
         // Only organizers can update the details of their events
-        return $user->id == $event->id_organizer;
+        return $user->id === $event->id_organizer;
     }
 
     /**
@@ -80,7 +80,7 @@ class EventPolicy {
     public function delete(User $user, Event $event) {
         // Organizers can delete their events
         // TODO: and admin
-        return $user->id == $event->id_organizer;
+        return $user->id === $event->id_organizer;
     }
 
     /**
