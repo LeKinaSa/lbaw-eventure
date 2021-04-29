@@ -19,9 +19,9 @@
                 <div class="mb-2">
                     <label for="username" class="form-label">Username *</label>
                     <input type="text" class="form-control" id="username" name="username" value="{{ old('username') }}" required>
-                    @if ($errors->has('username'))
-                        <span class="text-danger">{{ $errors->first('username') }}</span>
-                    @endif
+                    @error ('username')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
@@ -30,9 +30,9 @@
                         <a class="text-primary" href="recover_password.php">Forgot your password?</a>
                     </div>
                     <input type="password" class="form-control" id="password" name="password" required>
-                    @if ($errors->has('password'))
-                        <span class="text-danger">{{ $errors->first('password') }}</span>
-                    @endif
+                    @error ('password')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <input type="submit" class="btn btn-primary" value="Sign in">

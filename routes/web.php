@@ -17,10 +17,6 @@ Route::view('/', 'pages.home');
 Route::get('/users/{username}', 'UserController@show')->name('users.profile');
 Route::get('/users/{username}/edit', 'UserController@edit')->name('users.profile.edit');
 Route::post('/users/{username}/edit', 'UserController@update');
-/*
-Route::get('cards', 'CardController@list');
-Route::get('cards/{id}', 'CardController@show');
-*/
 
 // Event
 Route::get('/events/new', 'EventController@create')->name('events.new');
