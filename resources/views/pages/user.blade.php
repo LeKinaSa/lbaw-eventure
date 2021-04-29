@@ -46,6 +46,10 @@
                     <a href="personal_events.php" class="btn btn-primary text-uppercase">See all</a>
                 </header>
                 <div class="d-flex justify-content-center justify-content-md-start flex-wrap gap-3">
+                    @each('partials.event_small', $eventsOrganizing, 'event')
+
+                    {{--
+                    
                     <article class="card card-profile">
                         <img src="../assets/board_game.jpeg" class="card-img-top">
                         <div class="card-body">
@@ -68,6 +72,7 @@
                                 <li class="card-text"><i class="col-2 fa fa-user" aria-label="Number of participants"></i>15 participants</li>
                             </ul>
                         </div>
+                    --}}
                     </article>
                 </div>
             </section>

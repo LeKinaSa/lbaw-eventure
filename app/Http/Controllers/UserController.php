@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
@@ -44,7 +45,9 @@ class UserController extends Controller {
     public function show($username) {
         $user = User::where('username', $username)->firstOrFail();
         $this->authorize('show', $user);
-        return view('pages.user', ['user' => $user]);
+
+        $eventsOrganizing = Event::where('id_organizer', $user->id)->limit(3)->get();
+        return view('pages.user', ['user' => $user, 'eventsOrganizing' => $eventsOrganizing]);
     }
 
     /**
