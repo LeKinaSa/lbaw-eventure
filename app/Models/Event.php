@@ -52,4 +52,8 @@ class Event extends Model {
     public function participants() {
         return $this->usersRelatedTo()->where('status', 'Accepted');
     }
+
+    public function getTypeFormatted() {
+        return Event::FORMATTED_TYPES[$this->type];
+    }
 }
