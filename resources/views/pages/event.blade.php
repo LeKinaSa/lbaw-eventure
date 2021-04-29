@@ -12,7 +12,7 @@
     <h1 class="text-center mb-3">{{ $event->title }} <i class="fa {{ $event->visibility === 'Public' ? "fa-globe" : "fa-lock" }}"></i></h1>
 
     <div class="row mb-3">
-        <div class="col-md-5">
+        <div class="col-md-5 d-flex align-items-center justify-content-center">
             <img src="{{ is_null($event->picture) ? asset('img/event_default.png') : 'data:image/jpeg;base64, ' . $event->picture }}" class="img-fluid rounded" alt="Event image">
         </div>
         <div class="col-md-7 p-3">
@@ -72,16 +72,15 @@
                     <div class="mb-2">
                         <h5>Participants</h5>
                         <div class="border border-2 rounded px-3 py-2">
-                            37 <!-- TODO: check current participants -->
-                            {{ is_null($event->max_attendance) ? "" : "/ " . $event.max_attendance }}
+                            {{ $event->participants()->count() . (is_null($event->max_attendance) ? "" : "/ " . $event.max_attendance) }}
                         </div>
                     </div>
                 </div>
             </div>
 
+            {{-- Tags are disabled for now
             <div class="row">
                 <h5>Tags</h5>
-                <!-- TODO: get tags -->
                 <div class="d-flex flex-wrap gap-2">
                     <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">chess</span>
                     <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">friendly</span>
@@ -90,6 +89,7 @@
                     <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">learning</span>
                 </div>
             </div>
+            --}}
         </div>
     </div>
 

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
 use App\Models\User;
+use App\Policies\EventPolicy;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller {
     /**
@@ -42,12 +43,26 @@ class UserController extends Controller {
      * @param  string  $username
      * @return \Illuminate\Http\Response
      */
-    public function show($username) {
+    public function show(Request $request, $username) {
         $user = User::where('username', $username)->firstOrFail();
-        $this->authorize('show', $user);
+        $this->authorize('view', $user);
 
-        $eventsOrganizing = Event::where('id_organizer', $user->id)->limit(3)->get();
-        return view('pages.user', ['user' => $user, 'eventsOrganizing' => $eventsOrganizing]);
+        // TODO: Improve this
+        $eventsOrganizing = $user->eventsOrganizing()->limit(3)->get();
+        foreach ($eventsOrganizing as $key => $event) {
+            if (!EventPolicy::view(Auth::user(), $event)) {
+                unset($eventsOrganizing[$key]);
+            }
+        }
+
+        $eventsParticipatingIn = $user->eventsParticipatingIn()->limit(3)->get();
+        foreach ($eventsParticipatingIn as $key => $event) {
+            if (!EventPolicy::view(Auth::user(), $event)) {
+                unset($eventsParticipatingIn[$key]);
+            }
+        }
+
+        return view('pages.user', ['user' => $user, 'eventsOrganizing' => $eventsOrganizing, 'eventsParticipatingIn' => $eventsParticipatingIn]);
     }
 
     /**
@@ -58,7 +73,7 @@ class UserController extends Controller {
      */
     public function edit($username) {
         $user = User::where('username', $username)->firstOrFail();
-        $this->authorize('edit', $user);
+        $this->authorize('update', $user);
         return view('pages.user_edit', ['user' => $user]);
     }
 

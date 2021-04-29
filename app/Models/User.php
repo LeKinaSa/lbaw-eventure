@@ -38,4 +38,12 @@ class User extends Authenticatable {
     public function eventsRelatedTo() {
         return $this->belongsToMany(Event::class, 'participation', 'id_user', 'id_event')->withPivot('status');
     }
+
+    public function eventsOrganizing() {
+        return $this->hasMany(Event::class, 'id_organizer');
+    }
+
+    public function eventsParticipatingIn() {
+        return $this->eventsRelatedTo()->where('status', 'Accepted');
+    }
 }

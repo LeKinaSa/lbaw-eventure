@@ -25,8 +25,8 @@ class UserPolicy {
      * @param  \App\Models\User  $model
      * @return mixed
      */
-    public function view(User $user, User $model) {
-        //
+    public function view(?User $user, User $model) {
+        return true;
     }
 
     /**
@@ -81,13 +81,5 @@ class UserPolicy {
      */
     public function forceDelete(User $user, User $model) {
         //
-    }
-
-    public function show(?User $user, User $model) {
-        return true;
-    }
-
-    public function edit(User $user, User $model) {
-        return $user->id === $model->id;
     }
 }

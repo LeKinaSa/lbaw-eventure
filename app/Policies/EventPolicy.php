@@ -27,18 +27,18 @@ class EventPolicy {
      * @param  \App\Models\Event  $event
      * @return mixed
      */
-    public function view(?User $user, Event $event) {
+    public static function view(?User $user, Event $event) {
         if ($event->visibility === 'Public') {
             // Public events can be seen by everyone
             return true;
         }
 
-        if ($user->id === $event->id_organizer) {
+        if (optional($user)->id === $event->id_organizer) {
             // Organizer can see their own events
             return true;
         }
 
-        if ($event->participants()->wherePivot('id_user', $user->id)->first() !== null) {
+        if ($event->participants()->wherePivot('id_user', optional($user)->id)->first() !== null) {
             // Users can see private events they are participating in
             return true;
         }
