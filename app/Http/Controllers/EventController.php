@@ -95,11 +95,15 @@ class EventController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Event  $event
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Event $event) {
-        //
+    public function edit($id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('update', $event);
+
+        $categories = Category::get();
+        return view('pages.event_edit', ['event' => $event, 'categories' => $categories]);
     }
 
     /**

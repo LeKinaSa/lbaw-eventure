@@ -46,12 +46,12 @@
                     <img class="rounded-circle avatar-small" src="{{ is_null($user->picture) ? asset('img/profile_default.png') : 'data:image/jpeg;base64, ' . $user->picture }}">
                   </a>
                   <ul id="dropdownUserItems" class="dropdown-menu dropdown-menu-end ps-0 gap-2" aria-labelledby="dropdownUser">
-                    <li><a href="{{ route('users.profile', ['username' => $user->username]) }}" class="dropdown-item d-flex justify-content-center justify-content-md-start">My Profile</a></li>
-                    <li><a href="{{ route('users.profile.edit', ['username' => $user->username]) }}" class="dropdown-item d-flex justify-content-center justify-content-md-start">Edit Profile</a></li>
+                    <li><a href="{{ route('users.profile', ['username' => $user->username]) }}" class="dropdown-item d-block">My Profile</a></li>
+                    <li><a href="{{ route('users.profile.edit', ['username' => $user->username]) }}" class="dropdown-item d-block">Edit Profile</a></li>
                     <li>
-                      <form method="POST" action="{{ route('sign-out') }}">
+                      <form method="POST" action="{{ route('sign-out') }}" class="d-flex flex-column align-items-stretch">
                         {{ csrf_field() }}
-                        <button type="submit" class="dropdown-item d-flex justify-content-center justify-content-md-start">Sign out</button>
+                        <button type="submit" class="dropdown-item d-block">Sign out</button>
                       </form>
                     </li>
                   </ul>
