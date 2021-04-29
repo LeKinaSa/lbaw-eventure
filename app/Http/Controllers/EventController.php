@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Event;
+
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class EventController extends Controller
 {
@@ -38,6 +40,18 @@ class EventController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
+        $request->validate([
+            'title' => 'required|string|max:250',
+            'visibility' => ['required', 'string', Rule::in(['Public', 'Private'])],
+            'description' => 'required|string|max:5000',
+            'type' => ['required', 'string', Rule::in(['InPerson', 'Mixed', 'Virtual'])],
+            'location' => 'nullable|string|max:250',
+            'maxAttendance' => [Rule::requiredIf($request->has('switchLimitedAttendance')), 'digits_between:1,10000'],
+            'category' => 'required|integer|exists:category,id',
+            'startDate' => 'nullable|date_format:Y-m-d',
+            'endDate' => 'nullable|date_format:Y-m-d|after_or_equal:start_date'
+        ]);
+
         $this->authorize('create', Event::class);
 
         try {
@@ -45,11 +59,10 @@ class EventController extends Controller
                 'title' => $request->input('title'),
                 'id_organizer' => Auth::id(),
                 'visibility' => $request->input('visibility'),
-                'picture' => $request->input('image'),
                 'description' => $request->input('description'),
                 'type' => $request->input('type'),
                 'location' => $request->input('location'),
-                'max_attendance' => $request->input('switchLimitedAttendance') ? $request->input('maxAttendance') : NULL,
+                'max_attendance' => $request->has('switchLimitedAttendance') ? $request->input('maxAttendance') : NULL,
                 'id_category' => $request->input('category'),
             ]);
         }
@@ -57,7 +70,7 @@ class EventController extends Controller
             return redirect(route('events.new'));
         }
 
-        //$event->picture      = $request->input('image');
+        //$event->picture        = $request->input('image');
         //$event->start_date     = $request->input('startDate');  // TODO  startDate +  startTime
         //$event->end_date       = $request->input('finishDate'); // TODO finishDate + finishTime
         

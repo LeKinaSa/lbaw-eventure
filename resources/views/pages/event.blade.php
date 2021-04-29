@@ -19,9 +19,13 @@
             <div class="d-flex justify-content-between mb-2">
                 <div class="d-flex gap-2">
                     <a href="#" role="button" class="btn btn-primary">Results</a>
+                    @if (Auth::id() === $event->id_organizer)
                     <a href="#" role="button" class="btn btn-primary">Invitations</a>
+                    @endif
                 </div>
+                @if (Auth::id() === $event->id_organizer)
                 <a class="btn btn-secondary" href="{{ route('events.event.edit', ['id' => $event->id]) }}"><i class="fa fa-pencil"></i></a>
+                @endif
             </div>
             <hr>
             
