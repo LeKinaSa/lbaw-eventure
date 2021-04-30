@@ -111,6 +111,36 @@ class UserController extends Controller {
     }
 
     /**
+     * Remove the user from storage.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $username
+     * @return  \Illuminate\Http\Response
+     */
+    public function delete(Request $request, $username) {
+        // Get the user
+        $user = Auth::user();
+
+        // Log the user out
+        Auth::logout();
+
+        // Delete the user
+        $this->authorize('delete', $user);
+        if ($this->delete($user)) {
+            // Delete Sucessful
+            return redirect(url('/'));
+        }
+
+        // Delete failed
+        
+        // Login the user again
+        Auth::login($user);
+
+        // Redirect back to edit profile
+        return redirect(route('users.profile.edit', ['username' => $user->username]));
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\User  $user

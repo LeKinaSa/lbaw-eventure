@@ -17,6 +17,7 @@ Route::view('/', 'pages.home');
 Route::get('/users/{username}', 'UserController@show')->name('users.profile');
 Route::get('/users/{username}/edit', 'UserController@edit')->name('users.profile.edit');
 Route::post('/users/{username}/edit', 'UserController@update');
+Route::delete('/users/{username}/delete', 'UserController@delete')->name('users.profile.delete');
 
 // Event
 Route::get('/events/new', 'EventController@create')->name('events.new');

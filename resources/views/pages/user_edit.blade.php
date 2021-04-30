@@ -167,7 +167,8 @@
 
                         <p>If you are sure you wish to delete your account, please enter your current password below.</p>
                         
-                        <form>
+                        <form action="{{ route('users.profile.delete', ['username' => $user->username]) }}">
+                            @method('DELETE')
                             <div class="mb-3">
                                 <label for="passwordDelete" class="form-label">Current Password *</label>
                                 <input type="password" class="form-control" id="passwordDelete" name="password" required>
