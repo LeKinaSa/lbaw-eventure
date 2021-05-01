@@ -264,13 +264,19 @@ paths:
                   description: 'An error occurred during account deletion. Redirect to edit profile form.'
                   value: '/users/{username}/edit'
 
-  /api/change-password:
-    post:
+  /api/users/{username}/password:
+    patch:
       operationId: R110
       summary: 'R110: Change Password'
-      description: 'Changes the password of the currently authenticated user. Access: USR'
+      description: 'Changes the password of the currently authenticated user. Access: OWN'
       tags:
         - 'M01: Authentication and User Profile'
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
       requestBody:
         required: true
         content:
@@ -286,20 +292,8 @@ paths:
                 - oldPassword
                 - newPassword
       responses:
-        # TODO
-        '302':
-          description: 'Redirect user after changing their password.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Password was successfully changed. Redirect to user profile.'
-                  value: '/users/{username}'
-                302Error:
-                  description: 'An error occurred when changing password. Redirect to edit profile form.'
-                  value: '/users/{username}/edit'
+        '200':
+          description: 'Success.'
 
   # M02: Events
 
@@ -1399,10 +1393,55 @@ paths:
 
   # M06: Administration
 
-  /admin/user-management:
+  /admin/sign-in:
     get:
       operationId: R601
-      summary: 'R601: User Management'
+      summary: 'R601: Administrator Sign In Form'
+      description: 'Provides a sign in form, allowing administrators to authenticate themselves. Access: PUB'
+      tags:
+        - 'M06: Administration'
+      responses:
+        '200':
+          description: 'Ok. Show [UI02](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui02-sign-in)'
+    post:
+      operationId: R602
+      summary: 'R602: Administrator Sign In Action'
+      description: 'Processes information sent through the administrator sign in form. Access: PUB'
+      tags:
+        - 'M06: Administration'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '302':
+          description: 'Redirect administrator after processing the sign in credentials, depending on whether the authentication was successful or not.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to user management page.'
+                  value: '/admin/user-management'
+                302Error:
+                  description: 'Failed authentication (username or password did not match). Redirect to administrator sign in form.'
+                  value: '/admin/sign-in'
+
+  /admin/user-management:
+    get:
+      operationId: R603
+      summary: 'R603: User Management'
       description: 'Show a page containing all the users that have been suspended or banned. Access: ADM'
       tags:
         - 'M06: Administration'
@@ -1412,8 +1451,8 @@ paths:
 
   /admin/user-metrics:
     get:
-      operationId: R602
-      summary: 'R602: View User Metrics'
+      operationId: R604
+      summary: 'R604: View User Metrics'
       description: 'Show a page containing user-related statistics. Access: ADM'
       tags:
         - 'M06: Administration'
@@ -1423,8 +1462,8 @@ paths:
 
   /admin/event-metrics:
     get:
-      operationId: R603
-      summary: 'R603: View Event Metrics'
+      operationId: R605
+      summary: 'R605: View Event Metrics'
       description: 'Show a page containing event-related statistics. Access: ADM'
       tags:
         - 'M06: Administration'
@@ -1432,13 +1471,19 @@ paths:
         '200':
           description: 'Ok. Show [UI18](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui18-event-metrics)'
 
-  /api/suspend-user:
+  /api/users/{username}/suspensions:
     post:
-      operationId: R604
-      summary: 'R604: Suspend User'
+      operationId: R606
+      summary: 'R606: Suspend User'
       description: 'Suspends the specified user, preventing them from accessing the site for a certain amount of time. Access: ADM'
       tags:
         - 'M06: Administration'
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
       requestBody:
         required: true
         content:
@@ -1446,27 +1491,51 @@ paths:
             schema:
               type: object
               properties:
-                id:
-                  type: integer
                 duration:
                   type: string
                 reason:
                   type: string
               required:
-                - id
                 - duration
                 - reason
       responses:
-        '200': # TODO
-          description: 'User was successfully suspended'
+        '200':
+          description: 'User was successfully suspended. Returns a JSON representation of the suspension.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  idUser:
+                    type: integer
+                  from:
+                    type: string
+                  until:
+                    type: string
+                  reason:
+                    type: string
+                example:
+                  - id: 1
+                    idUser: 2
+                    from: '2021-06-18 16:05'
+                    since: '2021-06-25 16:05'
+                    reason: 'Promoting a malicious website.'
 
-  /api/ban-user:
+  /api/users/{username}/ban:
     post:
-      operationId: R605
-      summary: 'R605: Ban User'
+      operationId: R607
+      summary: 'R607: Ban User'
       description: 'Bans the specified user, permanently preventing them from accessing the site. Access: ADM'
       tags:
         - 'M06: Administration'
+      parameters:
+      - in: path
+        name: username
+        schema:
+          type: string
+        required: true
       requestBody:
         required: true
         content:
@@ -1474,13 +1543,25 @@ paths:
             schema:
               type: object
               properties:
-                id:
-                  type: integer
                 reason:
                   type: string
               required:
-                - id
                 - reason
       responses:
-        '200': # TODO
-          description: 'User was successfully banned'
+        '200':
+          description: 'User was successfully banned. Returns a JSON representation of the ban.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  since:
+                    type: string
+                  reason:
+                    type: string
+                example:
+                  - id: 1
+                    since: '2021-06-20 20:12'
+                    reason: 'Repeatedly posting highly offensive content.'
