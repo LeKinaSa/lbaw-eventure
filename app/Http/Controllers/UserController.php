@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Policies\EventPolicy;
+
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller {
     /**
@@ -89,6 +91,53 @@ class UserController extends Controller {
         $user = User::where('username', $username)->firstOrFail();
         $this->authorize('update', $user);
 
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => ['required', 'string', 'max:100', Rule::unique('user')->ignore($user->id)],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('user')->ignore($user->id)],
+            'location' => 'nullable|string|max:500',
+            'gender' => ['nullable', 'string', Rule::in(['Unspecified', 'Male', 'Female', 'Other'])],
+            'age' => 'nullable|integer|min:13|max:150',
+            'website' => 'nullable|url|max:500',
+            'description' => 'nullable|string|max:1000',
+            'picture' => 'nullable|file|image|max:1000',
+        ]);
+
+        $pictureBase64 = NULL;
+        $picture = $request->file('picture');
+
+        if ($request->hasFile('picture') && $picture->isValid()) {
+            // A valid image was uploaded
+            // TODO: move this to a separate function
+
+            list($width, $height) = getimagesize($picture);
+
+            if ($picture->extension() === 'png') {
+                $original = imagecreatefrompng($picture);
+            }
+            else if ($picture->extension() === 'jpeg' || $picture->extension() === 'jpg') {
+                $original = imagecreatefromjpeg($picture);
+            }
+            else {
+                return back()->withErrors(['picture' => 'Uploaded picture has an unsupported extension.']);
+            }
+
+            $square = min($width, $height);
+
+            // Resize the uploaded image to 500x500 pixels
+            $resized = imagecreatetruecolor(500, 500);
+            imagecopyresized($resized, $original, 0, 0, ($width > $square) ? ($width - $square) / 2 : 0,
+                    ($height > $square) ? ($height - $square) / 2 : 0, 500, 500, $square, $square);
+
+            // Using output buffering to store the result of imagejpeg into a string
+            ob_start();
+            imagejpeg($resized);
+            $pictureString = ob_get_contents(); // Read string from buffer
+            ob_end_clean();
+
+            $pictureBase64 = base64_encode($pictureString);
+        }
+
         $gender = $request->input('gender') === 'Unspecified' ? NULL : $request->input('gender');
         
         try {
@@ -101,6 +150,7 @@ class UserController extends Controller {
                 'age' => $request->input('age'),
                 'website' => $request->input('website'),
                 'description' => $request->input('description'),
+                'picture' => $pictureBase64,
             ]);
         }
         catch (QueryException $ex) {

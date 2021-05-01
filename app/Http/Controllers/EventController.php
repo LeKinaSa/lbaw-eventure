@@ -46,7 +46,7 @@ class EventController extends Controller
             'description' => 'required|string|max:5000',
             'type' => ['required', 'string', Rule::in(['InPerson', 'Mixed', 'Virtual'])],
             'location' => 'nullable|string|max:250',
-            'maxAttendance' => [Rule::requiredIf($request->has('switchLimitedAttendance')), 'digits_between:1,10000'],
+            'maxAttendance' => [Rule::requiredIf($request->has('switchLimitedAttendance')), 'integer', 'min:1', 'max:10000'],
             'category' => 'required|integer|exists:category,id',
             'startDate' => 'nullable|date_format:Y-m-d',
             'endDate' => 'nullable|date_format:Y-m-d|after_or_equal:start_date'

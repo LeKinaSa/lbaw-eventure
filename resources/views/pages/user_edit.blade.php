@@ -12,7 +12,7 @@
     
     <div class="row justify-content-md-center">
         <div class="col-md-7">
-            <form method="POST" class="mb-3" action="{{ route('users.profile.edit', ['username' => $user->username]) }}">
+            <form method="POST" enctype="multipart/form-data" class="mb-3" action="{{ route('users.profile.edit', ['username' => $user->username]) }}">
                 {{ csrf_field() }}
 
                 <h1 class="text-center">Edit Profile</h1>
@@ -101,8 +101,11 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="image" class="h5 form-label">Profile Picture</label>
-                    <input type="file" class="form-control" id="image" name="image" accept="image/x-png,image/jpeg">
+                    <label for="picture" class="h5 form-label">Profile Picture</label>
+                    <input type="file" class="form-control" id="picture" name="picture" accept="image/x-png,image/jpeg">
+                    @error ('picture')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="d-flex justify-content-center">

@@ -83,7 +83,7 @@ CREATE TABLE "user" (
     gender gender,
     age INTEGER,
     website TEXT,
-    picture BYTEA,
+    picture TEXT,
     "description" TEXT
 );
 
@@ -118,7 +118,7 @@ CREATE TABLE "event" (
     visibility visibility NOT NULL DEFAULT 'Public',
     "description" TEXT NOT NULL,
     keywords tsvector,
-    picture BYTEA,
+    picture TEXT,
     "start_date" TIMESTAMP,
     end_date TIMESTAMP,
     "type" event_type NOT NULL DEFAULT 'InPerson',
@@ -382,6 +382,8 @@ CREATE INDEX search_idx ON "event" USING GIST (keywords);
 
 
 -- POPULATION
+
+-- R02
 
 -- R05
 INSERT INTO "category" (id,"name") VALUES (1,'Board Games');
