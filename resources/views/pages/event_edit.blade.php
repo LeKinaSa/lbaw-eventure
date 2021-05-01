@@ -2,6 +2,10 @@
 
 @php
 $editing = isset($event);
+if ($editing) {
+    $startDate = is_null($event->start_date) ? NULL : new DateTime($event->start_date);
+    $finishDate = is_null($event->end_date) ? NULL : new DateTime($event->end_date);
+}
 @endphp
 @section('content')
 <div class="container py-3">
@@ -82,37 +86,37 @@ $editing = isset($event);
             <div class="row mb-3">
                 <div class="col">
                     <label for="startDate" class="h5 form-label">Start date</label>
-                    <input type="date" class="form-control" id="startDate" name="startDate" value="{{ old('startDate') }}">
+                    <input type="date" class="form-control" id="startDate" name="startDate" value="{{ ($editing && isset($startDate)) ? $startDate->format('Y-m-d') : old('startDate') }}">
+                    @error ('startDate')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
-                @error ('startDate')
-                <span class="text-danger">{{ $message }}</span>
-                @enderror
 
                 <div class="col">
                     <label for="startTime" class="h5 form-label">Start time</label>
-                    <input type="time" class="form-control" id="startTime" name="startTime" value="{{ old('startTime') }}">
+                    <input type="time" class="form-control" id="startTime" name="startTime" value="{{ ($editing && isset($startDate)) ? $startDate->format('H:i') : old('startTime') }}">
+                    @error ('startTime')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
-                @error ('startTime')
-                <span class="text-danger">{{ $message }}</span>
-                @enderror
             </div>
 
             <div class="row mb-3">
                 <div class="col">
                     <label for="finishDate" class="h5 form-label">Finish date</label>
-                    <input type="date" class="form-control" id="finishDate" name="finishDate" value="{{ old('finishDate') }}">
+                    <input type="date" class="form-control" id="finishDate" name="finishDate" value="{{ ($editing && isset($finishDate)) ? $finishDate->format('Y-m-d') : old('finishDate') }}">
+                    @error ('finishDate')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
-                @error ('finishDate')
-                <span class="text-danger">{{ $message }}</span>
-                @enderror
 
                 <div class="col">
                     <label for="finishTime" class="h5 form-label">Finish time</label>
-                    <input type="time" class="form-control" id="finishTime" name="finishTime" value="{{ old('finishTime') }}">
+                    <input type="time" class="form-control" id="finishTime" name="finishTime" value="{{ ($editing && isset($finishDate)) ? $finishDate->format('H:i') : old('finishTime') }}">
+                    @error ('finishTime')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
-                @error ('finishTime')
-                <span class="text-danger">{{ $message }}</span>
-                @enderror
             </div>
 
             <div class="mb-3">

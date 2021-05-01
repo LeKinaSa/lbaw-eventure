@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+$startDate = is_null($event->start_date) ? NULL : (new DateTime($event->start_date))->format('j M, Y H:i');
+$endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->format('j M, Y H:i');
+@endphp
 @section('content')
 <div class="container py-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -38,7 +42,7 @@
                     <div class="mb-2">
                         <h5>Start date</h5>
                         <div class="border border-2 rounded px-3 py-2">
-                            <i class="fa fa-calendar"></i> {{ is_null($event->start_date) ? "Not defined" : $event->start_date }} 
+                            <i class="fa fa-calendar"></i> {{ is_null($startDate) ? "Not defined" : $startDate }} 
                         </div>
                     </div>
                     <div class="mb-2">
@@ -60,7 +64,7 @@
                     <div class="mb-2">
                         <h5>End date</h5>
                         <div class="border border-2 rounded px-3 py-2">
-                            <i class="fa fa-calendar"></i> {{ is_null($event->end_date) ? "Not defined" : $event->end_date }}
+                            <i class="fa fa-calendar"></i> {{ is_null($endDate) ? "Not defined" : $endDate }}
                         </div>
                     </div>
                     <div class="mb-2">
@@ -208,11 +212,11 @@
                                 @csrf
 
                                 <div class="mb-3">
-                                    <label for="pollTitle" class="h5 form-label">Title *</label>
+                                    <label for="pollTitle" class="h5 form-label">Title <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="createPollQuestion" name="question" required>
                                 </div>
 
-                                <h5>Options *</h5>
+                                <h5>Options <span class="text-danger">*</span></h5>
                                 <ul id="createPollOptions" class="list-unstyled d-flex flex-column gap-1">
                                     <li class="input-group">
                                         <input type="text" class="form-control" required>
