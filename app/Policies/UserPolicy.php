@@ -58,7 +58,7 @@ class UserPolicy {
      * @return mixed
      */
     public function delete(User $user, User $model) {
-        //
+        return $user->id === $model->id;
     }
 
     /**

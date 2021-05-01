@@ -7,6 +7,7 @@ use App\Policies\EventPolicy;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller {
     /**
@@ -118,23 +119,21 @@ class UserController extends Controller {
      * @return  \Illuminate\Http\Response
      */
     public function delete(Request $request, $username) {
-        // Get the user
-        $user = Auth::user();
-
-        // Log the user out
-        Auth::logout();
-
-        // Delete the user
+        $user = User::where('username', $username)->firstOrFail();
         $this->authorize('delete', $user);
-        if ($this->delete($user)) {
-            // Delete Sucessful
-            return redirect(url('/'));
+
+        // Confirm password before deleting account
+        if (!Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'password' => ['The provided password does not match our records.']
+            ]);
         }
 
-        // Delete failed
-        
-        // Login the user again
-        Auth::login($user);
+        if ($user->delete()) {
+            // Account deletion was successful
+            Auth::logout();
+            return redirect(url('/'));
+        }
 
         // Redirect back to edit profile
         return redirect(route('users.profile.edit', ['username' => $user->username]));

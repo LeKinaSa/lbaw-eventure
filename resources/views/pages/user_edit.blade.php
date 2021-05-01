@@ -20,17 +20,17 @@
                 <div class="mb-3">
                     <label for="name" class="h5 form-label">Name *</label>
                     <input type="text" id="name" name="name" class="form-control" value="{{ $user->name }}" required>
-                    @if ($errors->has('name'))
-                        <span class="text-danger">{{ $errors->first('name') }}</span>
-                    @endif
+                    @error ('name')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
                     <label for="username" class="h5 form-label">Username *</label>
                     <input type="text" id="name" name="username" class="form-control" value="{{ $user->username }}" required>
-                    @if ($errors->has('username'))
-                        <span class="text-danger">{{ $errors->first('username') }}</span>
-                    @endif
+                    @error ('username')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
@@ -42,17 +42,17 @@
                         </div> --}}
                     </div>
                     <input type="email" id="email" name="email" class="form-control" value="{{ $user->email }}" required>
-                    @if ($errors->has('email'))
-                        <span class="text-danger">{{ $errors->first('email') }}</span>
-                    @endif
+                    @error ('email')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
                     <label for="description" class="h5 form-label">Description</label>
                     <textarea class="form-control" id="description" name="description" rows="4" placeholder="Tell us a bit about yourself">{{ $user->description }}</textarea>
-                    @if ($errors->has('description'))
-                        <span class="text-danger">{{ $errors->first('description') }}</span>
-                    @endif
+                    @error ('description')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="row mb-3">
@@ -70,34 +70,34 @@
                             <label for="unspecified" class="form-check-label">Prefer not to say</label>
                         </div>
 
-                        @if ($errors->has('gender'))
-                            <span class="text-danger">{{ $errors->first('gender') }}</span>
-                        @endif
+                        @error ('gender')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="col-md-9">
                         <label for="age" class="h5 form-label">Age</label>
                         <input type="number" id="age" name="age" class="form-control" value="{{ $user->age }}" min="13" max="150">
-                        @if ($errors->has('age'))
-                            <span class="text-danger">{{ $errors->first('age') }}</span>
-                        @endif
+                        @error ('age')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label for="location" class="h5 form-label">Location</label>
                     <input type="text" id="location" name="location" class="form-control" value="{{ $user->address }}">
-                    @if ($errors->has('location'))
-                        <span class="text-danger">{{ $errors->first('location') }}</span>
-                    @endif
+                    @error ('location')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
                     <label for="website" class="h5 form-label">Website</label>
                     <input type="text" id="website" name="website" class="form-control" value="{{ $user->website }}">
-                    @if ($errors->has('website'))
-                        <span class="text-danger">{{ $errors->first('website') }}</span>
-                    @endif
+                    @error ('website')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
@@ -119,6 +119,9 @@
                     Delete account
                 </button>
             </div>
+            @error ('password')
+            <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
         
         <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordLabel" aria-hidden="true">
@@ -167,7 +170,9 @@
 
                         <p>If you are sure you wish to delete your account, please enter your current password below.</p>
                         
-                        <form action="{{ route('users.profile.delete', ['username' => $user->username]) }}">
+                        <form method="POST" action="{{ route('users.profile.delete', ['username' => $user->username]) }}">
+                            {{ csrf_field() }}
+
                             @method('DELETE')
                             <div class="mb-3">
                                 <label for="passwordDelete" class="form-label">Current Password *</label>
