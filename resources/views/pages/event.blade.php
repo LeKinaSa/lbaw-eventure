@@ -205,6 +205,8 @@
                         </div>
                         <div class="modal-body">
                             <form id="createPollForm" method="POST" action="{{ route('api.events.event.polls.new', ['id' => $event->id]) }}">
+                                @csrf
+
                                 <div class="mb-3">
                                     <label for="pollTitle" class="h5 form-label">Title *</label>
                                     <input type="text" class="form-control" id="createPollQuestion" name="question" required>

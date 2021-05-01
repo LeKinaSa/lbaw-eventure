@@ -38,7 +38,7 @@ class PollController extends Controller {
         $event = Event::findOrFail($id);
         $this->authorize('create', [Poll::class, $event]);
 
-        $options = explode(';', $request->input('options'));
+        $options = explode('|', $request->input('options'));
 
         if (count($options) <= 1) {
             return response('A poll requires a minimum of two options.', 400);

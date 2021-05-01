@@ -58,6 +58,7 @@ function sendAjaxRequest(method, url, data, handler, acceptHeader = 'text/html')
 
 let createPollForm = document.getElementById('createPollForm');
 let createPollOptions = document.getElementById('createPollOptions');
+let createPollError = document.getElementById('createPollError');
 let pollsSection = document.querySelector('section#polls');
 
 if (createPollOptions != null) {
@@ -69,17 +70,25 @@ if (createPollOptions != null) {
 
 function sendCreatePollRequest(event) {
     let question = document.getElementById('createPollQuestion').value;
+    let csrfToken = createPollForm.querySelector('input[name=_token]').value;
 
     let optionInputs = createPollOptions.querySelectorAll('input');
     let options = [];
 
     for (let input of optionInputs) {
+        if (input.value.indexOf('|') > -1) {
+            createPollError.innerHTML = 'The | character cannot be used inside poll options.';
+            event.preventDefault();
+            return;
+        }
+
         options.push(input.value);
     }
 
     let data = {
+        _token: csrfToken,
         question: question,
-        options: options.join(';')
+        options: options.join('|')
     };
 
     sendAjaxRequest(createPollForm.method, createPollForm.action, data, createPollHandler);
@@ -88,7 +97,7 @@ function sendCreatePollRequest(event) {
 
 function createPollHandler() {
     if (this.status !== 200) {
-        document.getElementById('createPollError').innerHTML = this.responseText;
+        createPollError.innerHTML = this.responseText;
         return;
     }
 
@@ -146,6 +155,4 @@ function addPollOption() {
         newPollOptionInput.value = "";
         createPollOptions.appendChild(li);
     }
-
-    hideModal(document.getElementById('createPollModal'));
 }
