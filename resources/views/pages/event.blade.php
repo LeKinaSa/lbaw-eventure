@@ -193,28 +193,8 @@
             </section>
         </div>
         <div class="tab-pane fade p-3" id="pollsTab" role="tabpanel" aria-labelledby="pollsLabel">
-            <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#createPollModal">Create poll</button>
-    
-            <div class="row mt-3">
-                <section class="col-md-6 mb-3">
-                    <h5>What should the time control be?</h5>
-                    
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>5 + 3</span>
-                            <span class="text-primary">10 votes (55.6%)</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>5 + 0</span>
-                            <span class="text-primary">6 votes (33.3%)</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>3 + 2</span>
-                            <span class="text-primary">2 votes (11.1%)</span>
-                        </li>
-                    </ul>
-                </section>
-            </div>
+            @if (App\Policies\PollPolicy::create(Auth::user(), $event))
+            <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#createPollModal" id="createPollModalClose">Create poll</button>
 
             <div class="modal fade" id="createPollModal" tabindex="-1" aria-labelledby="createPollLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -224,32 +204,30 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form>
+                            <form id="createPollForm" method="POST" action="{{ route('api.events.event.polls.new', ['id' => $event->id]) }}">
+                                @csrf
+
                                 <div class="mb-3">
-                                    <label for="pollTitle" class="h5 form-label">Poll Title *</label>
-                                    <input type="text" class="form-control" id="pollTitle" name="pollTitle" required>
+                                    <label for="pollTitle" class="h5 form-label">Title *</label>
+                                    <input type="text" class="form-control" id="createPollQuestion" name="question" required>
                                 </div>
 
                                 <h5>Options *</h5>
-                                <ul class="list-unstyled d-flex flex-column gap-1">
+                                <ul id="createPollOptions" class="list-unstyled d-flex flex-column gap-1">
                                     <li class="input-group">
                                         <input type="text" class="form-control" required>
-                                        <button type="button" class="btn btn-danger" aria-label="Remove option"><i class="fa fa-remove"></i></button>
                                     </li>
                                     <li class="input-group">
                                         <input type="text" class="form-control" required>
-                                        <button type="button" class="btn btn-danger" aria-label="Remove option"><i class="fa fa-remove"></i></button>
-                                    </li>
-                                    <li class="input-group">
-                                        <input type="text" class="form-control" required>
-                                        <button type="button" class="btn btn-danger" aria-label="Remove option"><i class="fa fa-remove"></i></button>
                                     </li>
                                 </ul>
 
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="New option" aria-label="Name">
-                                    <button type="button" class="btn btn-success" aria-label="Add option"><i class="fa fa-plus"></i></button>
+                                    <input type="text" class="form-control" id="newPollOption" placeholder="New option" aria-label="Name">
+                                    <button type="button" class="btn btn-success" id="addPollOption" aria-label="Add option"><i class="fa fa-plus"></i></button>
                                 </div>
+
+                                <p class="text-danger" id="createPollError"></p>
 
                                 <div class="modal-footer px-0">
                                     <input type="submit" class="btn btn-primary" value="Create">
@@ -259,6 +237,11 @@
                     </div>
                 </div>
             </div>
+            @endif
+
+            <section id="polls" class="row mt-3">
+                @each('partials.poll', $event->polls()->get(), 'poll')
+            </section>
         </div>
     </div>
 </div>

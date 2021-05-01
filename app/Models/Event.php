@@ -41,6 +41,10 @@ class Event extends Model {
         return $this->belongsTo(Category::class, 'id_category');
     }
 
+    public function polls() {
+        return $this->hasMany(Poll::class, 'id_event');
+    }
+
     /**
      * Returns all the users that have an entry in the participation table for this event, regardless of whether
      * they are actually participants in the event (they can be simply invited or attempting to join).

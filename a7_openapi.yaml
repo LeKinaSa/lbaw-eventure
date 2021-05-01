@@ -879,7 +879,7 @@ paths:
                   type: string
                 options:
                   type: string
-                  description: 'Options are separated by newline (\n) characters. Minimum of two options.'
+                  description: 'Options are separated by | (vertical bar) characters. Minimum of two options.'
               required:
                 - question
                 - options
