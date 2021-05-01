@@ -194,7 +194,7 @@
         </div>
         <div class="tab-pane fade p-3" id="pollsTab" role="tabpanel" aria-labelledby="pollsLabel">
             @if (App\Policies\PollPolicy::create(Auth::user(), $event))
-            <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#createPollModal">Create poll</button>
+            <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#createPollModal" id="createPollModalClose">Create poll</button>
 
             <div class="modal fade" id="createPollModal" tabindex="-1" aria-labelledby="createPollLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -225,7 +225,7 @@
                                     <button type="button" class="btn btn-success" id="addPollOption" aria-label="Add option"><i class="fa fa-plus"></i></button>
                                 </div>
 
-                                <span class="text-danger" id="createPollError"></span>
+                                <p class="text-danger" id="createPollError"></p>
 
                                 <div class="modal-footer px-0">
                                     <input type="submit" class="btn btn-primary" value="Create">

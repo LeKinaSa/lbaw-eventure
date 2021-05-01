@@ -82,8 +82,6 @@ function sendCreatePollRequest(event) {
         options: options.join(';')
     };
 
-    console.log(data);
-
     sendAjaxRequest(createPollForm.method, createPollForm.action, data, createPollHandler);
     event.preventDefault();
 }
@@ -107,9 +105,10 @@ function createPollHandler() {
 
     document.getElementById('newPollOption').value = "";
 
-    console.log(this.responseText);
-
     pollsSection.innerHTML += this.responseText;
+    
+    let closeModalButton = document.getElementById('createPollModalClose');
+    closeModalButton.click();
 }
 
 function deletePollOption() {
@@ -147,4 +146,6 @@ function addPollOption() {
         newPollOptionInput.value = "";
         createPollOptions.appendChild(li);
     }
+
+    hideModal(document.getElementById('createPollModal'));
 }

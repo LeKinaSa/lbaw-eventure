@@ -41,7 +41,7 @@ class PollController extends Controller {
         $options = explode(';', $request->input('options'));
 
         if (count($options) <= 1) {
-            abort(400, 'Poll requires a minimum of two options');
+            return response('A poll requires a minimum of two options.', 400);
         }
 
         try {
@@ -60,7 +60,7 @@ class PollController extends Controller {
             }
         }
         catch (QueryException $ex) {
-            abort(500, 'Database error');
+            return response('A database error occurred.', 500);
         }
 
         if ($request->acceptsHtml()) {
