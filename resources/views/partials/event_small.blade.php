@@ -9,7 +9,7 @@
         <ul class="list-unstyled">
             <li class="card-text"><i class="fs-5 col-2 fa fa-info" aria-label="Date"></i>{{ $event->getTypeFormatted() }}</li>
             @if (!is_null($event->start_date))
-            <li class="card-text"><i class="fs-5 col-2 fa fa-calendar" aria-label="Date"></i>{{ $event->start_date }}</li>
+            <li class="card-text"><i class="fs-5 col-2 fa fa-calendar" aria-label="Date"></i>{{ (new DateTime($event->start_date))->format('j M, Y H:i') }}</li>
             @endif
             @if (!is_null($event->location))
             <li class="card-text"><i class="fs-5 col-2 fa fa-map-marker" aria-label="Location"></i>{{ $event->location }}</li>

@@ -380,13 +380,36 @@ CREATE INDEX event_id_category_idx ON "event" USING hash(id_category);
 
 CREATE INDEX search_idx ON "event" USING GIST (keywords);
 
-
 -- POPULATION
 
 -- R02
+INSERT INTO "user" (id,username,"name",email,"password","address",gender,age,website,picture,"description") VALUES (1 ,'cballard'   ,'Cooper Ballard'   ,'cooperbal@outlook.com','$2y$10$myqDITxpP1uw4.Dkq.Mk7elaht.kiyRQ3cnaQdcDVU3/a./fXH9M2','Michigan, USA'     ,'Male'  ,23,'www.cballard.com'    ,NULL,'I enjoy driving, exercising and playing board games.'           );
+INSERT INTO "user" (id,username,"name",email,"password","address",gender,age,website,picture,"description") VALUES (2 ,'dmaynard'   ,'Derek Maynard'    ,'dmal@gmail.com'       ,'$2y$10$suQG1OW49APnAOQgkKTXVev7CK6ZOL41X6nmJPOe3ib6Z0ruwVT26','Liverpool, UK'     ,'Male'  ,31,NULL                  ,NULL,'I am looking to travel all around the globe for events'         );
+INSERT INTO "user" (id,username,"name",email,"password","address",gender,age,website,picture,"description") VALUES (3 ,'wblake'     ,'Wynter Blake'     ,'wblak@gmail.com'      ,'$2y$10$NVfSx13SsS6ye8mS39KGz.ptXppbMVgmf8j63i.kfOdP8eSZwqdNS','Sydney, AU'        ,'Female',42,NULL                  ,NULL,'I like playing chess, video games and meeting new people.'      );
+INSERT INTO "user" (id,username,"name",email,"password","address",gender,age,website,picture,"description") VALUES (4 ,'fgallegos'  ,'Forrest Gallegos' ,'forrestgal@gmail.com' ,'$2y$10$hPeYJ64jAIUamFR.WAYkGuEDuBQ6ST0D3Z10hw/D5RMBi3zF1WycO','Catalonia'         ,NULL    ,20,'www.gallegoshub.com' ,NULL,'My interests are wide and I am open to all sort of events'      );
+INSERT INTO "user" (id,username,"name",email,"password","address",gender,age,website,picture,"description") VALUES (5 ,'sebowens'   ,'Sebastian Owens'  ,'sebowens87@yahoo.com' ,'$2y$10$xhq55I1msKSODAYvMzh.aeFEl.ltMGlt1ur4n5QHTlLk8/4Vwdtv.',NULL                ,'Male'  ,28,'www.sebowensblog.com',NULL,'I am looking for online events as a way to interact with people');
 
 -- R05
 INSERT INTO "category" (id,"name") VALUES (1,'Board Games');
 INSERT INTO "category" (id,"name") VALUES (2,'Video Games');
 INSERT INTO "category" (id,"name") VALUES (3,'Card Games');
 INSERT INTO "category" (id,"name") VALUES (4,'Role-Playing Games');
+
+-- R06
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 1, 1,'2021 FIFA Club Tournament'       ,'Private','Fifa Tournament with big prizes',NULL,'2021-06-10 20:00','2021-06-13 20:00','Virtual',NULL,NULL,'false',2,1,0.5,0,'false');
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 2, 3,'2021 VCT Challengers'            ,'Public' ,'Valorant Challengers Competition',NULL,'2021-06-15 18:00','2021-06-18 22:00','Mixed','Smithings Street, Liverpool',30,'false',2,2,1,0,'false');
+INSERT INTO "event" (id,id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES ( 3, 4,'Amateur Blitz Chess Tournament'  ,'Public' ,'Test your blitz skills in this amateur chess competition! Players with up to 1500 rating can participate.',NULL,'2021-05-30 10:00','2021-05-30 18:00','InPerson','79 Maroon Street, Toronto',20,'false',1,1,0.5,0,'true');
+
+-- R07
+INSERT INTO "poll" (id,id_event,question) VALUES (1,3,'What should the time control be?');
+
+-- R08
+INSERT INTO "poll_option" (id,id_poll,"option") VALUES (1,1,'5 + 0');
+INSERT INTO "poll_option" (id,id_poll,"option") VALUES (2,1,'5 + 3');
+INSERT INTO "poll_option" (id,id_poll,"option") VALUES (3,1,'5 + 5');
+
+-- R14
+INSERT INTO "participation" (id_user,id_event,"status") VALUES (2, 1,'Accepted');
+INSERT INTO "participation" (id_user,id_event,"status") VALUES (3, 1,'Accepted');
+INSERT INTO "participation" (id_user,id_event,"status") VALUES (4, 2,'Accepted');
+INSERT INTO "participation" (id_user,id_event,"status") VALUES (1, 3,'Accepted');

@@ -42,7 +42,7 @@
         <div class="col-md-9 pt-3">
             <section id="eventsOrganizer" class="row bg-light m-2 p-3">
                 <header class="d-flex align-items-center justify-content-between mb-2">
-                    <h4>Events you are organizing</h4>
+                    <h4>Events {{ Auth::id() === $user->id ? "you" : "they" }} are organizing</h4>
                     <a href="personal_events.php" class="btn btn-primary text-uppercase">See all</a>
                 </header>
                 <div class="d-flex justify-content-center justify-content-md-start flex-wrap gap-3">
@@ -52,7 +52,7 @@
 
             <section id="eventsParticipant" class="row bg-light m-2 p-3">
                 <header class="d-flex align-items-center justify-content-between mb-2">
-                    <h4>Events you are participating in</h4>
+                    <h4>Events {{ Auth::id() === $user->id ? "you" : "they" }} are participating in</h4>
                     <a href="personal_events.php" class="btn btn-primary text-uppercase">See all</a>
                 </header>
                 <div class="d-flex justify-content-center justify-content-md-start flex-wrap gap-3">
