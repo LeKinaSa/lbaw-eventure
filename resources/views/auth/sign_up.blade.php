@@ -57,7 +57,7 @@
 
             <div class="d-flex flex-column justify-content-center">
                 <button type="button" class="btn btn-outline-primary mb-3">
-                    Sign up with <img src="../assets/google.png" class="google" alt="Google logo">
+                    Sign up with <img src="{{ asset('img/google_logo.png') }}" class="google" alt="Google logo">
                 </button>
 
                 <span class="text-center">Already have an account? <a class="text-primary" href="{{ route('sign-in') }}"> Sign in</a> now!</span>

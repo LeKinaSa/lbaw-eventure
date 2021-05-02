@@ -40,7 +40,7 @@
 
             <div class="d-flex flex-column justify-content-center">
                 <button type="button" class="btn btn-outline-primary mb-3">
-                    Sign in with <img src="../assets/google.png" class="google" alt="Google">
+                    Sign in with <img src="{{ asset('img/google_logo.png') }}" class="google" alt="Google logo">
                 </button>
                 
                 <span class="text-center">New to Eventure? <a class="text-primary" href={{ route('sign-up') }}> Sign up</a> now!</span>
