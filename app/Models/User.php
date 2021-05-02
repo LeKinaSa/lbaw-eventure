@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
-{
+class User extends Authenticatable {
     use Notifiable;
 
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
+    
+    protected $table = 'user';
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +19,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'username', 'email', 'password', 'address', 
+        'gender', 'age', 'website', 'description', 'picture',
     ];
 
     /**
@@ -27,13 +29,22 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
     ];
 
     /**
-     * The cards this user owns.
+     * Returns all the events that have an entry in the participation table for this user, regardless of whether
+     * the user is actually participating in the event (they can be simply invited or attempting to join).
      */
-     public function cards() {
-      return $this->hasMany('App\Models\Card');
+    public function eventsRelatedTo() {
+        return $this->belongsToMany(Event::class, 'participation', 'id_user', 'id_event')->withPivot('status');
+    }
+
+    public function eventsOrganizing() {
+        return $this->hasMany(Event::class, 'id_organizer');
+    }
+
+    public function eventsParticipatingIn() {
+        return $this->eventsRelatedTo()->where('status', 'Accepted');
     }
 }

@@ -1,180 +1,158 @@
-function addEventListeners() {
-  let itemCheckers = document.querySelectorAll('article.card li.item input[type=checkbox]');
-  [].forEach.call(itemCheckers, function(checker) {
-    checker.addEventListener('change', sendItemUpdateRequest);
-  });
 
-  let itemCreators = document.querySelectorAll('article.card form.new_item');
-  [].forEach.call(itemCreators, function(creator) {
-    creator.addEventListener('submit', sendCreateItemRequest);
-  });
+function onWindowResize(event) {
+    let dropdownList = document.getElementById('dropdownUserItems');
 
-  let itemDeleters = document.querySelectorAll('article.card li a.delete');
-  [].forEach.call(itemDeleters, function(deleter) {
-    deleter.addEventListener('click', sendDeleteItemRequest);
-  });
+    if (dropdownList != null) {
+        let dropdownLinks = dropdownList.querySelectorAll('a, button');
 
-  let cardDeleters = document.querySelectorAll('article.card header a.delete');
-  [].forEach.call(cardDeleters, function(deleter) {
-    deleter.addEventListener('click', sendDeleteCardRequest);
-  });
+        if (window.innerWidth < 768) {
+            dropdownList.classList.remove('dropdown-menu', 'dropdown-menu-end');
+            
+            for (let link of dropdownLinks) {
+                link.classList.remove('dropdown-item');
+                link.classList.add('btn', 'btn-outline-light');
+            }
+        }
+        else {
+            dropdownList.classList.add('dropdown-menu', 'dropdown-menu-end');
+    
+            for (let link of dropdownLinks) {
+                link.classList.add('dropdown-item');
+                link.classList.remove('btn', 'btn-outline-light');
+            }
+        }
+    }
+}
 
-  let cardCreator = document.querySelector('article.card form.new_card');
-  if (cardCreator != null)
-    cardCreator.addEventListener('submit', sendCreateCardRequest);
+onWindowResize();
+window.addEventListener('resize', onWindowResize);
+
+function updateMaxAttendanceInput() {
+    let maxAttendance = document.querySelector('input#maxAttendance');
+    if (maxAttendance != null) maxAttendance.hidden = !switchLimitedAttendance.checked;
+}
+
+let switchLimitedAttendance = document.querySelector('input#switchLimitedAttendance')
+if (switchLimitedAttendance != null) {
+    switchLimitedAttendance.addEventListener('change', updateMaxAttendanceInput);
+    updateMaxAttendanceInput();
 }
 
 function encodeForAjax(data) {
-  if (data == null) return null;
-  return Object.keys(data).map(function(k){
-    return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
-  }).join('&');
+    if (data == null) return null;
+    return Object.keys(data).map(function(k){
+        return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+    }).join('&');
 }
 
-function sendAjaxRequest(method, url, data, handler) {
-  let request = new XMLHttpRequest();
+function sendAjaxRequest(method, url, data, handler, acceptHeader = 'text/html') {
+    let request = new XMLHttpRequest();
 
-  request.open(method, url, true);
-  request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
-  request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  request.addEventListener('load', handler);
-  request.send(encodeForAjax(data));
+    request.open(method, url, true);
+    request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    request.setRequestHeader('Accept', acceptHeader);
+    request.addEventListener('load', handler);
+    request.send(encodeForAjax(data));
 }
 
-function sendItemUpdateRequest() {
-  let item = this.closest('li.item');
-  let id = item.getAttribute('data-id');
-  let checked = item.querySelector('input[type=checkbox]').checked;
+let createPollForm = document.getElementById('createPollForm');
+let createPollOptions = document.getElementById('createPollOptions');
+let createPollError = document.getElementById('createPollError');
+let pollsSection = document.querySelector('section#polls');
 
-  sendAjaxRequest('post', '/api/item/' + id, {done: checked}, itemUpdatedHandler);
+if (createPollOptions != null) {
+    let addPollOptionButton = document.getElementById('addPollOption');
+    addPollOptionButton.addEventListener('click', addPollOption);
+
+    createPollForm.addEventListener('submit', sendCreatePollRequest);
 }
 
-function sendDeleteItemRequest() {
-  let id = this.closest('li.item').getAttribute('data-id');
+function sendCreatePollRequest(event) {
+    let question = document.getElementById('createPollQuestion').value;
+    let csrfToken = createPollForm.querySelector('input[name=_token]').value;
 
-  sendAjaxRequest('delete', '/api/item/' + id, null, itemDeletedHandler);
+    let optionInputs = createPollOptions.querySelectorAll('input');
+    let options = [];
+
+    for (let input of optionInputs) {
+        if (input.value.indexOf('|') > -1) {
+            createPollError.innerHTML = 'The | character cannot be used inside poll options.';
+            event.preventDefault();
+            return;
+        }
+
+        options.push(input.value);
+    }
+
+    let data = {
+        _token: csrfToken,
+        question: question,
+        options: options.join('|')
+    };
+
+    sendAjaxRequest(createPollForm.method, createPollForm.action, data, createPollHandler);
+    event.preventDefault();
 }
 
-function sendCreateItemRequest(event) {
-  let id = this.closest('article').getAttribute('data-id');
-  let description = this.querySelector('input[name=description]').value;
+function createPollHandler() {
+    if (this.status !== 200) {
+        createPollError.innerHTML = this.responseText;
+        return;
+    }
 
-  if (description != '')
-    sendAjaxRequest('put', '/api/cards/' + id, {description: description}, itemAddedHandler);
+    document.getElementById('createPollQuestion').value = "";
+    let optionInputs = createPollOptions.querySelectorAll('input');
 
-  event.preventDefault();
+    for (let input of optionInputs) {
+        input.value = "";
+
+        if (input.parentElement.querySelector('button') != null) {
+            input.parentElement.remove();
+        }
+    }
+
+    document.getElementById('newPollOption').value = "";
+
+    pollsSection.innerHTML += this.responseText;
+    
+    let closeModalButton = document.getElementById('createPollModalClose');
+    closeModalButton.click();
 }
 
-function sendDeleteCardRequest(event) {
-  let id = this.closest('article').getAttribute('data-id');
-
-  sendAjaxRequest('delete', '/api/cards/' + id, null, cardDeletedHandler);
+function deletePollOption() {
+    this.parentElement.remove();
 }
 
-function sendCreateCardRequest(event) {
-  let name = this.querySelector('input[name=name]').value;
+function addPollOption() {
+    let newPollOptionInput = document.getElementById('newPollOption');
+    let text = newPollOptionInput.value.trim();
 
-  if (name != '')
-    sendAjaxRequest('put', '/api/cards/', {name: name}, cardAddedHandler);
+    if (text && text.length > 0) {
+        let li = document.createElement('li');
+        li.classList.add('input-group');
 
-  event.preventDefault();
+        let input = document.createElement('input');
+        input.type = 'text';
+        input.classList.add('form-control');
+        input.required = true;
+        input.value = text;
+
+        li.appendChild(input);
+
+        let button = document.createElement('button');
+        button.classList.add('btn', 'btn-danger');
+        button.ariaLabel = 'Remove option';
+        
+        let icon = document.createElement('i');
+        icon.classList.add('fa', 'fa-remove');
+
+        button.appendChild(icon);
+        button.addEventListener('click', deletePollOption);
+
+        li.appendChild(button);
+        
+        newPollOptionInput.value = "";
+        createPollOptions.appendChild(li);
+    }
 }
-
-function itemUpdatedHandler() {
-  let item = JSON.parse(this.responseText);
-  let element = document.querySelector('li.item[data-id="' + item.id + '"]');
-  let input = element.querySelector('input[type=checkbox]');
-  element.checked = item.done == "true";
-}
-
-function itemAddedHandler() {
-  if (this.status != 200) window.location = '/';
-  let item = JSON.parse(this.responseText);
-
-  // Create the new item
-  let new_item = createItem(item);
-
-  // Insert the new item
-  let card = document.querySelector('article.card[data-id="' + item.card_id + '"]');
-  let form = card.querySelector('form.new_item');
-  form.previousElementSibling.append(new_item);
-
-  // Reset the new item form
-  form.querySelector('[type=text]').value="";
-}
-
-function itemDeletedHandler() {
-  if (this.status != 200) window.location = '/';
-  let item = JSON.parse(this.responseText);
-  let element = document.querySelector('li.item[data-id="' + item.id + '"]');
-  element.remove();
-}
-
-function cardDeletedHandler() {
-  if (this.status != 200) window.location = '/';
-  let card = JSON.parse(this.responseText);
-  let article = document.querySelector('article.card[data-id="'+ card.id + '"]');
-  article.remove();
-}
-
-function cardAddedHandler() {
-  if (this.status != 200) window.location = '/';
-  let card = JSON.parse(this.responseText);
-
-  // Create the new card
-  let new_card = createCard(card);
-
-  // Reset the new card input
-  let form = document.querySelector('article.card form.new_card');
-  form.querySelector('[type=text]').value="";
-
-  // Insert the new card
-  let article = form.parentElement;
-  let section = article.parentElement;
-  section.insertBefore(new_card, article);
-
-  // Focus on adding an item to the new card
-  new_card.querySelector('[type=text]').focus();
-}
-
-function createCard(card) {
-  let new_card = document.createElement('article');
-  new_card.classList.add('card');
-  new_card.setAttribute('data-id', card.id);
-  new_card.innerHTML = `
-
-  <header>
-    <h2><a href="cards/${card.id}">${card.name}</a></h2>
-    <a href="#" class="delete">&#10761;</a>
-  </header>
-  <ul></ul>
-  <form class="new_item">
-    <input name="description" type="text">
-  </form>`;
-
-  let creator = new_card.querySelector('form.new_item');
-  creator.addEventListener('submit', sendCreateItemRequest);
-
-  let deleter = new_card.querySelector('header a.delete');
-  deleter.addEventListener('click', sendDeleteCardRequest);
-
-  return new_card;
-}
-
-function createItem(item) {
-  let new_item = document.createElement('li');
-  new_item.classList.add('item');
-  new_item.setAttribute('data-id', item.id);
-  new_item.innerHTML = `
-  <label>
-    <input type="checkbox"> <span>${item.description}</span><a href="#" class="delete">&#10761;</a>
-  </label>
-  `;
-
-  new_item.querySelector('input').addEventListener('change', sendItemUpdateRequest);
-  new_item.querySelector('a.delete').addEventListener('click', sendDeleteItemRequest);
-
-  return new_item;
-}
-
-addEventListeners();

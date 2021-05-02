@@ -11,22 +11,31 @@
 |
 */
 // Home
-Route::get('/', 'Auth\LoginController@home');
+Route::view('/', 'pages.home');
 
-// Cards
-Route::get('cards', 'CardController@list');
-Route::get('cards/{id}', 'CardController@show');
+// User Profile
+Route::get('/users/{username}', 'UserController@show')->name('users.profile');
+Route::get('/users/{username}/edit', 'UserController@edit')->name('users.profile.edit');
+Route::post('/users/{username}/edit', 'UserController@update');
+Route::delete('/users/{username}/delete', 'UserController@delete')->name('users.profile.delete');
+
+// Event
+Route::get('/events/new', 'EventController@create')->name('events.new');
+Route::post('/events/new', 'EventController@store');
+Route::get('/events/{id}', 'EventController@show')->name('events.event');
+Route::get('/events/{id}/edit', 'EventController@edit')->name('events.event.edit');
+Route::post('/events/{id}/edit', 'EventController@update');
+
+// TODO: next 2 routes are not complete
+//Route::get('/events/{id}/matches', 'EventController@show')->name('events.event.matches');
+//Route::get('/events/{id}/invitations', 'EventController@show')->name('events.event.invitations');
 
 // API
-Route::put('api/cards', 'CardController@create');
-Route::delete('api/cards/{card_id}', 'CardController@delete');
-Route::put('api/cards/{card_id}/', 'ItemController@create');
-Route::post('api/item/{id}', 'ItemController@update');
-Route::delete('api/item/{id}', 'ItemController@delete');
+Route::post('/api/events/{id}/polls', 'PollController@store')->name('api.events.event.polls.new');
 
 // Authentication
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('register', 'Auth\RegisterController@register');
+Route::get('/sign-in', 'Auth\LoginController@showLoginForm')->name('sign-in');
+Route::post('/sign-in', 'Auth\LoginController@login');
+Route::post('/sign-out', 'Auth\LoginController@logout')->name('sign-out');
+Route::get('/sign-up', 'Auth\RegisterController@showRegistrationForm')->name('sign-up');
+Route::post('/sign-up', 'Auth\RegisterController@register');
