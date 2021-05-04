@@ -382,6 +382,12 @@ CREATE INDEX search_idx ON "event" USING GIST (keywords);
 
 -- POPULATION
 
+-- R01
+INSERT INTO "administrator" (id,username,"password") VALUES (1,'amanda'   ,'$2y$10$SMwx7vnXDrdpNSM9W/4vhOVGs/Wb6MrYDpDPhzz1YHmsPwWjN3YWS');
+INSERT INTO "administrator" (id,username,"password") VALUES (2,'kiona'    ,'$2y$10$gZHa7j1vNTXFQXskFgRET.A4n0Cxpp5kAwswrGzP.3B67oirEcFvm');
+INSERT INTO "administrator" (id,username,"password") VALUES (3,'shaeleigh','$2y$10$eTrJiN0bt.yw46GL8N.VOO4W2AtvQ6ecQHOjFs2G8xgao/8Y6qZzu');
+INSERT INTO "administrator" (id,username,"password") VALUES (4,'ina'      ,'$2y$10$0GXPGF8m/rC4av6v57u3xO7LDKRSvy4EiGoNVZB9rlGnN7C6rCHvu');
+
 -- R02
 INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('cballard'   ,'Cooper Ballard'   ,'cooperbal@outlook.com','$2y$10$myqDITxpP1uw4.Dkq.Mk7elaht.kiyRQ3cnaQdcDVU3/a./fXH9M2','Michigan, USA'     ,'Male'  ,23,'www.cballard.com'    ,NULL,'I enjoy driving, exercising and playing board games.'           );
 INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('dmaynard'   ,'Derek Maynard'    ,'dmal@gmail.com'       ,'$2y$10$suQG1OW49APnAOQgkKTXVev7CK6ZOL41X6nmJPOe3ib6Z0ruwVT26','Liverpool, UK'     ,'Male'  ,31,NULL                  ,NULL,'I am looking to travel all around the globe for events'         );
