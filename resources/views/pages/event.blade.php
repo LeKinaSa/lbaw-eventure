@@ -113,20 +113,22 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
         </ul>
     </nav>
 
-    <!-- TODO: comments and polls -->
+    <!-- TODO: comments -->
     <div class="tab-content" id="tabContent">
         <div class="tab-pane fade show active p-3" id="commentsTab" role="tabpanel" aria-labelledby="commentsLabel">
-            <form class="mb-3">
-                <div class="mb-3">
-                    <label for="comment" class="h5 form-label">Write a comment</label>
-                    <textarea class="form-control" id="comment" name="comment" placeholder="You can use comments to ask questions or make suggestions..." required></textarea>
-                </div>
-                <input type="submit" class="btn btn-primary" value="Post">
-            </form>
+            @if (App\Policies\CommentPolicy::create(Auth::user(), $event))
+            <div class="mb-3">
+                <label for="comment" class="h5 form-label">Write a comment</label>
+                <form method="POST" action="{{ route('api.events.event.comments.new', ['id' => $event->id]) }}" class="form-comment-post">
+                    <textarea class="form-control mb-2" name="text" placeholder="You can use comments to ask questions or make suggestions..." required></textarea>
+                    <input type="submit" class="btn btn-primary" value="Post">
+                </form>
+            </div>
+            @endif
 
             <section id="comments">
                 <h4>{{ $event->comments()->count() }} comments</h4>
-                <div>
+                <div class="mt-3">
                     @if (array_key_exists(0, $commentsByParent))
                         @foreach ($commentsByParent[0] as $comment)
                             @include('partials.comment', ['comment' => $comment, 'commentsByParent' => $commentsByParent])

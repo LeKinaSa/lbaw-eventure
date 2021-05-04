@@ -32,6 +32,7 @@ Route::post('/events/{id}/edit', 'EventController@update');
 
 // API
 Route::post('/api/events/{id}/polls', 'PollController@store')->name('api.events.event.polls.new');
+Route::post('/api/events/{id}/comments', 'CommentController@store')->name('api.events.event.comments.new');
 
 // Authentication
 Route::get('/sign-in', 'Auth\LoginController@showLoginForm')->name('sign-in');

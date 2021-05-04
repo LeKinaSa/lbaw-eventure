@@ -45,14 +45,16 @@ function encodeForAjax(data) {
     }).join('&');
 }
 
-function sendAjaxRequest(method, url, data, handler, acceptHeader = 'text/html') {
+function sendAjaxRequest(method, url, data, handler, handlerData = {}, acceptHeader = 'text/html') {
     let request = new XMLHttpRequest();
 
     request.open(method, url, true);
     request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     request.setRequestHeader('Accept', acceptHeader);
-    request.addEventListener('load', handler);
+    request.addEventListener('load', function() {
+        handler.call(this, handlerData);
+    });
     request.send(encodeForAjax(data));
 }
 
@@ -155,4 +157,73 @@ function addPollOption() {
         newPollOptionInput.value = "";
         createPollOptions.appendChild(li);
     }
+}
+
+// ----- Comments API -----
+
+// ----- Button Event Listeners -----
+function onReplyButtonClicked() {
+    let article = this.closest('article');
+    let replyForm = article.querySelector('form.form-comment-post');
+    replyForm.hidden = false;
+}
+
+document.querySelectorAll('button.button-comment-reply').forEach(function(button) { button.addEventListener('click', onReplyButtonClicked) });
+
+
+function sendPostCommentRequest(event, form) {
+    let csrfToken = form.querySelector('input[name=_token]').value;
+    let text = form.querySelector('textarea[name=text]').value;
+
+    let id = null, idParent = null;
+
+    let idElement = form.querySelector('input[name=id]');
+    let idParentElement = form.querySelector('input[name=idParent]');
+
+    if (idElement != null) id = idElement.value;
+    if (idParentElement != null) idParent = idParentElement.value;
+
+    let data = {
+        _token: csrfToken,
+        id: id,
+        idParent: idParent,
+        text: text,
+    };
+    
+    let handler = id != null ? editCommentHandler : postCommentHandler;
+    sendAjaxRequest(form.method, form.action, data, handler, { id: id, idParent: idParent });
+}
+
+function editCommentHandler(data) {
+    console.log(data);
+}
+
+function postCommentHandler(data) {
+    if (data.idParent == null) {
+        // New root comment
+        document.querySelector('section#comments > div').innerHTML += this.responseText;
+
+        // Clear the comment form
+        postCommentForm.querySelector('text').value = "";
+    }
+    else {
+        // New child comment
+        let parentCommentChildren = document.querySelector('section#comments article[data-id=' + data.idParent + '] > section');
+
+        if (parentCommentChildren != null) {
+            parentCommentChildren.innerHTML += this.responseText;
+        }
+    }
+
+    console.log(this.responseText);
+    console.log(data);
+}
+
+
+let postCommentForm = document.querySelector('#commentsTab > div > form');
+if (postCommentForm != null) {
+    postCommentForm.addEventListener('submit', function(event) {
+        sendPostCommentRequest(event, postCommentForm);
+        event.preventDefault();
+    });
 }
