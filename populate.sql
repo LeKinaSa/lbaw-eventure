@@ -1,9 +1,9 @@
 
 -- R01
-INSERT INTO "administrator" (id,username,"password") VALUES (1,'amanda'   ,'QHA35ZTP5TI');
-INSERT INTO "administrator" (id,username,"password") VALUES (2,'kiona'    ,'NID14NVH1CP');
-INSERT INTO "administrator" (id,username,"password") VALUES (3,'shaeleigh','XBR72IRG1JG');
-INSERT INTO "administrator" (id,username,"password") VALUES (4,'ina'      ,'XLA52GNN6UN');
+INSERT INTO "administrator" (id,username,"password") VALUES (1,'amanda'   ,'$2y$10$SMwx7vnXDrdpNSM9W/4vhOVGs/Wb6MrYDpDPhzz1YHmsPwWjN3YWS');
+INSERT INTO "administrator" (id,username,"password") VALUES (2,'kiona'    ,'$2y$10$gZHa7j1vNTXFQXskFgRET.A4n0Cxpp5kAwswrGzP.3B67oirEcFvm');
+INSERT INTO "administrator" (id,username,"password") VALUES (3,'shaeleigh','$2y$10$eTrJiN0bt.yw46GL8N.VOO4W2AtvQ6ecQHOjFs2G8xgao/8Y6qZzu');
+INSERT INTO "administrator" (id,username,"password") VALUES (4,'ina'      ,'$2y$10$0GXPGF8m/rC4av6v57u3xO7LDKRSvy4EiGoNVZB9rlGnN7C6rCHvu');
 
 -- R02
 INSERT INTO "user" (id,username,"name",email,"password","address",gender,age,website,picture,"description") VALUES (1 ,'cballard'   ,'Cooper Ballard'   ,'cooperbal@outlook.com','$2y$10$myqDITxpP1uw4.Dkq.Mk7elaht.kiyRQ3cnaQdcDVU3/a./fXH9M2','Tomsk'             ,'Male'  ,53,'www.blue.com'  ,NULL,'I like to travel in fast vehicles'                              );
