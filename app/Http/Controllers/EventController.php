@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\User;
 use App\Models\Event;
+use DB;
 use DateTime;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
-class EventController extends Controller
-{
+class EventController extends Controller {
     /**
      * Display a listing of the resource.
      *
@@ -180,6 +182,40 @@ class EventController extends Controller
         
         $event->save();
         return redirect(route('events.event', ['id' => $event->id]));
+    }
+
+    /**
+     * Show the invitations page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function invitations(Request $request, $id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('update', $event);
+        return view('pages.invitations', ['event' => $event]);
+    }
+
+    public function sendInvitation(Request $request, $id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('update', $event);
+        
+        // The input may be username or email
+        $usernameOrEmail = $request->input('invite');
+        
+        // Obtain user
+        try {
+            $user = User::where('username', $usernameOrEmail)->orWhere('email', $usernameOrEmail)->firstOrFail();
+        }
+        catch (ModelNotFoundException $ex) {
+            return redirect(route('events.event.invitations', ['id' => $event->id]));
+        }
+        
+        // Invite user
+        DB::insert("INSERT INTO participation (id_user, id_event, status) VALUES (?, ?, ?);", [$user->id, $event->id, 'Invitation']);
+
+        return redirect(route('events.event.invitations', ['id' => $event->id]));
     }
 
     /**

@@ -28,7 +28,8 @@ Route::post('/events/{id}/edit', 'EventController@update');
 
 // TODO: next 2 routes are not complete
 //Route::get('/events/{id}/matches', 'EventController@show')->name('events.event.matches');
-//Route::get('/events/{id}/invitations', 'EventController@show')->name('events.event.invitations');
+Route::get('/events/{id}/invitations', 'EventController@invitations')->name('events.event.invitations');
+Route::post('/api/events/{id}/invitations', 'EventController@sendInvitation')->name('events.event.invitations.invite');
 
 // API
 Route::post('/api/events/{id}/polls', 'PollController@store')->name('api.events.event.polls.new');
