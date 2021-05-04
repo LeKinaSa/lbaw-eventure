@@ -41,6 +41,10 @@ class Event extends Model {
         return $this->belongsTo(Category::class, 'id_category');
     }
 
+    public function comments() {
+        return $this->hasMany(Comment::class, 'id_event');
+    }
+
     public function polls() {
         return $this->hasMany(Poll::class, 'id_event');
     }

@@ -123,7 +123,23 @@ class EventController extends Controller
     public function show($id) {
         $event = Event::findOrFail($id);
         $this->authorize('view', $event);
-        return view('pages.event', ['event' => $event]);
+
+        $comments = $event->comments()->join('user', 'comment.id_author', '=', 'user.id')
+                ->select('comment.*', 'user.name', 'user.username');
+        $commentsByParent = array();
+
+        foreach ($comments->get() as $comment) {
+            $idParent = is_null($comment->id_parent) ? 0 : $comment->id_parent;
+
+            if (array_key_exists($idParent, $commentsByParent)) {
+                array_push($commentsByParent[$idParent], $comment);
+            }
+            else {
+                $commentsByParent[$idParent] = array($comment);
+            }
+        }
+
+        return view('pages.event', ['event' => $event, 'commentsByParent' => $commentsByParent]);
     }
 
     /**
