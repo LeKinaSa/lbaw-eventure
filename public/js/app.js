@@ -198,6 +198,8 @@ function postCommentHandler(data) {
         return;
     }
 
+    let newForm, replyButton;
+
     if (data.idParent == null) {
         // New root comment
         let commentsDiv = document.querySelector('section#comments > div');
@@ -205,6 +207,9 @@ function postCommentHandler(data) {
 
         // Clear the comment form
         rootCommentForm.querySelector('textarea[name=text]').value = "";
+
+        newForm = commentsDiv.querySelector('form.form-comment-post');
+        replyButton = commentsDiv.querySelector('button.button-comment-reply');
     }
     else {
         // New child comment
@@ -218,13 +223,17 @@ function postCommentHandler(data) {
             replyForm.querySelector('textarea[name=text]').value = "";
             parentCommentChildren.innerHTML = this.responseText + parentCommentChildren.innerHTML;
 
-            let newForm = parentCommentChildren.querySelector('form.form-comment-post');
-            newForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                sendPostCommentRequest(newForm);
-            });
+            newForm = parentCommentChildren.querySelector('form.form-comment-post');
+            replyButton = parentCommentChildren.querySelector('button.button-comment-reply');
         }
     }
+    
+    newForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        sendPostCommentRequest(newForm);
+    });
+    
+    replyButton.addEventListener('click', onReplyButtonClicked);
 
     let commentCountSpan = document.querySelector('span#commentCount');
     commentCountSpan.innerHTML = parseInt(commentCountSpan.innerHTML) + 1;
