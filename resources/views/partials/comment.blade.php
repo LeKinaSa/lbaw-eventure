@@ -1,7 +1,7 @@
 
 <article data-id="{{ $comment->id }}" class="border-start border-2">
     <div>
-        <header class="bg-light px-2 py-1 rounded d-flex align-items-center justify-content-between">
+        <header class="bg-light px-2 py-1 d-flex align-items-center justify-content-between">
             <h5 class="m-0">{{ $comment->name }} (<a class="text-primary" href="{{ route('users.profile', ['username' => $comment->username]) }}">&commat;{{ $comment->username }}</a>)</h5>
             <div class="d-flex gap-1 comment-text">
                 @if (App\Policies\CommentPolicy::create(Auth::user(), $event))
@@ -30,11 +30,11 @@
         </div>
     </div>
 
+    <section class="ms-4 ms-md-5">
     @if (array_key_exists($comment->id, $commentsByParent))
-        <section class="ms-4 ms-md-5">
         @foreach ($commentsByParent[$comment->id] as $child)
             @include('partials.comment', ['comment' => $child, 'commentsByParent' => $commentsByParent])
         @endforeach
-        </section>
     @endif
+    </section>
 </article>

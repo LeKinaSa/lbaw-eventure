@@ -171,59 +171,72 @@ function onReplyButtonClicked() {
 document.querySelectorAll('button.button-comment-reply').forEach(function(button) { button.addEventListener('click', onReplyButtonClicked) });
 
 
-function sendPostCommentRequest(event, form) {
+function sendPostCommentRequest(form) {
     let csrfToken = form.querySelector('input[name=_token]').value;
     let text = form.querySelector('textarea[name=text]').value;
 
-    let id = null, idParent = null;
-
-    let idElement = form.querySelector('input[name=id]');
+    let idParent;
     let idParentElement = form.querySelector('input[name=idParent]');
-
-    if (idElement != null) id = idElement.value;
     if (idParentElement != null) idParent = idParentElement.value;
 
     let data = {
         _token: csrfToken,
-        id: id,
-        idParent: idParent,
         text: text,
     };
-    
-    let handler = id != null ? editCommentHandler : postCommentHandler;
-    sendAjaxRequest(form.method, form.action, data, handler, { id: id, idParent: idParent });
+
+    if (idParent != null) data['idParent'] = idParent;
+    sendAjaxRequest(form.method, form.action, data, postCommentHandler, { idParent: idParent });
 }
 
 function editCommentHandler(data) {
-    console.log(data);
+    // TODO
 }
 
 function postCommentHandler(data) {
+    if (this.status !== 200) {
+        // TODO: Add error message?
+        console.log('Error');
+        return;
+    }
+
     if (data.idParent == null) {
         // New root comment
-        document.querySelector('section#comments > div').innerHTML += this.responseText;
+        let commentsDiv = document.querySelector('section#comments > div');
+        commentsDiv.innerHTML = this.responseText + commentsDiv.innerHTML;
 
         // Clear the comment form
-        postCommentForm.querySelector('text').value = "";
+        rootCommentForm.querySelector('textarea[name=text]').value = "";
     }
     else {
         // New child comment
-        let parentCommentChildren = document.querySelector('section#comments article[data-id=' + data.idParent + '] > section');
+        let parentComment = document.querySelector('section#comments article[data-id=\"' + data.idParent + '\"]');
 
-        if (parentCommentChildren != null) {
-            parentCommentChildren.innerHTML += this.responseText;
+        if (parentComment != null) {
+            let parentCommentChildren = parentComment.querySelector('section');
+            let replyForm = parentComment.querySelector('form.form-comment-post');
+
+            replyForm.hidden = true;
+            replyForm.querySelector('textarea[name=text]').value = "";
+            parentCommentChildren.innerHTML = this.responseText + parentCommentChildren.innerHTML;
+
+            let newForm = parentCommentChildren.querySelector('form.form-comment-post');
+            newForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                sendPostCommentRequest(newForm);
+            });
         }
     }
 
-    console.log(this.responseText);
-    console.log(data);
+    let commentCountSpan = document.querySelector('span#commentCount');
+    commentCountSpan.innerHTML = parseInt(commentCountSpan.innerHTML) + 1;
 }
 
+let rootCommentForm = document.querySelector('#commentsTab > div > form.form-comment-post');
+let postCommentForms = document.querySelectorAll('form.form-comment-post');
 
-let postCommentForm = document.querySelector('#commentsTab > div > form');
-if (postCommentForm != null) {
-    postCommentForm.addEventListener('submit', function(event) {
-        sendPostCommentRequest(event, postCommentForm);
+for (let form of postCommentForms) {
+    form.addEventListener('submit', function(event) {
         event.preventDefault();
+        sendPostCommentRequest(form);
     });
 }

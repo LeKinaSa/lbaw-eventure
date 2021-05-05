@@ -3,38 +3,58 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class CommentController extends Controller
-{
+class CommentController extends Controller {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Validates a request to add a new comment or edit an existing one.
      */
-    public function index()
-    {
-        //
+    private static function validateRequest(Request $request) {
+        $maxLength = Comment::MAX_LENGTH;
+        $request->validate([
+            'text' => 'string|max:' . $maxLength,
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Store a newly created comment in the database.
      *
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id                              ID of the event the comment will be posted in
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
+    public function store(Request $request, $id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('create', [Comment::class, $event]);
+        CommentController::validateRequest($request);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request) {
-        return response('Test');
+        $idParent = $request->input('idParent');
+
+        if (!is_null($idParent) && $event->comments()->where('id', $idParent)->first() === null) {
+            return response('Parent comment does not belong to the specified event.', 400);
+        }
+
+        try {
+            $comment = Comment::create([
+                'id_event' => $id,
+                'id_author' => Auth::id(),
+                'id_parent' => $idParent,
+                'text' => $request->input('text'),
+            ]);
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        $comment->save();
+        $comment = Comment::where('comment.id', $comment->id)->join('user', 'comment.id_author', '=', 'user.id')
+                ->select('comment.*', 'user.name', 'user.username')->first();
+
+        if ($request->acceptsHtml()) {
+            return view('partials.comment', ['event' => $event, 'comment' => $comment, 'commentsByParent' => array()])->render();
+        }
     }
 
     /**
@@ -43,19 +63,7 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function show(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Comment $comment)
-    {
+    public function show(Comment $comment) {
         //
     }
 
@@ -66,8 +74,7 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comment $comment)
-    {
+    public function update(Request $request, Comment $comment) {
         //
     }
 
@@ -77,8 +84,7 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment)
-    {
+    public function destroy(Comment $comment) {
         //
     }
 }
