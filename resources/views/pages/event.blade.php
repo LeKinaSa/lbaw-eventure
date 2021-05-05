@@ -117,6 +117,7 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
         <div class="tab-pane fade show active p-3" id="commentsTab" role="tabpanel" aria-labelledby="commentsLabel">
             @if (App\Policies\CommentPolicy::create(Auth::user(), $event))
             <div class="mb-3">
+                <p class="mb-1 text-danger" id="commentsError"></p>
                 <h5>Write a comment</h5>
                 <form method="POST" action="{{ route('api.events.event.comments.new', ['id' => $event->id]) }}" class="form-comment-post">
                     @csrf

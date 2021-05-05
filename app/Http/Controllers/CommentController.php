@@ -4,18 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Event;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller {
     /**
-     * Validates a request to add a new comment or edit an existing one.
+     * Returns true if a request to add a new comment or edit an existing one is invalid.
      */
-    private static function validateRequest(Request $request) {
+    private static function isInvalid(Request $request) {
         $maxLength = Comment::MAX_LENGTH;
-        $request->validate([
+        return Validator::make($request->all(), [
+            'idParent' => 'nullable|integer',
             'text' => 'string|max:' . $maxLength,
-        ]);
+        ])->fails();
     }
 
     /**
@@ -28,7 +30,10 @@ class CommentController extends Controller {
     public function store(Request $request, $id) {
         $event = Event::findOrFail($id);
         $this->authorize('create', [Comment::class, $event]);
-        CommentController::validateRequest($request);
+
+        if (CommentController::isInvalid($request)) {
+            return response('Invalid request.', 400);
+        }
 
         $idParent = $request->input('idParent');
 

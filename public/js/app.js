@@ -194,8 +194,7 @@ function editCommentHandler(data) {
 
 function postCommentHandler(data) {
     if (this.status !== 200) {
-        // TODO: Add error message?
-        console.log('Error');
+        document.getElementById('commentsError').innerHTML = this.responseText;
         return;
     }
 
