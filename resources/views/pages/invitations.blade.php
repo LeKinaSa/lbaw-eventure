@@ -17,6 +17,9 @@
         <div class="input-group">
             <input type="text" class="form-control" id="invite" name="invite" placeholder="Enter a username / email..." required>
             <button type="submit" class="btn btn-primary">Send invitation</button>
+            @error ('invite')
+            <span class="p-2 text-danger">{{ $message }}</span>
+            @enderror
         </div>
     </form>
 

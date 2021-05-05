@@ -209,7 +209,9 @@ class EventController extends Controller {
             $user = User::where('username', $usernameOrEmail)->orWhere('email', $usernameOrEmail)->firstOrFail();
         }
         catch (ModelNotFoundException $ex) {
-            return redirect(route('events.event.invitations', ['id' => $event->id]));
+            return back()->withErrors([
+                'invite' => 'User couldn\'t be found.'
+            ]);
         }
         
         // Invite user
