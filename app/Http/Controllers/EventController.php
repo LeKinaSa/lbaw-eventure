@@ -197,6 +197,13 @@ class EventController extends Controller {
         return view('pages.invitations', ['event' => $event]);
     }
 
+    /**
+     * Send an invitation to an user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function sendInvitation(Request $request, $id) {
         $event = Event::findOrFail($id);
         $this->authorize('update', $event);
@@ -217,6 +224,22 @@ class EventController extends Controller {
         // Invite user
         DB::insert("INSERT INTO participation (id_user, id_event, status) VALUES (?, ?, ?);", [$user->id, $event->id, 'Invitation']);
 
+        return redirect(route('events.event.invitations', ['id' => $event->id]));
+    }
+
+    /**
+     * Cancel the invitation of an user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelInvitation(Request $request, $id, $idInvitation) {
+        $event = Event::findOrFail($id);
+        $user = User::where('username', $idInvitation);
+        $this->authorize('update', $event);
+
+        // TODO: delete invitation from participation table
         return redirect(route('events.event.invitations', ['id' => $event->id]));
     }
 

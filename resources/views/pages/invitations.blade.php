@@ -30,7 +30,9 @@
             <button class="btn btn-outline-danger">Cancel all</button>
 
             <div class="d-flex flex-wrap mt-2 gap-3">
-                @each('partials.invitation', $event->invitations()->get(), 'user')
+                @foreach ($event->invitations()->get() as $user)
+                    @include('partials.invitation', ['user' => $user])
+                @endforeach
             </div>
         </section>
 
