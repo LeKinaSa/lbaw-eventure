@@ -124,7 +124,7 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
         $this->authorize('view', $event);
 
-        $comments = $event->comments()->join('user', 'comment.id_author', '=', 'user.id')
+        $comments = $event->comments()->leftJoin('user', 'comment.id_author', '=', 'user.id')
                 ->select('comment.*', 'user.name', 'user.username');
         $commentsByParent = array();
 

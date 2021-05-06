@@ -37,7 +37,7 @@ class CommentController extends Controller {
 
         $idParent = $request->input('idParent');
 
-        if (!is_null($idParent) && $event->comments()->where('id', $idParent)->first() === null) {
+        if (!is_null($idParent) && $event->comments()->where('id', $idParent)->first() === NULL) {
             return response('Parent comment does not belong to the specified event.', 400);
         }
 
@@ -54,11 +54,11 @@ class CommentController extends Controller {
         }
 
         $comment->save();
-        $comment = Comment::where('comment.id', $comment->id)->join('user', 'comment.id_author', '=', 'user.id')
+        $comment = Comment::where('comment.id', $comment->id)->leftJoin('user', 'comment.id_author', '=', 'user.id')
                 ->select('comment.*', 'user.name', 'user.username')->first();
 
         if ($request->acceptsHtml()) {
-            return view('partials.comment', ['event' => $event, 'comment' => $comment, 'commentsByParent' => array()])->render();
+            return view('partials.comment_thread', ['event' => $event, 'comment' => $comment, 'commentsByParent' => array()])->render();
         }
     }
 
@@ -86,10 +86,40 @@ class CommentController extends Controller {
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Comment  $comment
+     * @param  int $idEvent
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment) {
-        //
+    public function destroy($idEvent, $id) {
+        $comment = Comment::find($id);
+        if (is_null($comment)) {
+            return response('Request has an invalid comment id.', 400);
+        }
+        $this->authorize('delete', $comment);
+
+        $event = Event::find($idEvent);
+        if (is_null($event)) {
+            return response('Request has an invalid event id.', 400);
+        }
+
+        if ($event->comments()->where('id', $id)->first() === NULL) {
+            return response('The specified comment does not belong to the event.', 400);
+        }
+
+        try {
+            $comment->update([
+                'id_author' => NULL,
+                'text' => NULL,
+            ]);
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        $comment->save();
+        $comment = Comment::where('comment.id', $comment->id)->leftJoin('user', 'comment.id_author', '=', 'user.id')
+                ->select('comment.*', 'user.name', 'user.username')->first();
+        
+        return view('partials.comment', ['event' => $event, 'comment' => $comment]);
     }
 }

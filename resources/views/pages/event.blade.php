@@ -132,7 +132,7 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
                 <div class="mt-3">
                     @if (array_key_exists(0, $commentsByParent))
                         @foreach ($commentsByParent[0] as $comment)
-                            @include('partials.comment', ['comment' => $comment, 'commentsByParent' => $commentsByParent])
+                            @include('partials.comment_thread', ['comment' => $comment, 'commentsByParent' => $commentsByParent])
                         @endforeach
                     @endif
                 </div>

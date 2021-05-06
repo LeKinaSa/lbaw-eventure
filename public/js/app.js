@@ -168,8 +168,30 @@ function onReplyButtonClicked() {
     replyForm.hidden = false;
 }
 
-document.querySelectorAll('button.button-comment-reply').forEach(function(button) { button.addEventListener('click', onReplyButtonClicked) });
+function onDeleteButtonClicked(event) {
+    event.preventDefault();
+    
+    let article = this.closest('article');
+    if (article != null) {
+        sendAjaxRequest(this.querySelector('input[name=_method]').value, this.action, {}, deleteCommentHandler, { id: article.getAttribute('data-id') });
+    }
+}
 
+function deleteCommentHandler(data) {
+    if (this.status !== 200) {
+        document.getElementById('commentsError').innerHTML = this.responseText;
+        return;
+    }
+
+    let comment = document.querySelector('article[data-id=\"' + data.id + '\"] > .comment');
+
+    if (comment != null) {
+        comment.outerHTML = this.responseText;
+    }
+}
+
+document.querySelectorAll('button.button-comment-reply').forEach(function(button) { button.addEventListener('click', onReplyButtonClicked) });
+document.querySelectorAll('button.button-comment-delete').forEach(function(button) { button.parentElement.addEventListener('submit', onDeleteButtonClicked) });
 
 function sendPostCommentRequest(form) {
     let csrfToken = form.querySelector('input[name=_token]').value;
@@ -198,7 +220,7 @@ function postCommentHandler(data) {
         return;
     }
 
-    let newForm, replyButton;
+    let newForm, replyButton, deleteButton;
 
     if (data.idParent == null) {
         // New root comment
@@ -210,6 +232,7 @@ function postCommentHandler(data) {
 
         newForm = commentsDiv.querySelector('form.form-comment-post');
         replyButton = commentsDiv.querySelector('button.button-comment-reply');
+        deleteButton = commentsDiv.querySelector('button.button-comment-delete');
     }
     else {
         // New child comment
@@ -225,6 +248,7 @@ function postCommentHandler(data) {
 
             newForm = parentCommentChildren.querySelector('form.form-comment-post');
             replyButton = parentCommentChildren.querySelector('button.button-comment-reply');
+            deleteButton = parentCommentChildren.querySelector('button.button-comment-delete');
         }
     }
     
@@ -234,6 +258,7 @@ function postCommentHandler(data) {
     });
     
     replyButton.addEventListener('click', onReplyButtonClicked);
+    deleteButton.parentElement.addEventListener('submit', onDeleteButtonClicked);
 
     let commentCountSpan = document.querySelector('span#commentCount');
     commentCountSpan.innerHTML = parseInt(commentCountSpan.innerHTML) + 1;
