@@ -5,7 +5,7 @@
     </div>
     <div class="card-footer">
         <div class="d-flex align-items-center justify-content-evenly">
-            <form method="POST" action="{{ route('events.event.invitations.cancel', ['id' => $event->id, 'username' => $user->username]) }}">
+            <form method="POST" action="{{ route('events.event.invitations.cancel', ['id' => $event->id, 'idInvitation' => $user->username]) }}">
                 {{ csrf_field() }}
 
                 @method('DELETE')
