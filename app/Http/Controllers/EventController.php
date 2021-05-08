@@ -222,7 +222,7 @@ class EventController extends Controller {
         }
         
         // Invite user
-        DB::insert("INSERT INTO participation (id_user, id_event, status) VALUES (?, ?, ?);", [$user->id, $event->id, 'Invitation']);
+        DB::table('participation')->insertOrIgnore(['id_user' => $user->id, 'id_event' => $event->id, 'status' => 'Invitation']);
 
         return redirect(route('events.event.invitations', ['id' => $event->id]));
     }
@@ -256,6 +256,92 @@ class EventController extends Controller {
         $this->authorize('update', $event);
 
         DB::table('participation')->where([['id_event', $event->id], ['status', 'Invitation']])->delete();
+        return redirect(route('events.event.invitations', ['id' => $event->id]));
+    }
+
+    /**
+     * Send a request to join the event.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function sendJoinRequest(Request $request, $id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('view', $event);
+        $userId = Auth::id();
+
+        try {
+            DB::table('participation')->where([['id_user', $user->id], ['id_event', $event->id], ['status', 'Invitation']])->update(['status' => 'Accepted']);
+        }
+        catch (ModelNotFoundException $ex) {
+            DB::table('participation')->insertOrIgnore(['id_user' => $user->id, 'id_event' => $event->id, 'status' => 'JoinRequest']);
+        }
+        return redirect(route('events.event', ['id' => $event->id]));
+    }
+
+    /**
+     * Accept a request to join the event.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @param string idJoinRequest
+     * @return \Illuminate\Http\Response
+     */
+    public function acceptJoinRequest(Request $request, $id, $idJoinRequest) {
+        $event = Event::findOrFail($id);
+        $user = User::where('username', $idJoinRequest)->firstOrFail();
+        $this->authorize('update', $event);
+        
+        dd("hi");
+        DB::table('participation')->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'JoinRequest']])->update(['status' => 'Accepted']);
+        return redirect(route('events.event.invitations', ['id' => $event->id]));
+    }
+
+    /**
+     * Decline a request to join the event.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @param string idJoinRequest
+     * @return \Illuminate\Http\Response
+     */
+    public function declineJoinRequest(Request $request, $id, $idJoinRequest) {
+        $event = Event::findOrFail($id);
+        $user = User::where('username', $idJoinRequest)->firstOrFail();
+        $this->authorize('update', $event);
+        
+        DB::table('participation')->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'JoinRequest']])->update(['status' => 'Declined']);
+        return redirect(route('events.event.invitations', ['id' => $event->id]));
+    }
+
+    /**
+     * Accept all the requests to join the event.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function acceptAllJoinRequests(Request $request, $id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('update', $event);
+
+        DB::table('participation')->where([['id_event', $event->id], ['status', 'JoinRequest']])->update(['status' => 'Accepted']);
+        return redirect(route('events.event.invitations', ['id' => $event->id]));
+    }
+
+    /**
+     * Decline all the requests to join the event.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function declineAllJoinRequests(Request $request, $id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('update', $event);
+
+        DB::table('participation')->where([['id_event', $event->id], ['status', 'JoinRequest']])->update(['status' => 'Declined']);
         return redirect(route('events.event.invitations', ['id' => $event->id]));
     }
 

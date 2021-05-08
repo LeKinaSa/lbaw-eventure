@@ -32,6 +32,11 @@ Route::get('/events/{id}/invitations', 'EventController@invitations')->name('eve
 Route::post('/api/events/{id}/invitations', 'EventController@sendInvitation')->name('events.event.invitations.invite');
 Route::delete('/api/events/{id}/invitations/cancel/{idInvitation}', 'EventController@cancelInvitation')->name('events.event.invitations.cancel');
 Route::delete('/api/events/{id}/invitations/cancel-all', 'EventController@cancelAllInvitations')->name('events.event.invitations.cancel.all');
+Route::post('/api/events/{id}/join-request', 'EventController@sendJoinRequest')->name('events.event.joinrequest');
+Route::patch('/api/events/{id}/join-request/accept/{idJoinRequest}', 'EventController@acceptJoinRequest')->name('events.event.joinrequest.accept');
+Route::patch('/api/events/{id}/join-request/decline/{idJoinRequest}', 'EventController@declineJoinRequest')->name('events.event.joinrequest.decline');
+Route::patch('/api/events/{id}/join-request/accept-all', 'EventController@acceptAllJoinRequests')->name('events.event.joinrequest.accept.all');
+Route::patch('/api/events/{id}/join-request/decline-all', 'EventController@declineAllJoinRequests')->name('events.event.joinrequest.decline.all');
 
 // API
 Route::post('/api/events/{id}/polls', 'PollController@store')->name('api.events.event.polls.new');

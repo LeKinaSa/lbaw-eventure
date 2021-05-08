@@ -45,36 +45,24 @@
             <h4>Requests to participate</h4>
             
             <div class="d-flex gap-2">
-                <button class="btn btn-outline-success">Accept all</button>
-                <button class="btn btn-outline-danger">Reject all</button>
+                <form method="POST" action="{{ route('events.event.joinrequest.accept.all', ['id' => $event->id]) }}">
+                    {{ csrf_field() }}
+
+                    @method('PATCH')
+                    <button type="submit" class="btn btn-outline-success">Accept all</button>
+                </form>
+                <form method="POST" action="{{ route('events.event.joinrequest.decline.all', ['id' => $event->id]) }}">
+                    {{ csrf_field() }}
+
+                    @method('PATCH')
+                    <button type="submit" class="btn btn-outline-danger">Reject all</button>
+                </form>
             </div>
 
             <div class="d-flex flex-wrap mt-2 gap-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Afonso Caiado</h5>
-                        <h6 class="text-primary">@afonsocaiado</h6>
-                    </div>
-                    <div class="card-footer">
-                        <div class="d-flex align-items-center justify-content-evenly">
-                            <button class="btn btn-success" aria-label="Accept"><i class="fa fa-check"></i></button>
-                            <button class="btn btn-danger" aria-label="Reject"><i class="fa fa-remove"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Daniel Monteiro</h5>
-                        <h6 class="text-primary">@danielmonteiro</h6>
-                    </div>
-                    <div class="card-footer">
-                        <div class="d-flex align-items-center justify-content-evenly">
-                            <button class="btn btn-success" aria-label="Accept"><i class="fa fa-check"></i></button>
-                            <button class="btn btn-danger" aria-label="Deny"><i class="fa fa-remove"></i></button>
-                        </div>
-                    </div>
-                </div>
+                @foreach ($event->joinRequests()->get() as $user)
+                    @include('partials.join_request', ['user' => $user])
+                @endforeach
             </div>
         </section>
     </div>
