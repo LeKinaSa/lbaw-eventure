@@ -236,10 +236,10 @@ class EventController extends Controller {
      */
     public function cancelInvitation(Request $request, $id, $idInvitation) {
         $event = Event::findOrFail($id);
-        $user = User::where('username', $idInvitation);
+        $user = User::where('username', $idInvitation)->firstOrFail();
         $this->authorize('update', $event);
-
-        // TODO: delete invitation from participation table
+        
+        DB::table('participation')->where([['id_event', $event->id],['id_user', $user->id]])->delete(); // TODO
         return redirect(route('events.event.invitations', ['id' => $event->id]));
     }
 
