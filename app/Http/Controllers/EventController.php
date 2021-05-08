@@ -232,6 +232,7 @@ class EventController extends Controller {
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
+     * @param string $idInvitation
      * @return \Illuminate\Http\Response
      */
     public function cancelInvitation(Request $request, $id, $idInvitation) {
@@ -239,7 +240,22 @@ class EventController extends Controller {
         $user = User::where('username', $idInvitation)->firstOrFail();
         $this->authorize('update', $event);
         
-        DB::table('participation')->where([['id_event', $event->id],['id_user', $user->id]])->delete(); // TODO
+        DB::table('participation')->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'Invitation']])->delete();
+        return redirect(route('events.event.invitations', ['id' => $event->id]));
+    }
+
+    /**
+     * Cancel all the invitations for this event.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelAllInvitations(Request $request, $id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('update', $event);
+
+        DB::table('participation')->where([['id_event', $event->id], ['status', 'Invitation']])->delete();
         return redirect(route('events.event.invitations', ['id' => $event->id]));
     }
 

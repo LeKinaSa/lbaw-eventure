@@ -26,8 +26,13 @@
     <div class="row">
         <section id="sent" class="col-md mb-4 mb-md-0">
             <h4>Sent</h4>
-            
-            <button class="btn btn-outline-danger">Cancel all</button>
+
+            <form method="POST" action="{{ route('events.event.invitations.cancel.all', ['id' => $event->id]) }}">
+                {{ csrf_field() }}
+
+                @method('DELETE')
+                <button type="submit" class="btn btn-outline-danger">Cancel all</button>
+            </form>
 
             <div class="d-flex flex-wrap mt-2 gap-3">
                 @foreach ($event->invitations()->get() as $user)

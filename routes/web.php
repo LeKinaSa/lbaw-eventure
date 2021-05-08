@@ -30,7 +30,8 @@ Route::post('/events/{id}/edit', 'EventController@update');
 //Route::get('/events/{id}/matches', 'EventController@show')->name('events.event.matches');
 Route::get('/events/{id}/invitations', 'EventController@invitations')->name('events.event.invitations');
 Route::post('/api/events/{id}/invitations', 'EventController@sendInvitation')->name('events.event.invitations.invite');
-Route::delete('/api/events/{id}/invitations/{idInvitation}', 'EventController@cancelInvitation')->name('events.event.invitations.cancel');
+Route::delete('/api/events/{id}/invitations/cancel/{idInvitation}', 'EventController@cancelInvitation')->name('events.event.invitations.cancel');
+Route::delete('/api/events/{id}/invitations/cancel-all', 'EventController@cancelAllInvitations')->name('events.event.invitations.cancel.all');
 
 // API
 Route::post('/api/events/{id}/polls', 'PollController@store')->name('api.events.event.polls.new');
