@@ -221,10 +221,35 @@ class EventController extends Controller {
             ]);
         }
         
-        // Invite user
+        // Invite user (if it has a join request, accept it)
+        DB::table('participation')->where([['id_user', $user->id], ['id_event', $event->id], ['status', 'JoinRequest']])->update(['status' => 'Accepted']);
         DB::table('participation')->insertOrIgnore(['id_user' => $user->id, 'id_event' => $event->id, 'status' => 'Invitation']);
 
         return redirect(route('events.event.invitations', ['id' => $event->id]));
+    }
+
+    /**
+     * Accept an event invitation.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function acceptInvitation(Request $request, $id) {
+        DB::table('participation')->where([['id_event', $id], ['id_user', Auth::id()], ['status', 'Invitation']])->update(['status' => 'Accepted']);
+        return back();
+    }
+
+    /**
+     * Decline an event invitation.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function declineInvitation(Request $request, $id) {
+        DB::table('participation')->where([['id_event', $id], ['id_user', Auth::id()], ['status', 'Invitation']])->update(['status' => 'Declined']);
+        return back();
     }
 
     /**
@@ -270,13 +295,10 @@ class EventController extends Controller {
         $event = Event::findOrFail($id);
         $this->authorize('view', $event);
         $userId = Auth::id();
-
-        try {
-            DB::table('participation')->where([['id_user', $user->id], ['id_event', $event->id], ['status', 'Invitation']])->update(['status' => 'Accepted']);
-        }
-        catch (ModelNotFoundException $ex) {
-            DB::table('participation')->insertOrIgnore(['id_user' => $user->id, 'id_event' => $event->id, 'status' => 'JoinRequest']);
-        }
+        
+        // Request to Join (if it has a invitation, accept it)
+        DB::table('participation')->where([['id_user', $userId], ['id_event', $event->id], ['status', 'Invitation']])->update(['status' => 'Accepted']);
+        DB::table('participation')->insertOrIgnore(['id_user' => $userId, 'id_event' => $event->id, 'status' => 'JoinRequest']);
         return redirect(route('events.event', ['id' => $event->id]));
     }
 
@@ -293,7 +315,6 @@ class EventController extends Controller {
         $user = User::where('username', $idJoinRequest)->firstOrFail();
         $this->authorize('update', $event);
         
-        dd("hi");
         DB::table('participation')->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'JoinRequest']])->update(['status' => 'Accepted']);
         return redirect(route('events.event.invitations', ['id' => $event->id]));
     }

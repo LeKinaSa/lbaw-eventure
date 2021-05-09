@@ -5,13 +5,13 @@
     </div>
     <div class="card-footer">
         <div class="d-flex align-items-center justify-content-evenly">
-            <form method="POST" action="{{ route('events.event.invitations.cancel', ['id' => $event->id, 'idInvitation' => $user->username]) }}">
+            <form method="POST" action="{{ route('events.event.joinrequest.accept', ['id' => $event->id, 'idJoinRequest' => $user->username]) }}">
                 {{ csrf_field() }}
 
                 @method('PATCH')
                 <button type="submit" class="btn btn-success" aria-label="Accept"><i class="fa fa-check"></i></button>
             </form>
-            <form method="POST" action="{{ route('events.event.invitations.cancel', ['id' => $event->id, 'idInvitation' => $user->username]) }}">
+            <form method="POST" action="{{ route('events.event.joinrequest.decline', ['id' => $event->id, 'idJoinRequest' => $user->username]) }}">
                 {{ csrf_field() }}
 
                 @method('PATCH')
