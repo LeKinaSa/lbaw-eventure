@@ -32,6 +32,10 @@ class UserPolicy {
     }
 
     public static function canRequestToJoin(User $user, Event $event) {
+        if ($event->visibility === 'Private') {
+            return false;
+        }
+        
         if ($user->id === $event->id_organizer) {
             return false;
         }
