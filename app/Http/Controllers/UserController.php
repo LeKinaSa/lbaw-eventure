@@ -190,7 +190,8 @@ class UserController extends Controller {
     }
 
     public function showEvents($username) {
-        return view('pages.user_events');
+        $user = User::where('username', $username)->firstOrFail();
+        return view('pages.user_events', ['user' => $user]);
     }
 
     /**

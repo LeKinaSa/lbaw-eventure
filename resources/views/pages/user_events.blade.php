@@ -1,5 +1,6 @@
-<? include_once('../templates/header.php'); ?>
+@extends('layouts.app')
 
+@section('content')
 <div class="container py-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -94,6 +95,4 @@
         </div>
     </div>
 </div>
-
-
-<? include_once('../templates/footer.php'); ?>
+@endsection
