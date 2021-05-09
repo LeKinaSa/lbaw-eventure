@@ -189,6 +189,10 @@ class UserController extends Controller {
         return redirect(route('users.profile.edit', ['username' => $user->username]));
     }
 
+    public function showEvents($username) {
+        return view('pages.user_events');
+    }
+
     /**
      * Remove the specified resource from storage.
      *
