@@ -191,7 +191,23 @@ class UserController extends Controller {
 
     public function showEvents($username) {
         $user = User::where('username', $username)->firstOrFail();
-        return view('pages.user_events', ['user' => $user]);
+        $this->authorize('view', $user);
+
+        $eventsOrganizing = $user->eventsOrganizing()->limit(3)->get();
+        foreach ($eventsOrganizing as $key => $event) {
+            if (!EventPolicy::view(Auth::user(), $event)) {
+                unset($eventsOrganizing[$key]);
+            }
+        }
+
+        $eventsParticipatingIn = $user->eventsParticipatingIn()->limit(3)->get();
+        foreach ($eventsParticipatingIn as $key => $event) {
+            if (!EventPolicy::view(Auth::user(), $event)) {
+                unset($eventsParticipatingIn[$key]);
+            }
+        }
+
+        return view('pages.user_events', ['user' => $user, 'eventsOrganizing' => $eventsOrganizing, 'eventsParticipatingIn' => $eventsParticipatingIn]);
     }
 
     /**
