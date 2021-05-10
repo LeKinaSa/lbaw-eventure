@@ -3,6 +3,8 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Models\Event;
+use DB;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy {
@@ -26,6 +28,23 @@ class UserPolicy {
      * @return mixed
      */
     public function view(?User $user, User $model) {
+        return true;
+    }
+
+    public static function canRequestToJoin(User $user, Event $event) {
+        if ($event->visibility === 'Private') {
+            return false;
+        }
+        
+        if ($user->id === $event->id_organizer) {
+            return false;
+        }
+
+        $status = DB::table('participation')->where([['id_event', $event->id], ['id_user', $user->id]])->value('status');
+        if (($status !== null) && ($status !== 'Invitation')) {
+            return false;
+        }
+        
         return true;
     }
 

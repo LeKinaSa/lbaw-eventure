@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\User;
 use App\Models\Event;
+use DB;
 use DateTime;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
-class EventController extends Controller
-{
+class EventController extends Controller {
     /**
      * Display a listing of the resource.
      *
@@ -196,6 +198,186 @@ class EventController extends Controller
         
         $event->save();
         return redirect(route('events.event', ['id' => $event->id]));
+    }
+
+    /**
+     * Show the invitations page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showInvitations(Request $request, $id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('update', $event);
+        return view('pages.invitations', ['event' => $event]);
+    }
+
+    /**
+     * Send an invitation to an user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function createInvitation(Request $request, $id) {
+        $event = Event::find($id);
+
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+
+        $this->authorize('update', $event);
+        
+        // The input may be username or email
+        $usernameOrEmail = $request->input('invite');
+        
+        // Obtain user
+        $user = User::where('username', $usernameOrEmail)->orWhere('email', $usernameOrEmail)->first();
+        if (is_null($user))  {
+            return response('The given username or email does not match any user.', 400);
+        }
+
+        // Check if an invitation or join request already exists
+        $participation = DB::table('participation')->where([['id_user', $user->id], ['id_event', $event->id]])->first();
+        if (!is_null($participation)) {
+            return response('An invitation or join request for the specified user already exists.', 400);
+        }
+
+        // Invite user
+        try {
+            DB::table('participation')->insert(['id_user' => $user->id, 'id_event' => $id, 'status' => 'Invitation']);
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        return view('partials.invitation', ['user' => $user, 'event' => $event]);
+    }
+
+    /**
+     * Accept an event invitation.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @param  String   $id
+     * @param  int      $idEvent
+     * @return \Illuminate\Http\Response
+     */
+    public function updateInvitation(Request $request, $username, $idEvent) {
+        $user = User::where('username', $username)->first();
+        if (is_null($user)) {
+            return response('The specified username does not exist.', 404);
+        }
+
+        $event = Event::find($idEvent);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+
+        // TODO: authorization
+
+        DB::table('participation')->where([['id_event', $idEvent], ['id_user', $user->id], ['status', 'Invitation']])->update(['status' => $request->input('status')]);
+
+        // TODO: Modify for Ajax?
+        return back();
+    }
+
+    /**
+     * Cancel the invitation of an user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @param string $idInvitation
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteInvitation(Request $request, $id, $idUser) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+        
+        $user = User::find($idUser);
+        if (is_null($user)) {
+            return response('User with the specified ID does not exist.', 404);
+        }
+
+        $this->authorize('update', $event);
+        
+        try {
+            DB::table('participation')
+                    ->where([['id_event', $id], ['id_user', $idUser], ['status', 'Invitation']])
+                    ->delete();
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        return response('');
+    }
+
+    /**
+     * Cancel all the invitations for this event.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelAllInvitations(Request $request, $id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('update', $event);
+
+        DB::table('participation')->where([['id_event', $event->id], ['status', 'Invitation']])->delete();
+        return redirect(route('events.event.invitations', ['id' => $event->id]));
+    }
+
+    /**
+     * Send a request to join the event.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function sendJoinRequest(Request $request, $id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('view', $event);
+        $userId = Auth::id();
+        
+        // Request to Join (if it has a invitation, accept it)
+        DB::table('participation')->where([['id_user', $userId], ['id_event', $event->id], ['status', 'Invitation']])->update(['status' => 'Accepted']);
+        DB::table('participation')->insertOrIgnore(['id_user' => $userId, 'id_event' => $event->id, 'status' => 'JoinRequest']);
+        return redirect(route('events.event', ['id' => $event->id]));
+    }
+
+    /**
+     * Manage a request to join the event.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @param string idJoinRequest
+     * @return \Illuminate\Http\Response
+     */
+    public function manageJoinRequest(Request $request, $id, $idJoinRequest) {
+        $event = Event::findOrFail($id);
+        $user = User::where('username', $idJoinRequest)->firstOrFail();
+        $this->authorize('update', $event);
+        
+        DB::table('participation')->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'JoinRequest']])->update(['status' => 'Accepted']);
+        return redirect(route('events.event.invitations', ['id' => $event->id]));
+    }
+
+    /**
+     * Accept all the requests to join the event.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function manageAllJoinRequests(Request $request, $id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('update', $event);
+
+        DB::table('participation')->where([['id_event', $event->id], ['status', 'JoinRequest']])->update(['status' => 'Accepted']);
+        return redirect(route('events.event.invitations', ['id' => $event->id]));
     }
 
     /**

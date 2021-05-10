@@ -26,9 +26,17 @@ Route::get('/events/{id}', 'EventController@show')->name('events.event');
 Route::get('/events/{id}/edit', 'EventController@edit')->name('events.event.edit');
 Route::post('/events/{id}/edit', 'EventController@update');
 
-// TODO: next 2 routes are not complete
+// TODO: next route is not complete
 //Route::get('/events/{id}/matches', 'EventController@show')->name('events.event.matches');
-//Route::get('/events/{id}/invitations', 'EventController@show')->name('events.event.invitations');
+Route::get('/events/{id}/invitations', 'EventController@showInvitations')->name('events.event.invitations');
+Route::post('/api/events/{id}/invitations', 'EventController@createInvitation')->name('events.event.invitations.new');
+Route::patch('/api/users/{username}/invitations/{idEvent}', 'EventController@updateInvitation')->name('users.user.invitations.update');
+Route::delete('/api/events/{id}/invitations/{idUser}', 'EventController@deleteInvitation')->name('events.event.invitations.delete');
+
+Route::delete('/api/events/{id}/invitations', 'EventController@cancelAllInvitations')->name('events.event.invitations.cancel.all');
+Route::get('/api/events/{id}/join-request', 'EventController@sendJoinRequest')->name('events.event.joinrequest');
+Route::patch('/api/events/{id}/join-request/manage/{idUser}', 'EventController@manageJoinRequest')->name('events.event.joinrequest.manage');
+Route::patch('/api/events/{id}/join-request/manage-all', 'EventController@manageAllJoinRequests')->name('events.event.joinrequest.manage.all');
 
 // API
 Route::post('/api/events/{id}/polls', 'PollController@store')->name('api.events.event.polls.new');

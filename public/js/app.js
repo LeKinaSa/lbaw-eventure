@@ -273,3 +273,70 @@ for (let form of postCommentForms) {
         sendPostCommentRequest(form);
     });
 }
+
+// ----- Invitations API -----
+
+
+let sendInvitationForm = document.querySelector('form#sendInvitationForm');
+
+if (sendInvitationForm != null) {
+    sendInvitationForm.addEventListener('submit', sendCreateInvitationRequest);
+}
+
+function sendCreateInvitationRequest(event) {
+    event.preventDefault();
+    let csrfToken = this.querySelector('input[name=_token]').value;
+    let invite = this.querySelector('input[name=invite]').value;
+
+    let data = {
+        _token: csrfToken,
+        invite: invite,
+    };
+
+    sendAjaxRequest(this.method, this.action, data, createInvitationHandler);
+}
+
+function createInvitationHandler() {
+    if (this.status !== 200) {
+        document.getElementById('invitationsError').innerHTML = this.responseText;
+        return;
+    }
+
+    let invite = sendInvitationForm.querySelector('input[name=invite]');
+    invite.value = '';
+    
+    let invitations = document.getElementById('invitations');
+    invitations.innerHTML = this.responseText + invitations.innerHTML;
+
+    let deleteForm = invitations.querySelector('.form-delete-invitation');
+    deleteForm.addEventListener('submit', sendDeleteInvitationRequest);
+}
+
+let deleteInvitationForms = document.querySelectorAll('.form-delete-invitation');
+for (let form of deleteInvitationForms) {
+    form.addEventListener('submit', sendDeleteInvitationRequest);
+}
+
+function sendDeleteInvitationRequest(event) {
+    console.log('got here!');
+
+    event.preventDefault();
+    let csrfToken = this.querySelector('input[name=_token]').value;
+    let method = this.querySelector('input[name=_method]').value;
+
+    let data = {
+        _token: csrfToken,
+    };
+
+    let invitationCard = this.closest('div.card');
+    sendAjaxRequest(method, this.action, data, deleteInvitationHandler, { invitationCard: invitationCard });
+}
+
+function deleteInvitationHandler(data) {
+    if (this.status !== 200) {
+        document.getElementById('invitationsError').innerHTML = this.responseText;
+        return;
+    }
+
+    data.invitationCard.remove();
+}
