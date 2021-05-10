@@ -6,12 +6,12 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a class="text-primary" href="homepage.php">Home</a></li>
             <li class="breadcrumb-item"><a class="text-primary" href="profile.php">Profile</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Your Events</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ Auth::id() === $user->id ? "Your" : "Their" }} events</li>
         </ol>
     </nav>
 
     <div class="row g-3 justify-content-center">
-        <h1 class="text-center">Your Events</h1>
+        <h1 class="text-center">{{ Auth::id() === $user->id ? "Your" : "Their" }} events</h1>
 
         <nav>
             <div class="nav nav-tabs">
