@@ -2,13 +2,12 @@
 
 namespace App\Policies;
 
-use App\Models\Poll;
+use App\Models\Comment;
 use App\Models\User;
 use App\Models\Event;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PollPolicy
-{
+class CommentPolicy {
     use HandlesAuthorization;
 
     /**
@@ -25,10 +24,10 @@ class PollPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Poll  $poll
+     * @param  \App\Models\Comment  $comment
      * @return mixed
      */
-    public function view(User $user) {
+    public function view(User $user, Comment $comment) {
         //
     }
 
@@ -36,43 +35,46 @@ class PollPolicy
      * Determine whether the user can create models.
      *
      * @param  \App\Models\User  $user
-     * @return mixed
+     * @param  \App\Models\Event $event
+     * @return bool
      */
     public static function create(?User $user, Event $event) {
-        // Only the organizer can create polls for an event
-        return optional($user)->id === $event->id_organizer;
+        // The organizer and the participants can post comments
+        return optional($user)->id === $event->id_organizer 
+                || $event->participants()->wherePivot('id_user', optional($user)->id)->first() !== null;
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Poll  $poll
+     * @param  \App\Models\Comment  $comment
      * @return mixed
      */
-    public function update(User $user, Poll $poll) {
-        //
+    public function update(?User $user, Comment $comment) {
+        return optional($user)->id === $comment->id_author;
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Poll  $poll
+     * @param  \App\Models\Comment  $comment
      * @return mixed
      */
-    public function delete(User $user, Poll $poll) {
-        //
+    public function delete(?User $user, Comment $comment) {
+        // TODO: admins can also delete comments
+        return optional($user)->id === $comment->id_author;
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Poll  $poll
+     * @param  \App\Models\Comment  $comment
      * @return mixed
      */
-    public function restore(User $user, Poll $poll) {
+    public function restore(User $user, Comment $comment) {
         //
     }
 
@@ -80,10 +82,10 @@ class PollPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Poll  $poll
+     * @param  \App\Models\Comment  $comment
      * @return mixed
      */
-    public function forceDelete(User $user, Poll $poll) {
+    public function forceDelete(User $user, Comment $comment) {
         //
     }
 }

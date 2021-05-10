@@ -66,3 +66,7 @@ img.google {
 .card-event-small {
     min-width: 250px;
 }
+
+.show-whitespace {
+    white-space: pre-wrap;
+}
