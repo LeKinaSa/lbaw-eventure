@@ -4,6 +4,7 @@
 $startDate = is_null($event->start_date) ? NULL : (new DateTime($event->start_date))->format('j M, Y H:i');
 $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->format('j M, Y H:i');
 @endphp
+
 @section('content')
 <div class="container py-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -115,87 +116,28 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
         </ul>
     </nav>
 
-    <!-- TODO: comments and polls -->
     <div class="tab-content" id="tabContent">
         <div class="tab-pane fade show active p-3" id="commentsTab" role="tabpanel" aria-labelledby="commentsLabel">
-            <form class="mb-3">
-                <div class="mb-3">
-                    <label for="comment" class="h5 form-label">Write a comment</label>
-                    <textarea class="form-control" id="comment" name="comment" placeholder="You can use comments to ask questions or make suggestions..." required></textarea>
-                </div>
-                <input type="submit" class="btn btn-primary" value="Post">
-            </form>
+            @if (App\Policies\CommentPolicy::create(Auth::user(), $event))
+            <div class="mb-3">
+                <p class="mb-2 text-danger" id="commentsError"></p>
+                <h5>Write a comment</h5>
+                <form method="POST" action="{{ route('api.events.event.comments.new', ['id' => $event->id]) }}" class="form-comment-post">
+                    @csrf
+                    <textarea class="form-control mb-2" name="text" placeholder="You can use comments to ask questions or make suggestions..." maxlength="{{ App\Models\Comment::MAX_LENGTH }}" required></textarea>
+                    <input type="submit" class="btn btn-primary" value="Post">
+                </form>
+            </div>
+            @endif
 
             <section id="comments">
-                <h4>5 comments</h4>
-                <div>
-                    <div class="row pt-3">
-                        <div>
-                            <div class="d-flex align-items-start justify-content-between">
-                                <h5>Mary Langdon (<span class="text-primary">@marylangdon105</span>)</h5>
-                                <div class="d-flex gap-1">
-                                    <button type="button" class="btn btn-primary" aria-label="Reply"><i class="fa fa-reply"></i></button>
-                                </div>
-                            </div>
-                            What is your favorite opening?
-                        </div>
-
-                        <div class="ps-5">
-                            <div class="row pt-3">
-                                <div>
-                                    <div class="d-flex align-items-start justify-content-between">
-                                        <h5>Dmitri Dolyakov (<span class="text-primary">@dmitridlkv</span>)</h5>
-                                        <div class="d-flex gap-1">
-                                            <button type="button" class="btn btn-primary" aria-label="Reply"><i class="fa fa-reply"></i></button>
-                                        </div>
-                                    </div>
-                                    Italian Game with Evans Gambit :)
-                                </div>
-                            </div>
-
-                            <div class="row pt-3">
-                                <div>
-                                    <div class="d-flex align-items-start justify-content-between">
-                                        <h5>John Doe (<span class="text-primary">@johndoe123</span>)</h5>
-                                        <div class="d-flex gap-1">
-                                            <button type="button" class="btn btn-primary" aria-label="Reply"><i class="fa fa-reply"></i></button>
-                                            <button type="button" class="btn btn-secondary" aria-label="Edit"><i class="fa fa-pencil"></i></button>
-                                            <button type="button" class="btn btn-danger" aria-label="Remove"><i class="fa fa-remove"></i></button>
-                                        </div>
-                                    </div>
-                                    I love the King's Gambit :D
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row py-3">
-                        <div>
-                            <div class="d-flex align-items-start justify-content-between">
-                                <h5>Martin Fowler (<span class="text-primary">@fowlersrook</span>)</h5>
-                                <div class="d-flex gap-1">
-                                    <button type="button" class="btn btn-primary" aria-label="Reply"><i class="fa fa-reply"></i></button>
-                                </div>
-                            </div>
-                            Great event, the players were very friendly! Hope I can participate in more events like this soon.
-                        </div>
-
-                        <div class="ps-5">
-                            <div class="row pt-3">
-                                <div>
-                                    <div class="d-flex align-items-start justify-content-between">
-                                        <h5>John Doe (<span class="text-primary">@johndoe123</span>)</h5>
-                                        <div class="d-flex gap-1">
-                                            <button type="button" class="btn btn-primary" aria-label="Reply"><i class="fa fa-reply"></i></button>
-                                            <button type="button" class="btn btn-secondary" aria-label="Edit"><i class="fa fa-pencil"></i></button>
-                                            <button type="button" class="btn btn-danger" aria-label="Remove"><i class="fa fa-remove"></i></button>
-                                        </div>
-                                    </div>
-                                    Thank you! Hope to see you too!
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <h4><span id="commentCount">{{ $event->comments()->count() }}</span> comments</h4>
+                <div class="mt-3">
+                    @if (array_key_exists(0, $commentsByParent))
+                        @foreach ($commentsByParent[0] as $comment)
+                            @include('partials.comment_thread', ['comment' => $comment, 'commentsByParent' => $commentsByParent])
+                        @endforeach
+                    @endif
                 </div>
             </section>
         </div>
