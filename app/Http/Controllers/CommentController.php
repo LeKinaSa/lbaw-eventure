@@ -28,7 +28,11 @@ class CommentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, $id) {
-        $event = Event::findOrFail($id);
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('The specified event does not exist.', 400);
+        }
+
         $this->authorize('create', [Comment::class, $event]);
 
         if (CommentController::isInvalid($request)) {
