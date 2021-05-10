@@ -189,6 +189,27 @@ class UserController extends Controller {
         return redirect(route('users.profile.edit', ['username' => $user->username]));
     }
 
+    public function showEvents($username) {
+        $user = User::where('username', $username)->firstOrFail();
+        $this->authorize('view', $user);
+
+        $eventsOrganizing = $user->eventsOrganizing()->limit(3)->get();
+        foreach ($eventsOrganizing as $key => $event) {
+            if (!EventPolicy::view(Auth::user(), $event)) {
+                unset($eventsOrganizing[$key]);
+            }
+        }
+
+        $eventsParticipatingIn = $user->eventsParticipatingIn()->limit(3)->get();
+        foreach ($eventsParticipatingIn as $key => $event) {
+            if (!EventPolicy::view(Auth::user(), $event)) {
+                unset($eventsParticipatingIn[$key]);
+            }
+        }
+
+        return view('pages.user_events', ['user' => $user, 'eventsOrganizing' => $eventsOrganizing, 'eventsParticipatingIn' => $eventsParticipatingIn]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
