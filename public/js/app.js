@@ -58,6 +58,8 @@ function sendAjaxRequest(method, url, data, handler, handlerData = {}, acceptHea
     request.send(encodeForAjax(data));
 }
 
+// ----- Polls API -----
+
 let createPollForm = document.getElementById('createPollForm');
 let createPollOptions = document.getElementById('createPollOptions');
 let createPollError = document.getElementById('createPollError');
@@ -244,7 +246,7 @@ function postCommentHandler(data) {
 
             replyForm.hidden = true;
             replyForm.querySelector('textarea[name=text]').value = "";
-            parentCommentChildren.innerHTML = this.responseText + parentCommentChildren.innerHTML;
+            parentCommentChildren.insertAdjacentHTML('afterbegin', this.responseText);
 
             newForm = parentCommentChildren.querySelector('form.form-comment-post');
             replyButton = parentCommentChildren.querySelector('button.button-comment-reply');
@@ -306,7 +308,7 @@ function createInvitationHandler() {
     invite.value = '';
     
     let invitations = document.getElementById('invitations');
-    invitations.innerHTML = this.responseText + invitations.innerHTML;
+    invitations.insertAdjacentHTML('afterbegin', this.responseText);
 
     let deleteForm = invitations.querySelector('.form-delete-invitation');
     deleteForm.addEventListener('submit', sendDeleteInvitationRequest);
@@ -318,8 +320,6 @@ for (let form of deleteInvitationForms) {
 }
 
 function sendDeleteInvitationRequest(event) {
-    console.log('got here!');
-
     event.preventDefault();
     let csrfToken = this.querySelector('input[name=_token]').value;
     let method = this.querySelector('input[name=_method]').value;
