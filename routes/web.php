@@ -27,6 +27,8 @@ Route::get('/events/{id}', 'EventController@show')->name('events.event');
 Route::get('/events/{id}/edit', 'EventController@edit')->name('events.event.edit');
 Route::post('/events/{id}/edit', 'EventController@update');
 
+Route::get('/events/{id}/matches', 'EventController@showResults')->name('events.event.results');
+
 // TODO: next route is not complete
 //Route::get('/events/{id}/matches', 'EventController@show')->name('events.event.matches');
 Route::get('/events/{id}/invitations', 'EventController@showInvitations')->name('events.event.invitations');

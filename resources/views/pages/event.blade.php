@@ -23,7 +23,7 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
         <div class="col-md-7 p-3">
             <div class="d-flex justify-content-between mb-2">
                 <div class="d-flex gap-2">
-                    <a href="#" role="button" class="btn btn-primary">Results</a>
+                    <a href="{{ route('events.event.results', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Results</a>
                     @if (Auth::id() === $event->id_organizer)
                     <a href="{{ route('events.event.invitations', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Invitations</a>
                     @endif

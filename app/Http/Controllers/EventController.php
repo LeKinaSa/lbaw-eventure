@@ -380,6 +380,12 @@ class EventController extends Controller {
         return redirect(route('events.event.invitations', ['id' => $event->id]));
     }
 
+    public function showResults($id){
+        $event = Event::find($id);
+
+        return view('pages.results', ['event' => $event]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
