@@ -4,8 +4,8 @@
 <div class="container py-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a class="text-primary" href="homepage.php">Home</a></li>
-            <li class="breadcrumb-item"><a class="text-primary" href="profile.php">Profile</a></li>
+            <li class="breadcrumb-item"><a class="text-primary" href="{{ url('/') }}">Home</a></li>
+            <li class="breadcrumb-item"><a class="text-primary" href="{{ route('users.profile', ['username' => $user->username]) }}">Profile</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ Auth::id() === $user->id ? "Your" : "Their" }} events</li>
         </ol>
     </nav>
