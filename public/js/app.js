@@ -161,6 +161,63 @@ function addPollOption() {
     }
 }
 
+function sendPutPollAnswerRequest() {
+    let form = this.closest('form');
+
+    let csrfToken = form.querySelector('input[name=_token]').value;
+    let method = form.querySelector('input[name=_method]').value;
+
+    let option = this.value;
+
+    let data = {
+        _token: csrfToken,
+        option: option,
+    };
+
+    sendAjaxRequest(method, form.action, data, pollAnswerHandler, { id: this.closest('article').getAttribute('data-id') });
+}
+
+function pollAnswerHandler(data) {
+    if (this.status !== 200) {
+        document.getElementById('pollError').innerHTML = this.responseText;
+        return;
+    }
+
+    let query = 'article[data-id=\"' + data.id + '\"';
+
+    let article = document.querySelector(query);
+    article.outerHTML = this.responseText;
+    article = document.querySelector(query); // We need to run querySelector again since the article HTML has changed
+
+    // Add event listeners
+    let inputs = article.querySelectorAll('.input-poll-answer');
+    for (let input of inputs) {
+        input.addEventListener('change', sendPutPollAnswerRequest);
+    }
+
+    let deleteForm = article.querySelector('.form-remove-poll-answer');
+    if (deleteForm != null) deleteForm.addEventListener('submit', sendDeletePollAnswerRequest);
+}
+
+function sendDeletePollAnswerRequest(event) {
+    event.preventDefault();
+
+    let csrfToken = this.querySelector('input[name=_token]').value;
+    let method = this.querySelector('input[name=_method]').value;
+
+    sendAjaxRequest(method, this.action, { _token: csrfToken }, pollAnswerHandler, {id: this.closest('article').getAttribute('data-id') });
+}
+
+let pollAnswerInputs = document.querySelectorAll('.input-poll-answer');
+for (let input of pollAnswerInputs) {
+    input.addEventListener('change', sendPutPollAnswerRequest);
+}
+
+let removePollAnswerForms = document.querySelectorAll('.form-remove-poll-answer');
+for (let form of removePollAnswerForms) {
+    form.addEventListener('submit', sendDeletePollAnswerRequest);
+}
+
 // ----- Comments API -----
 
 // ----- Button Event Listeners -----
