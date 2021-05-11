@@ -382,6 +382,7 @@ class EventController extends Controller {
 
     public function showResults($id){
         $event = Event::find($id);
+        $this->authorize('view', $event);
 
         return view('pages.results', ['event' => $event]);
     }
