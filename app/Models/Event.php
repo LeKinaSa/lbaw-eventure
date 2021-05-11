@@ -72,4 +72,8 @@ class Event extends Model {
     public function getTypeFormatted() {
         return Event::FORMATTED_TYPES[$this->type];
     }
+
+    public function limitedAttendance() {
+        return $this->max_attendance !== null;
+    }
 }

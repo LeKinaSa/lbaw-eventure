@@ -256,27 +256,45 @@ class EventController extends Controller {
     }
 
     /**
-     * Accept an event invitation.
+     * Manage an event invitation.
      * 
      * @param  \Illuminate\Http\Request  $request
      * @param  String   $id
      * @param  int      $idEvent
      * @return \Illuminate\Http\Response
      */
-    public function updateInvitation(Request $request, $username, $idEvent) {
-        $user = User::where('username', $username)->first();
-        if (is_null($user)) {
-            return response('The specified username does not exist.', 404);
-        }
-
-        $event = Event::find($idEvent);
+    public function updateInvitation(Request $request, $id, $idUser) {
+        $event = Event::find($id);
         if (is_null($event)) {
             return response('Event with the specified ID does not exist.', 404);
+        }
+        
+        $user = User::find($idUser);
+        if (is_null($user)) {
+            return response('User with the specified ID does not exist.', 404);
+        }
+
+        // Verify if the user is already in this event
+        $participation = DB::table('participation')->where([['id_event', $idEvent], ['id_user', $user->id], ['status', 'Invitation']])->first();
+        if (is_null($participation)) {
+            return response('User is not invited to this event.', 404);
+        }
+
+        // Check status input
+        if (($request->input('status') !== 'Accepted') && ($request->input('status') !== 'Declined')) {
+            return response('Invalid Status.', 500); // TODO
         }
 
         // TODO: authorization
 
-        DB::table('participation')->where([['id_event', $idEvent], ['id_user', $user->id], ['status', 'Invitation']])->update(['status' => $request->input('status')]);
+        // Accept / Decline the invitation
+        if (!$event->limitedAttendance()) {
+            DB::table('participation')->where([['id_event', $idEvent], ['id_user', $user->id], ['status', 'Invitation']])
+                                      ->update(['status' => $request->input('status')]);
+        }
+        else {
+            // TODO: transaction
+        }
 
         // TODO: Modify for Ajax?
         return back();
@@ -322,12 +340,24 @@ class EventController extends Controller {
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function cancelAllInvitations(Request $request, $id) {
-        $event = Event::findOrFail($id);
+    public function deleteAllInvitations(Request $request, $id) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+
         $this->authorize('update', $event);
 
-        DB::table('participation')->where([['id_event', $event->id], ['status', 'Invitation']])->delete();
-        return redirect(route('events.event.invitations', ['id' => $event->id]));
+        try {
+            DB::table('participation')
+                    ->where([['id_event', $id], ['status', 'Invitation']])
+                    ->delete();
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        return response('');
     }
 
     /**
@@ -337,15 +367,35 @@ class EventController extends Controller {
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function sendJoinRequest(Request $request, $id) {
-        $event = Event::findOrFail($id);
+    public function createJoinRequest(Request $request, $id) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+
+        $user = User::find(Auth::id());
+        if (is_null($user)) {
+            return response('User does not exist.', 404);
+        }
+
         $this->authorize('view', $event);
-        $userId = Auth::id();
         
-        // Request to Join (if it has a invitation, accept it)
-        DB::table('participation')->where([['id_user', $userId], ['id_event', $event->id], ['status', 'Invitation']])->update(['status' => 'Accepted']);
-        DB::table('participation')->insertOrIgnore(['id_user' => $userId, 'id_event' => $event->id, 'status' => 'JoinRequest']);
-        return redirect(route('events.event', ['id' => $event->id]));
+        // Check if an invitation or join request already exists
+        $participation = DB::table('participation')->where([['id_user', $user->id], ['id_event', $event->id]])->first();
+        if (!is_null($participation)) {
+            return response('An invitation or join request for the specified user already exists.', 400);
+        }
+
+        // Request to Join
+        try {
+            DB::table('participation')->insert(['id_user' => $user->id, 'id_event' => $id, 'status' => 'JoinRequest']);
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        // TODO: modify for ajax?
+        return response('', 200);
     }
 
     /**
@@ -353,31 +403,83 @@ class EventController extends Controller {
      * 
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @param string idJoinRequest
+     * @param string idUser
      * @return \Illuminate\Http\Response
      */
-    public function manageJoinRequest(Request $request, $id, $idJoinRequest) {
-        $event = Event::findOrFail($id);
-        $user = User::where('username', $idJoinRequest)->firstOrFail();
+    public function updateJoinRequest(Request $request, $id, $idUser) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+        
+        $user = User::find($idUser);
+        if (is_null($user)) {
+            return response('User with the specified ID does not exist.', 404);
+        }
+
+        // Verify if the user is already in this event
+        $participation = DB::table('participation')->where([['id_event', $id], ['id_user', $user->id], ['status', 'JoinRequest']])->first();
+        if (is_null($participation)) {
+            return response('User did not request to join this event.', 404);
+        }
+
+        // Check status input
+        if (($request->input('status') !== 'Accepted') && ($request->input('status') !== 'Declined')) {
+            return response('Invalid Status.', 500); // TODO
+        }
+
         $this->authorize('update', $event);
         
-        DB::table('participation')->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'JoinRequest']])->update(['status' => 'Accepted']);
-        return redirect(route('events.event.invitations', ['id' => $event->id]));
+        // Accept / Decline the join request
+        if (!$event->limitedAttendance()) {
+            DB::table('participation')->where([['id_event', $id], ['id_user', $user->id], ['status', 'JoinRequest']])
+                                      ->update(['status' => $request->input('status')]);
+        }
+        else {
+            // TODO: transaction
+        }
+
+        // TODO: Modify for Ajax?
+        return response('');
     }
 
     /**
-     * Accept all the requests to join the event.
+     * Manage all the requests to join the event.
      * 
      * @param \Illuminate\Http\Request $request
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function manageAllJoinRequests(Request $request, $id) {
-        $event = Event::findOrFail($id);
-        $this->authorize('update', $event);
+    public function updateAllJoinRequests(Request $request, $id) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
 
-        DB::table('participation')->where([['id_event', $event->id], ['status', 'JoinRequest']])->update(['status' => 'Accepted']);
-        return redirect(route('events.event.invitations', ['id' => $event->id]));
+        // Verify if the user is already in this event
+        $participations = DB::table('participation')->where([['id_event', $id], ['status', 'JoinRequest']])->get();
+        if (is_null($participations)) {
+            return response('There are no join requests for this event.', 404);
+        }
+
+        // Check status input
+        if (($request->input('status') !== 'Accepted') && ($request->input('status') !== 'Declined')) {
+            return response('Invalid Status.', 500); // TODO
+        }
+
+        $this->authorize('update', $event);
+        
+        // Accept / Decline all the join requests
+        if (!$event->limitedAttendance()) {
+            DB::table('participation')->where([['id_event', $id], ['status', 'JoinRequest']])
+                                      ->update(['status' => $request->input('status')]);
+        }
+        else {
+            // TODO: transaction
+        }
+
+        // TODO: modify for ajax?
+        return back();
     }
 
     /**

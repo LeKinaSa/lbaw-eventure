@@ -9,12 +9,14 @@
                 {{ csrf_field() }}
 
                 @method('PATCH')
+                <input type="hidden" id="status" name="status" value="Accepted">
                 <button type="submit" class="btn btn-success" aria-label="Accept"><i class="fa fa-check"></i></button>
             </form>
             <form method="POST" action="{{ route('events.event.joinrequest.manage', ['id' => $event->id, 'idUser' => $user->id]) }}">
                 {{ csrf_field() }}
 
                 @method('PATCH')
+                <input type="hidden" id="status" name="status" value="Declined">
                 <button type="submit" class="btn btn-danger" aria-label="Reject"><i class="fa fa-remove"></i></button>
             </form>
         </div>

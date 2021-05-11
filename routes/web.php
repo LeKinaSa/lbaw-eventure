@@ -34,10 +34,10 @@ Route::post('/api/events/{id}/invitations', 'EventController@createInvitation')-
 Route::patch('/api/users/{username}/invitations/{idEvent}', 'EventController@updateInvitation')->name('users.user.invitations.update');
 Route::delete('/api/events/{id}/invitations/{idUser}', 'EventController@deleteInvitation')->name('events.event.invitations.delete');
 
-Route::delete('/api/events/{id}/invitations', 'EventController@cancelAllInvitations')->name('events.event.invitations.cancel.all');
-Route::get('/api/events/{id}/join-request', 'EventController@sendJoinRequest')->name('events.event.joinrequest');
-Route::patch('/api/events/{id}/join-request/manage/{idUser}', 'EventController@manageJoinRequest')->name('events.event.joinrequest.manage');
-Route::patch('/api/events/{id}/join-request/manage-all', 'EventController@manageAllJoinRequests')->name('events.event.joinrequest.manage.all');
+Route::delete('/api/events/{id}/invitations', 'EventController@deleteAllInvitations')->name('events.event.invitations.cancel.all');
+Route::get('/api/events/{id}/join-request', 'EventController@createJoinRequest')->name('events.event.joinrequest');
+Route::patch('/api/events/{id}/join-request/manage/{idUser}', 'EventController@updateJoinRequest')->name('events.event.joinrequest.manage');
+Route::patch('/api/events/{id}/join-request/manage-all', 'EventController@updateAllJoinRequests')->name('events.event.joinrequest.manage.all');
 
 // API
 Route::post('/api/events/{id}/polls', 'PollController@store')->name('api.events.event.polls.new');

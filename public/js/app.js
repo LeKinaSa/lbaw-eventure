@@ -340,3 +340,29 @@ function deleteInvitationHandler(data) {
 
     data.invitationCard.remove();
 }
+
+let joinRequestButton = document.getElementById('joinRequestButton');
+
+if (joinRequestButton != null) {
+    joinRequestButton.addEventListener('submit', sendCreateJoinRequestRequest);
+}
+
+function sendCreateJoinRequestRequest(event) {
+    event.preventDefault();
+    let csrfToken = this.querySelector('input[name=_token]').value;
+    
+    let data = {
+        _token: csrfToken,
+    };
+
+    sendAjaxRequest(this.method, this.action, data, createJoinRequestHandler);
+}
+
+function createJoinRequestHandler() {
+    if (this.status !== 200) {
+        document.getElementById('joinRequestError').insertAdjacentHTML('afterbegin', this.responseText);
+        return;
+    }
+    
+    joinRequestButton.remove();
+}

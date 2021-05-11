@@ -42,15 +42,15 @@
             
             <div class="d-flex gap-2">
                 <form method="POST" action="{{ route('events.event.joinrequest.manage.all', ['id' => $event->id]) }}">
-                    {{ csrf_field() }}
-
+                    @csrf
                     @method('PATCH')
+                    <input type="hidden" id="status" name="status" value="Accepted">
                     <button type="submit" class="btn btn-outline-success">Accept all</button>
                 </form>
                 <form method="POST" action="{{ route('events.event.joinrequest.manage.all', ['id' => $event->id]) }}">
-                    {{ csrf_field() }}
-
+                    @csrf
                     @method('PATCH')
+                    <input type="hidden" id="status" name="status" value="Declined">
                     <button type="submit" class="btn btn-outline-danger">Reject all</button>
                 </form>
             </div>
