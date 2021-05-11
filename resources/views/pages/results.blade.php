@@ -4,8 +4,8 @@
 <div class="container py-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a class="text-primary" href="homepage.php">Home</a></li>
-            <li class="breadcrumb-item"><a class="text-primary" href="event.php">Amateur Blitz Chess Tournament</a></li>
+            <li class="breadcrumb-item"><a class="text-primary" href="{{ url('/') }}">Home</a></li>
+            <li class="breadcrumb-item"><a class="text-primary" href="{{ route('events.event', ['id' => $event->id]) }}">{{ $event->title }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">Results</li>
         </ol>
     </nav>
