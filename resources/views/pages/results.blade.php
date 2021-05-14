@@ -165,46 +165,9 @@
         </div>
 
         <div class="d-inline-flex flex-column flex-md-row flex-md-wrap gap-2">
-            <div class="card" style="max-width: 400px">
-                <div class="card-body">
-                    <h5 class="card-title"><span class="text-primary">Dmitri Dolyakov</span> vs <span class="text-primary">Martin Fowler</span></h5>
-                    <p class="card-text"><b>Result:</b> Win (Dmitri Dolyakov)</p>
-                    <p class="card-text text-muted">Dolyakov wins with the white pieces after Fowler resigns</p>
-                </div>
-            </div>
-            <div class="card" style="max-width: 400px">
-                <div class="card-body">
-                    <h5 class="card-title"><span class="text-primary">Dmitri Dolyakov</span> vs <span class="text-primary">Jane Caldwin</span></h5>
-                    <p class="card-text"><b>Result:</b> Draw</p>
-                    <p class="card-text text-muted">Draw by threefold repetition</p>
-                </div>
-            </div>
-            <div class="card" style="max-width: 400px">
-                <div class="card-body">
-                    <h5 class="card-title"><span class="text-primary">Dmitri Dolyakov</span> vs <span class="text-primary">Santiago Neves</span></h5>
-                    <p class="card-text"><b>Result:</b> Win (Dmitri Dolyakov)</p>
-                    <p class="card-text text-muted">Decisive victory for Dolyakov with the black pieces</p>
-                </div>
-            </div>
-            <div class="card" style="max-width: 400px">
-                <div class="card-body">
-                    <h5 class="card-title"><span class="text-primary">Martin Fowler</span> vs <span class="text-primary">Santiago Neves</span></h5>
-                    <p class="card-text"><b>Result:</b> Win (Martin Fowler)</p>
-                </div>
-            </div>
-            <div class="card" style="max-width: 400px">
-                <div class="card-body">
-                    <h5 class="card-title"><span class="text-primary">Martin Fowler</span> vs <span class="text-primary">Jane Caldwin</span></h5>
-                    <p class="card-text"><b>Result:</b> Win (Martin Fowler)</p>
-                    <p class="card-text text-muted">Surprising victory from Fowler, who was the lower rated player</p>
-                </div>
-            </div>
-            <div class="card" style="max-width: 400px">
-                <div class="card-body">
-                    <h5 class="card-title"><span class="text-primary">Santiago Neves</span> vs <span class="text-primary">Jane Caldwin</span></h5>
-                    <p class="card-text"><b>Result:</b> Win (Jane Caldwin)</p>
-                </div>
-            </div>
+            @foreach ($event->results()->get() as $match)
+                @include('partials.result', ['match' => $match])
+            @endforeach
         </div>
     </section>
 

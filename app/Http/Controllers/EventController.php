@@ -380,7 +380,7 @@ class EventController extends Controller {
         return redirect(route('events.event.invitations', ['id' => $event->id]));
     }
 
-    public function showResults($id){
+    public function showResults(Request $request, $id){
         $event = Event::find($id);
         $this->authorize('view', $event);
 
