@@ -39,23 +39,25 @@
 
         <section id="requests" class="col-md">
             <h4>Requests to participate</h4>
+            <p class="mb-0 mt-2 px-2 text-danger" id="updateJoinRequestError"></p>
             
             <div class="d-flex gap-2">
-                <form method="POST" action="{{ route('events.event.joinrequest.manage.all', ['id' => $event->id]) }}">
+                <form method="POST" action="{{ route('events.event.joinrequest.manage.all', ['id' => $event->id]) }}" class="form-manage-all-join-request">
                     @csrf
                     @method('PATCH')
                     <input type="hidden" id="status" name="status" value="Accepted">
                     <button type="submit" class="btn btn-outline-success">Accept all</button>
                 </form>
-                <form method="POST" action="{{ route('events.event.joinrequest.manage.all', ['id' => $event->id]) }}">
+                <form method="POST" action="{{ route('events.event.joinrequest.manage.all', ['id' => $event->id]) }}" class="form-manage-all-join-request">
                     @csrf
                     @method('PATCH')
                     <input type="hidden" id="status" name="status" value="Declined">
                     <button type="submit" class="btn btn-outline-danger">Reject all</button>
                 </form>
             </div>
+            <p class="mb-0 mt-2 px-2 text-danger" id="joinRequestsError"></p>
 
-            <div class="d-flex flex-wrap mt-2 gap-3">
+            <div class="d-flex flex-wrap mt-2 gap-3" id="join-requests">
                 @foreach ($event->joinRequests()->get() as $user)
                     @include('partials.join_request', ['user' => $user])
                 @endforeach

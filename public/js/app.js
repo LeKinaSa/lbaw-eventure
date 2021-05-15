@@ -341,21 +341,18 @@ function deleteInvitationHandler(data) {
     data.invitationCard.remove();
 }
 
+// ----- Join Requests API -----
+
 let joinRequestButton = document.getElementById('joinRequestButton');
 
 if (joinRequestButton != null) {
-    joinRequestButton.addEventListener('submit', sendCreateJoinRequestRequest);
+    joinRequestButton.addEventListener('click', sendCreateJoinRequestRequest);
 }
 
 function sendCreateJoinRequestRequest(event) {
     event.preventDefault();
-    let csrfToken = this.querySelector('input[name=_token]').value;
-    
-    let data = {
-        _token: csrfToken,
-    };
-
-    sendAjaxRequest(this.method, this.action, data, createJoinRequestHandler);
+    // TODO
+    sendAjaxRequest(method, action, {}, createJoinRequestHandler);
 }
 
 function createJoinRequestHandler() {
@@ -366,3 +363,57 @@ function createJoinRequestHandler() {
     
     joinRequestButton.remove();
 }
+
+let manageJoinRequestForms = document.querySelectorAll('.form-manage-join-request');
+for (let form of manageJoinRequestForms) {
+    form.addEventListener('submit', sendUpdateJoinRequestRequest);
+}
+
+function sendUpdateJoinRequestRequest(event) {
+    event.preventDefault();
+    let csrfToken = this.querySelector('input[name=_token]').value;
+    
+    let data = {
+        _token: csrfToken,
+        join_request: null, // TODO: insert the join request card here
+    };
+
+    sendAjaxRequest(this.method, this.action, data, updateJoinRequestHandler);
+}
+
+function updateJoinRequestHandler(data) {
+    if (this.status !== 200) {
+        document.getElementById('updateJoinRequestError').insertAdjacentHTML('afterbegin', this.responseText);
+        return;
+    }
+    
+    data.join_request.remove();
+}
+
+
+let manageAllJoinRequestForms = document.querySelectorAll('.form-manage-all-join-request');
+for (let form of manageAllJoinRequestForms) {
+    form.addEventListener('submit', sendUpdateAllJoinRequestRequest);
+}
+
+function sendUpdateAllJoinRequestRequest(event) {
+    event.preventDefault();
+    let csrfToken = this.querySelector('input[name=_token]').value;
+
+    let data = {
+        _token: csrfToken,
+    };
+
+    sendAjaxRequest(this.method, this.action, data, updateAllJoinRequestHandler);
+}
+
+function updateAllJoinRequestHandler() {
+    if (this.status !== 200) {
+        document.getElementById("joinRequestsError").innerHTML = this.responseText;
+        return;
+    }
+
+    // TODO: should it remove all the join requests - what happens if the event doesnt have space for everyone
+    document.getElementById("join-requests").innerHTML = "";
+}
+
