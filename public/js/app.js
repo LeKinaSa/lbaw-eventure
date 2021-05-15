@@ -351,8 +351,7 @@ if (joinRequestButton != null) {
 
 function sendCreateJoinRequestRequest(event) {
     event.preventDefault();
-    // TODO
-    sendAjaxRequest(method, action, {}, createJoinRequestHandler);
+    sendAjaxRequest("get", this.href, {}, createJoinRequestHandler);
 }
 
 function createJoinRequestHandler() {
