@@ -57,10 +57,6 @@ class Event extends Model {
         return $this->belongsToMany(User::class, 'participation', 'id_event', 'id_user')->withPivot('status');
     }
 
-    public function matchesRelatedTo() {
-        return $this->belongsToMany(Match::class, 'id_event');
-    }
-
     public function participants() {
         return $this->usersRelatedTo()->where('status', 'Accepted');
     }
@@ -78,6 +74,6 @@ class Event extends Model {
     }
 
     public function results() {
-        return $this->matchesRelatedTo();
+        return $this->hasMany(Match::class, 'id_event');
     }
 }
