@@ -76,4 +76,8 @@ class Event extends Model {
     public function results() {
         return $this->hasMany(Match::class, 'id_event');
     }
+
+    public function players() {
+        return $this->hasMany(Competitor::class, 'id_event');
+    }
 }

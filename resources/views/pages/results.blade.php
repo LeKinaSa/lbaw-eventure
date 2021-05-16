@@ -109,26 +109,9 @@
             <div class="p-3">
                 <h5>Players / Teams</h5>
                 <ul class="list-unstyled d-flex flex-column gap-1">
-                    <li class="input-group">
-                        <input type="text" class="form-control" value="Dmitri Dolyakov">
-                        <button type="button" class="btn btn-primary"><i class="fa fa-pencil"></i></button>
-                        <button type="button" class="btn btn-danger"><i class="fa fa-remove"></i></button>
-                    </li>
-                    <li class="input-group">
-                        <input type="text" class="form-control" value="Martin Fowler">
-                        <button type="button" class="btn btn-primary"><i class="fa fa-pencil"></i></button>
-                        <button type="button" class="btn btn-danger"><i class="fa fa-remove"></i></button>
-                    </li>
-                    <li class="input-group">
-                        <input type="text" class="form-control" value="Jane Caldwin">
-                        <button type="button" class="btn btn-primary"><i class="fa fa-pencil"></i></button>
-                        <button type="button" class="btn btn-danger"><i class="fa fa-remove"></i></button>
-                    </li>
-                    <li class="input-group">
-                        <input type="text" class="form-control" value="Santiago Neves">
-                        <button type="button" class="btn btn-primary"><i class="fa fa-pencil"></i></button>
-                        <button type="button" class="btn btn-danger"><i class="fa fa-remove"></i></button>
-                    </li>
+                    @foreach ($event->players()->get() as $competitor)
+                        @include('partials.player', ['competitor' => $competitor])
+                    @endforeach
                 </ul>
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="Name" aria-label="Name">
