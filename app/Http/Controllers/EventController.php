@@ -387,6 +387,30 @@ class EventController extends Controller {
         return view('pages.results', ['event' => $event]);
     }
 
+    public function createPlayer(Request $request, $id){
+        $event = Event::find($id);
+        $this->validateRequest($request);
+        if (is_null($event)) {
+            return response('The specified event does not exist.', 400);
+        }
+
+        $this->authorize('create', [Competitor::class, $event]);
+
+        try {
+            $competitor = Competitor::create([
+                'id_event' => $id,
+                'name' => $request->input('text'),
+            ]);
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        
+        $competitor->save();
+        return view('partials.player', ['competitor' => $competitor]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

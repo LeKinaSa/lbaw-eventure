@@ -113,10 +113,13 @@
                         @include('partials.player', ['competitor' => $competitor])
                     @endforeach
                 </ul>
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Name" aria-label="Name">
-                    <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i></button>
-                </div>
+                <form method="POST" class="py-3" action="{{ route('events.event.players.new', ['id' => $event->id]) }}" id="addPlayersForm">
+                @csrf
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Name" aria-label="Name">
+                        <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i></button>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -149,7 +152,7 @@
 
         <div class="d-inline-flex flex-column flex-md-row flex-md-wrap gap-2">
             @foreach ($event->results()->get() as $match)
-                @include('partials.result', ['match' => $match])
+                @include('partials.match', ['match' => $match])
             @endforeach
         </div>
     </section>

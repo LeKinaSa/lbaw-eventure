@@ -28,6 +28,7 @@ Route::get('/events/{id}/edit', 'EventController@edit')->name('events.event.edit
 Route::post('/events/{id}/edit', 'EventController@update');
 
 Route::get('/events/{id}/matches', 'EventController@showResults')->name('events.event.results');
+Route::post('/api/events/{id}/competitors', 'EventController@createPlayer')->name('events.event.players.new');
 
 // TODO: next route is not complete
 //Route::get('/events/{id}/matches', 'EventController@show')->name('events.event.matches');
