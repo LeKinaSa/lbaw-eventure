@@ -12,14 +12,14 @@
     </nav>
 
     <div class="d-grid gap-4 text-center">
-        <img src="../assets/computers.jpg" class="img-fluid" alt="Several computer setups for gaming">
+        <img src="{{ asset('img/computers.jpg') }}" class="img-fluid" alt="Several computer setups for gaming">
         <div class="text-center">
             <h1 class="display-4">A dedicated platform for tournaments and competitions</h1>
             <p class="fs-4">Eventure provides tournament organizers tools to schedule matches, post results and automatically generate leaderboards. 
             These tools are customisable and can be adapted to several kinds of tournaments and games</p>
         </div>
 
-        <img src="../assets/evo.jpg" class="img-fluid" alt="EVO fighting game tournament">
+        <img src="{{ asset('img/evo.jpg') }}" class="img-fluid" alt="EVO fighting game tournament">
         <div class="text-center">
             <h1 class="display-4">A way to interact with the community</h1>
             <p class="fs-4">We know the importance of the feeling of community and social interaction in these events, 
