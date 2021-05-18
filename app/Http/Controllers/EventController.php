@@ -425,21 +425,20 @@ class EventController extends Controller {
 
         // Check status input
         if (($request->input('status') !== 'Accepted') && ($request->input('status') !== 'Declined')) {
-            return response('Invalid Status.', 500); // TODO
+            return response('Invalid Status.', 500);
         }
 
         $this->authorize('update', $event);
         
         // Accept / Decline the join request
-        if (!$event->limitedAttendance()) {
+        if ($event->limitedAttendance()) {
+            // TODO: transaction
+        }
+        else {
             DB::table('participation')->where([['id_event', $id], ['id_user', $user->id], ['status', 'JoinRequest']])
                                       ->update(['status' => $request->input('status')]);
         }
-        else {
-            // TODO: transaction
-        }
 
-        // TODO: Modify for Ajax?
         return response('');
     }
 
@@ -458,28 +457,27 @@ class EventController extends Controller {
 
         // Verify if the user is already in this event
         $participations = DB::table('participation')->where([['id_event', $id], ['status', 'JoinRequest']])->get();
-        if (is_null($participations)) {
+        if ($participations->isEmpty()) {
             return response('There are no join requests for this event.', 404);
         }
-
+        
         // Check status input
         if (($request->input('status') !== 'Accepted') && ($request->input('status') !== 'Declined')) {
-            return response('Invalid Status.', 500); // TODO
+            return response('Invalid Status.', 500);
         }
 
         $this->authorize('update', $event);
         
         // Accept / Decline all the join requests
-        if (!$event->limitedAttendance()) {
+        DB::table('participation')->where([['id_event', $id], ['status', 'JoinRequest']])->update(['status' => 'Accepted']);
+        if ($event->limitedAttendance()) {
+            // TODO: transaction
+        }
+        else {
             DB::table('participation')->where([['id_event', $id], ['status', 'JoinRequest']])
                                       ->update(['status' => $request->input('status')]);
         }
-        else {
-            // TODO: transaction
-        }
-
-        // TODO: modify for ajax?
-        return back();
+        return response('Success', 200);
     }
 
     /**

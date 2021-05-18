@@ -396,14 +396,15 @@ for (let form of manageAllJoinRequestForms) {
 }
 
 function sendUpdateAllJoinRequestRequest(event) {
-    event.preventDefault();
+    //event.preventDefault();
     let csrfToken = this.querySelector('input[name=_token]').value;
+    let method = this.querySelector('input[name=_method]').value;
 
     let data = {
         _token: csrfToken,
     };
 
-    sendAjaxRequest(this.method, this.action, data, updateAllJoinRequestHandler);
+    sendAjaxRequest(method, this.action, data, updateAllJoinRequestHandler);
 }
 
 function updateAllJoinRequestHandler() {
@@ -412,7 +413,7 @@ function updateAllJoinRequestHandler() {
         return;
     }
 
-    // TODO: should it remove all the join requests - what happens if the event doesnt have space for everyone
+    // If the event doesn't have enough space for everyone, the status should be different from 200
     document.getElementById("join-requests").innerHTML = "";
 }
 
