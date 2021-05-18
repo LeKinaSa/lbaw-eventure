@@ -14,6 +14,7 @@
 Route::view('/', 'pages.home');
 Route::view('/about.php', 'pages.about');
 Route::view('/contacts.php', 'pages.contacts');
+Route::view('/faq.php', 'pages.faq');
 
 
 // User Profile
