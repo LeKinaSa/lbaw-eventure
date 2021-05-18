@@ -189,7 +189,10 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
             @endif
 
             <section id="polls" class="row mt-3">
-                @each('partials.poll', $event->polls()->get(), 'poll')
+                <p class="text-danger" id="pollError"></p>
+                @foreach($event->polls()->get() as $poll)
+                    @include('partials.poll', ['poll' => $poll])
+                @endforeach
             </section>
         </div>
     </div>

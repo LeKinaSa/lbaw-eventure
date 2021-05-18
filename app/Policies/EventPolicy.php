@@ -104,4 +104,9 @@ class EventPolicy {
     public function forceDelete(User $user, Event $event) {
         //
     }
+
+    public static function answerPolls(?User $user, Event $event) {
+        // Only event participants can answer polls
+        return $event->participants()->wherePivot('id_user', optional($user)->id)->first() !== null;
+    }
 }
