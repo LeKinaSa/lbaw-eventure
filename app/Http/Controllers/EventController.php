@@ -455,29 +455,24 @@ class EventController extends Controller {
             return response('Event with the specified ID does not exist.', 404);
         }
 
-        // Verify if the user is already in this event
-        $participations = DB::table('participation')->where([['id_event', $id], ['status', 'JoinRequest']])->get();
-        if ($participations->isEmpty()) {
-            return response('There are no join requests for this event.', 404);
-        }
-        
         // Check status input
-        if (($request->input('status') !== 'Accepted') && ($request->input('status') !== 'Declined')) {
-            return response('Invalid Status.', 500);
+        if ($request->input('status') !== 'Accepted' && $request->input('status') !== 'Declined') {
+            return response('Invalid request: status is not \'Accepted\' or \'Declined\'.', 400);
         }
 
         $this->authorize('update', $event);
         
         // Accept / Decline all the join requests
-        DB::table('participation')->where([['id_event', $id], ['status', 'JoinRequest']])->update(['status' => 'Accepted']);
+        $joinRequests = $event->joinRequests();
+
         if ($event->limitedAttendance()) {
             // TODO: transaction
         }
         else {
-            DB::table('participation')->where([['id_event', $id], ['status', 'JoinRequest']])
-                                      ->update(['status' => $request->input('status')]);
+            $joinRequests->update(['status' => $request->input('status')]);
         }
-        return response('Success', 200);
+
+        return response('');
     }
 
     /**

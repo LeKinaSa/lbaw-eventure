@@ -396,12 +396,15 @@ for (let form of manageAllJoinRequestForms) {
 }
 
 function sendUpdateAllJoinRequestRequest(event) {
-    //event.preventDefault();
+    event.preventDefault();
+
     let csrfToken = this.querySelector('input[name=_token]').value;
     let method = this.querySelector('input[name=_method]').value;
+    let status = this.querySelector('input[name=status]').value;
 
     let data = {
         _token: csrfToken,
+        status: status,
     };
 
     sendAjaxRequest(method, this.action, data, updateAllJoinRequestHandler);

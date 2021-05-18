@@ -29,15 +29,18 @@ Route::post('/events/{id}/edit', 'EventController@update');
 
 // TODO: next route is not complete
 //Route::get('/events/{id}/matches', 'EventController@show')->name('events.event.matches');
+
+// Invitations
 Route::get('/events/{id}/invitations', 'EventController@showInvitations')->name('events.event.invitations');
 Route::post('/api/events/{id}/invitations', 'EventController@createInvitation')->name('events.event.invitations.new');
-Route::patch('/api/users/{username}/invitations/{idEvent}', 'EventController@updateInvitation')->name('users.user.invitations.update');
-Route::delete('/api/events/{id}/invitations/{idUser}', 'EventController@deleteInvitation')->name('events.event.invitations.delete');
+Route::patch('/api/users/{username}/invitations/{idEvent}', 'EventController@updateInvitation')->name('users.user.invitations.invitation.update');
+Route::delete('/api/events/{id}/invitations/{idUser}', 'EventController@deleteInvitation')->name('events.event.invitations.invitation.delete');
+Route::delete('/api/events/{id}/invitations', 'EventController@deleteAllInvitations')->name('events.event.invitations.delete');
 
-Route::delete('/api/events/{id}/invitations', 'EventController@deleteAllInvitations')->name('events.event.invitations.cancel.all');
-Route::get('/api/events/{id}/join-request', 'EventController@createJoinRequest')->name('events.event.joinrequest');
-Route::patch('/api/events/{id}/join-request/manage/{idUser}', 'EventController@updateJoinRequest')->name('events.event.joinrequest.manage');
-Route::patch('/api/events/{id}/join-request/manage-all', 'EventController@updateAllJoinRequests')->name('events.event.joinrequest.manage.all');
+// Join Requests
+Route::get('/api/events/{id}/join-requests', 'EventController@createJoinRequest')->name('events.event.join-requests.new');
+Route::patch('/api/events/{id}/join-requests/{idUser}', 'EventController@updateJoinRequest')->name('events.event.join-requests.join-request.update');
+Route::patch('/api/events/{id}/join-requests', 'EventController@updateAllJoinRequests')->name('events.event.join-requests.update');
 
 // API
 Route::post('/api/events/{id}/polls', 'PollController@store')->name('api.events.event.polls.new');
