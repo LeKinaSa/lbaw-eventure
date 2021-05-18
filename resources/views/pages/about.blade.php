@@ -34,22 +34,22 @@
 
             <div class="col-md">
                 <h4 class="mb-2">Afonso Caiado</h4>
-                <img src="../assets/profile_default.png" class="img-fluid rounded-circle w-75">
+                <img src="{{ asset('img/profile_default.png') }}" class="img-fluid rounded-circle w-75">
             </div>
 
             <div class="col-md">
                 <h4 class="mb-2">Clara Martins</h4>
-                <img src="../assets/profile_default.png" class="img-fluid rounded-circle w-75">
+                <img src="{{ asset('img/profile_default.png') }}" class="img-fluid rounded-circle w-75">
             </div>
 
             <div class="col-md">
                 <h4 class="mb-2">Daniel Monteiro</h4>
-                <img src="../assets/profile_default.png" class="img-fluid rounded-circle w-75">
+                <img src="{{ asset('img/profile_default.png') }}" class="img-fluid rounded-circle w-75">
             </div>
 
             <div class="col-md">
                 <h4 class="mb-2">Gonçalo Pascoal</h4>
-                <img src="../assets/profile_default.png" class="img-fluid rounded-circle w-75">
+                <img src="{{ asset('img/profile_default.png') }}" class="img-fluid rounded-circle w-75">
             </div>
         </div>
     </div>
