@@ -22,20 +22,22 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
         </div>
         <div class="col-md-7 p-3">
             <div class="d-flex justify-content-between mb-2">
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 align-items-center">
                     <a href="#" role="button" class="btn btn-primary">Results</a>
                     @if (Auth::id() === $event->id_organizer)
                     <a href="{{ route('events.event.invitations', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Invitations</a>
                     @endif
-                    @if (Auth::check() && (App\Policies\UserPolicy::canRequestToJoin(Auth::user(), $event)))
-                    <a href="{{ route('events.event.joinrequest', ['id' => $event->id]) }}" id="joinRequestButton" role="button" class="btn btn-primary">Request to Join</a>
-                    @endif
-                    <p class="mb-0 mt-2 px-2 text-danger" id="joinRequestError"></p>
                 </div>
-                @if (Auth::id() === $event->id_organizer)
-                <a class="btn btn-secondary" href="{{ route('events.event.edit', ['id' => $event->id]) }}"><i class="fa fa-pencil"></i></a>
-                @endif
+                <div class="d-flex align-items-center">
+                    @if (Auth::id() === $event->id_organizer)
+                    <a class="btn btn-secondary" href="{{ route('events.event.edit', ['id' => $event->id]) }}"><i class="fa fa-pencil"></i></a>
+                    @endif
+                    <div id="requestToJoin" class="d-flex gap-2 align-items-center">
+                        @include('partials.event_request_to_join')
+                    </div>
+                </div>
             </div>
+
             <hr>
             
             <p>

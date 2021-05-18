@@ -351,16 +351,19 @@ if (joinRequestButton != null) {
 
 function sendCreateJoinRequestRequest(event) {
     event.preventDefault();
-    sendAjaxRequest("get", this.href, {}, createJoinRequestHandler);
+    sendAjaxRequest('POST', this.href, {}, createJoinRequestHandler);
 }
 
 function createJoinRequestHandler() {
+    console.log(this.status);
+
     if (this.status !== 200) {
-        document.getElementById('joinRequestError').insertAdjacentHTML('afterbegin', this.responseText);
+        document.getElementById('joinRequestError').innerHTML = this.responseText;
         return;
     }
     
-    joinRequestButton.remove();
+    let requestToJoinDiv = document.getElementById('requestToJoin');
+    requestToJoinDiv.innerHTML = this.responseText;
 }
 
 let manageJoinRequestForms = document.querySelectorAll('.form-manage-join-request');

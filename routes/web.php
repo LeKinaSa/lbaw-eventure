@@ -38,7 +38,7 @@ Route::delete('/api/events/{id}/invitations/{idUser}', 'EventController@deleteIn
 Route::delete('/api/events/{id}/invitations', 'EventController@deleteAllInvitations')->name('events.event.invitations.delete');
 
 // Join Requests
-Route::get('/api/events/{id}/join-requests', 'EventController@createJoinRequest')->name('events.event.join-requests.new');
+Route::post('/api/events/{id}/join-requests', 'EventController@createJoinRequest')->name('events.event.join-requests.new');
 Route::patch('/api/events/{id}/join-requests/{idUser}', 'EventController@updateJoinRequest')->name('events.event.join-requests.join-request.update');
 Route::patch('/api/events/{id}/join-requests', 'EventController@updateAllJoinRequests')->name('events.event.join-requests.update');
 

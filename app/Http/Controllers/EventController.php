@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Event;
+use App\Policies\EventPolicy;
 use DB;
 use DateTime;
 use Illuminate\Database\QueryException;
@@ -373,29 +374,31 @@ class EventController extends Controller {
             return response('Event with the specified ID does not exist.', 404);
         }
 
-        $user = User::find(Auth::id());
-        if (is_null($user)) {
-            return response('User does not exist.', 404);
+        // Check if user is allowed to make a join request
+        $user = Auth::user();
+        if (!EventPolicy::requestToJoin($user, $event)) {
+            return response('No permission to perform this request.', 403);
         }
 
-        $this->authorize('view', $event);
-        
         // Check if an invitation or join request already exists
         $participation = DB::table('participation')->where([['id_user', $user->id], ['id_event', $event->id]])->first();
         if (!is_null($participation)) {
             return response('An invitation or join request for the specified user already exists.', 400);
         }
 
-        // Request to Join
+        // Insert a new join request
         try {
-            DB::table('participation')->insert(['id_user' => $user->id, 'id_event' => $id, 'status' => 'JoinRequest']);
+            DB::table('participation')->insert([
+                'id_user' => $user->id,
+                'id_event' => $id,
+                'status' => 'JoinRequest'
+            ]);
         }
         catch (QueryException $ex) {
             return response('A database error occurred.', 500);
         }
 
-        // TODO: modify for ajax?
-        return response('', 200);
+        return view('partials.event_request_to_join', ['event' => $event]);
     }
 
     /**
