@@ -355,8 +355,6 @@ function sendCreateJoinRequestRequest(event) {
 }
 
 function createJoinRequestHandler() {
-    console.log(this.status);
-
     if (this.status !== 200) {
         document.getElementById('joinRequestError').innerHTML = this.responseText;
         return;
@@ -385,7 +383,7 @@ function sendUpdateJoinRequestRequest(event) {
 
 function updateJoinRequestHandler(data) {
     if (this.status !== 200) {
-        document.getElementById('updateJoinRequestError').insertAdjacentHTML('afterbegin', this.responseText);
+        document.getElementById('updateJoinRequestError').innerHTML = this.responseText;
         return;
     }
     

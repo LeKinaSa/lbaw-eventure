@@ -40,6 +40,10 @@ class User extends Authenticatable {
         return $this->belongsToMany(Event::class, 'participation', 'id_user', 'id_event')->withPivot('status');
     }
 
+    public function invitations() {
+        return $this->eventsRelatedTo()->wherePivot('status', 'Invitation');
+    }
+
     public function eventsOrganizing() {
         return $this->hasMany(Event::class, 'id_organizer');
     }

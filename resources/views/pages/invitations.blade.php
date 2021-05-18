@@ -64,19 +64,5 @@
             </div>
         </section>
     </div>
-
-    <div class="row">
-        <section id="participants" class="col-md mb-4 mb-mb-0">
-            <h4>Participants</h4>
-            @foreach ($event->participants()->get() as $user)
-            @endforeach
-        </section>
-
-        <section id="rejected" class="col-md">
-            <h4>Rejected</h4>
-            @foreach ($event->participants()->get() as $user)
-            @endforeach
-        </section>
-    </div>
 </div>
 @endsection

@@ -18,13 +18,14 @@ $participation = $event->usersRelatedTo()->wherePivot('id_user', Auth::id())->fi
             <p class="mb-0 text-muted">You have requested to join this event</p>
             @break
         @case ('Invitation')
-            <form method="POST" action="{{ route('users.user.invitations.invitation.update', ['id' => $event->id, 'idUser' => $user->id]) }}" class="form-manage-invitation">
+            <p class="mb-0 text-muted">You have been invited to this event</p>
+            <form method="POST" action="{{ route('users.user.invitations.invitation.update', ['username' => Auth::user()->username, 'idEvent' => $event->id]) }}" class="form-manage-invitation">
                 @csrf
                 @method('PATCH')
                 <input type="hidden" id="status" name="status" value="Accepted">
                 <button type="submit" class="btn btn-success" aria-label="Accept"><i class="fa fa-check"></i></button>
             </form>
-            <form method="POST" action="{{ route('users.user.invitations.invitation.update', ['id' => $event->id, 'idUser' => $user->id]) }}" class="form-manage-invitation">
+            <form method="POST" action="{{ route('users.user.invitations.invitation.update', ['username' => Auth::user()->username, 'idEvent' => $event->id]) }}" class="form-manage-invitation">
                 @csrf
                 @method('PATCH')
                 <input type="hidden" id="status" name="status" value="Declined">

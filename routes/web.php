@@ -19,6 +19,7 @@ Route::get('/users/{username}/edit', 'UserController@edit')->name('users.profile
 Route::post('/users/{username}/edit', 'UserController@update');
 Route::delete('/users/{username}/delete', 'UserController@delete')->name('users.profile.delete');
 Route::get('/users/{username}/my-events', 'UserController@showEvents')->name('users.profile.events');
+Route::get('/users/{username}/invitations', 'UserController@showInvitations')->name('users.profile.invitations');
 
 // Event
 Route::get('/events/new', 'EventController@create')->name('events.new');
@@ -26,6 +27,7 @@ Route::post('/events/new', 'EventController@store');
 Route::get('/events/{id}', 'EventController@show')->name('events.event');
 Route::get('/events/{id}/edit', 'EventController@edit')->name('events.event.edit');
 Route::post('/events/{id}/edit', 'EventController@update');
+Route::get('/events/{id}/participants', 'EventController@showParticipants')->name('events.event.participants');
 
 // TODO: next route is not complete
 //Route::get('/events/{id}/matches', 'EventController@show')->name('events.event.matches');

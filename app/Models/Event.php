@@ -69,6 +69,10 @@ class Event extends Model {
         return $this->usersRelatedTo()->where('status', 'JoinRequest');
     }
 
+    public function rejectedParticipants() {
+        return $this->usersRelatedTo()->where('status', 'Declined');
+    }
+
     public function getTypeFormatted() {
         return Event::FORMATTED_TYPES[$this->type];
     }

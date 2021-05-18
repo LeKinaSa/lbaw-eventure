@@ -215,6 +215,19 @@ class EventController extends Controller {
     }
 
     /**
+     * Show the participants page.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showParticipants(Request $request, $id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('update', $event);
+        return view('pages.participants', ['event' => $event]);
+    }
+
+    /**
      * Send an invitation to an user.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -463,16 +476,15 @@ class EventController extends Controller {
             return response('Invalid request: status is not \'Accepted\' or \'Declined\'.', 400);
         }
 
-        $this->authorize('update', $event);
+        //TODO: $this->authorize('update', $event);
         
         // Accept / Decline all the join requests
-        $joinRequests = $event->joinRequests();
-
         if ($event->limitedAttendance()) {
             // TODO: transaction
         }
         else {
-            $joinRequests->update(['status' => $request->input('status')]);
+            DB::table('participation')->where([['id_event', $id], ['status', 'JoinRequest']])
+                                      ->update(['status' => $request->input('status')]);
         }
 
         return response('');
