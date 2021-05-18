@@ -151,9 +151,7 @@
         </div>
 
         <div class="d-inline-flex flex-column flex-md-row flex-md-wrap gap-2">
-            @foreach ($event->results()->get() as $match)
-                @include('partials.match', ['match' => $match])
-            @endforeach
+            @each('partials.match', $matches, 'match')
         </div>
     </section>
 
