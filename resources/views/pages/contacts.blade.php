@@ -14,7 +14,7 @@
 
     <div class="row">
         <div class="col-md-8 mb-2 mb-md-0">
-            <img src="../assets/macdesk.jpeg" class="img-fluid rounded" alt="Macbook laptop on a desk">
+            <img src="{{ asset('img/mac_desk.jpg') }}" class="img-fluid rounded" alt="Macbook laptop on a desk">
         </div>
         
         <div class="col-md-4 py-2">
