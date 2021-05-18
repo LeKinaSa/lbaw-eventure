@@ -12,9 +12,9 @@
 */
 // Home
 Route::view('/', 'pages.home');
-Route::view('/about.php', 'pages.about');
-Route::view('/contacts.php', 'pages.contacts');
-Route::view('/faq.php', 'pages.faq');
+Route::view('/about', 'pages.about');
+Route::view('/contacts', 'pages.contacts');
+Route::view('/faq', 'pages.faq');
 
 
 // User Profile
