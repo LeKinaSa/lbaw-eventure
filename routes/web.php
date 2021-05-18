@@ -13,6 +13,8 @@
 // Home
 Route::view('/', 'pages.home');
 Route::view('/about.php', 'pages.about');
+Route::view('/contacts.php', 'pages.contacts');
+
 
 // User Profile
 Route::get('/users/{username}', 'UserController@show')->name('users.profile');
