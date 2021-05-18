@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable {
     use Notifiable;
@@ -46,5 +47,10 @@ class User extends Authenticatable {
 
     public function eventsParticipatingIn() {
         return $this->eventsRelatedTo()->where('status', 'Accepted');
+    }
+
+    public function pollAnswer(Poll $poll) {
+        $options = $poll->options()->select('id');
+        return DB::table('poll_answer')->where('id_user', $this->id)->whereIn('id_poll_option', $options);
     }
 }

@@ -302,7 +302,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER poll_answer_option
-    BEFORE INSERT OR UPDATE ON poll_answer
+    BEFORE INSERT ON poll_answer
     FOR EACH ROW
     EXECUTE PROCEDURE poll_answer_option();
 

@@ -81,9 +81,9 @@
           <div class="col-md mb-2">
             <h5 class="text-uppercase">Help</h5>
             <ul class="list-unstyled">
-              <li><a class="text-primary" href="about.php">About</a></li>
-              <li><a class="text-primary" href="contacts.php">Contacts</a></li>
-              <li><a class="text-primary" href="faq.php">FAQ</a></li>
+              <li><a class="text-primary" href="{{ url('/about') }}">About</a></li>
+              <li><a class="text-primary" href="{{ url('/contacts') }}">Contacts</a></li>
+              <li><a class="text-primary" href="{{ url('/faq') }}">FAQ</a></li>
             </ul>
           </div>
           <!-- TODO: Only show this section if authenticated as admin -->

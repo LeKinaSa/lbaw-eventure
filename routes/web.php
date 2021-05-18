@@ -15,6 +15,10 @@
 use Illuminate\Routing\Route;
 
 Route::view('/', 'pages.home');
+Route::view('/about', 'pages.about');
+Route::view('/contacts', 'pages.contacts');
+Route::view('/faq', 'pages.faq');
+
 
 // User Profile
 Route::get('/users/{username}', 'UserController@show')->name('users.profile');
@@ -42,8 +46,11 @@ Route::get('/api/events/{id}/join-request', 'EventController@sendJoinRequest')->
 Route::patch('/api/events/{id}/join-request/manage/{idUser}', 'EventController@manageJoinRequest')->name('events.event.joinrequest.manage');
 Route::patch('/api/events/{id}/join-request/manage-all', 'EventController@manageAllJoinRequests')->name('events.event.joinrequest.manage.all');
 
-// API
+// Polls API
 Route::post('/api/events/{id}/polls', 'PollController@store')->name('api.events.event.polls.new');
+Route::put('/api/events/{id}/polls/{idPoll}/answer', 'PollController@putAnswer')->name('api.events.event.polls.poll.answer.put');
+Route::delete('/api/events/{id}/polls/{idPoll}/answer', 'PollController@deleteAnswer')->name('api.events.event.polls.poll.answer.delete');
+
 Route::post('/api/events/{id}/comments', 'CommentController@store')->name('api.events.event.comments.new');
 Route::delete('/api/events/{idEvent}/comments/{id}', 'CommentController@destroy')->name('api.events.event.comments.comment.delete');
 
