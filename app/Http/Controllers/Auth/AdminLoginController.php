@@ -13,7 +13,8 @@ class AdminLoginController extends Controller {
     protected $redirectTo = '/admin/user-management';
 
     public function __construct() {
-        $this->middleware('guest')->except('logout');
+        $this->middleware('guest');
+        $this->middleware('guest:admin')->except('logout');
     }
 
     public function guard() {
