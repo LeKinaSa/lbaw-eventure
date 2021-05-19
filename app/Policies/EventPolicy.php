@@ -2,8 +2,10 @@
 
 namespace App\Policies;
 
+use App\Models\Administrator;
 use App\Models\Event;
 use App\Models\User;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,13 +25,18 @@ class EventPolicy {
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\Models\User  $user
+     * @param  Illuminate\Foundation\Auth\User  $user
      * @param  \App\Models\Event  $event
      * @return mixed
      */
-    public static function view(?User $user, Event $event) {
+    public static function view(?Authenticatable $user, Event $event) {
         if ($event->visibility === 'Public') {
             // Public events can be seen by everyone
+            return true;
+        }
+
+        if (!is_null($user) && $user instanceof Administrator) {
+            // All events can be seen by administrators
             return true;
         }
 
@@ -43,7 +50,6 @@ class EventPolicy {
             return true;
         }
 
-        // TODO: private events can be seen by administrators
         return false;
     }
 
