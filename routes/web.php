@@ -68,5 +68,5 @@ Route::post('/admin/sign-out', 'Auth\AdminLoginController@logout')->name('admin.
 
 // Routes exclusive to Administrators
 Route::group(['middleware' => 'admin'], function () {
-    
+    Route::get('/admin/user-management', 'AdminController@showUserManagement')->name('admin.user-management');
 });

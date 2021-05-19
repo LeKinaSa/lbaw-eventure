@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RedirectIfNotAdmin {
     /**
@@ -15,7 +16,7 @@ class RedirectIfNotAdmin {
      * @return mixed
      */
     public function handle(Request $request, Closure $next, $guard = 'admin') {
-        if (!auth()->guard($guard)->check()) {
+        if (!Auth::guard($guard)->check()) {
             return redirect(route('admin.sign-in'));
         }
         return $next($request);
