@@ -395,6 +395,9 @@ INSERT INTO "user" (username,"name",email,"password","address",gender,age,websit
 INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('fgallegos'  ,'Forrest Gallegos' ,'forrestgal@gmail.com' ,'$2y$10$hPeYJ64jAIUamFR.WAYkGuEDuBQ6ST0D3Z10hw/D5RMBi3zF1WycO','Catalonia'         ,NULL    ,20,'www.gallegoshub.com' ,NULL,'My interests are wide and I am open to all sort of events'      );
 INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('sebowens'   ,'Sebastian Owens'  ,'sebowens87@yahoo.com' ,'$2y$10$xhq55I1msKSODAYvMzh.aeFEl.ltMGlt1ur4n5QHTlLk8/4Vwdtv.',NULL                ,'Male'  ,28,'www.sebowensblog.com',NULL,'I am looking for online events as a way to interact with people');
 
+-- R04
+INSERT INTO suspension (id_user, "from", until, reason) VALUES (4, '2021-05-15', '2021-05-19', 'Spamming in comments.');
+
 -- R05
 INSERT INTO "category" ("name") VALUES ('Board Games');
 INSERT INTO "category" ("name") VALUES ('Video Games');
