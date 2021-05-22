@@ -338,6 +338,7 @@ function deleteInvitationHandler(data) {
         return;
     }
 
+    document.getElementById('invitationsError').innerHTML = "";
     data.invitationCard.remove();
 }
 
@@ -360,6 +361,7 @@ function createJoinRequestHandler() {
         return;
     }
     
+    document.getElementById('joinRequestError').innerHTML = "";
     let requestToJoinDiv = document.getElementById('requestToJoin');
     requestToJoinDiv.innerHTML = this.responseText;
 }
@@ -387,6 +389,7 @@ function updateJoinRequestHandler(data) {
         return;
     }
     
+    document.getElementById('updateJoinRequestError').innerHTML = "";
     data.join_request.remove();
 }
 
@@ -413,11 +416,12 @@ function sendUpdateAllJoinRequestRequest(event) {
 
 function updateAllJoinRequestHandler() {
     if (this.status !== 200) {
-        document.getElementById("joinRequestsError").innerHTML = this.responseText;
+        document.getElementById('joinRequestsError').innerHTML = this.responseText;
         return;
     }
 
+    document.getElementById('joinRequestsError').innerHTML = "";
     // If the event doesn't have enough space for everyone, the status should be different from 200
-    document.getElementById("join-requests").innerHTML = "";
+    document.getElementById('join-requests').innerHTML = "";
 }
 

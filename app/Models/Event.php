@@ -26,7 +26,7 @@ class Event extends Model {
      */
     protected $fillable = [
         'title', 'id_organizer', 'visibility', 'description', 'start_date', 'end_date',
-        'type', 'location', 'max_attendance', 'cancelled', 'id_category', 
+        'type', 'location', 'max_attendance', 'n_participants', 'cancelled', 'id_category', 
         'win_points', 'draw_points', 'loss_points', 'leaderboard',
     ];
 

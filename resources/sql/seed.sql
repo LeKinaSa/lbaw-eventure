@@ -124,13 +124,15 @@ CREATE TABLE "event" (
     "type" event_type NOT NULL DEFAULT 'InPerson',
     "location" TEXT,
     max_attendance INTEGER CONSTRAINT max_attendance_ck CHECK ((max_attendance >= 0) AND (max_attendance <= 10000)),
+    n_participants INTEGER NOT NULL DEFAULT 0 CONSTRAINT n_participants_ck CHECK (n_participants >=0),
     cancelled BOOLEAN NOT NULL DEFAULT false,
     id_category INTEGER REFERENCES category(id) NOT NULL,
     win_points NUMERIC(3) NOT NULL DEFAULT 1 CONSTRAINT win_points_ck CHECK ((win_points >= 0) AND (win_points <= 100)),
     draw_points NUMERIC(3) NOT NULL DEFAULT 0.5 CONSTRAINT draw_points_ck CHECK ((draw_points >= 0) AND (draw_points <= 100)),
     loss_points NUMERIC(3) NOT NULL DEFAULT 0 CONSTRAINT loss_points_ck CHECK ((loss_points >= 0) AND (loss_points <= 100)),
     leaderboard BOOLEAN NOT NULL DEFAULT false,
-    CONSTRAINT event_date_ck CHECK ("start_date" < end_date)
+    CONSTRAINT event_date_ck CHECK ("start_date" < end_date),
+    CONSTRAINT participants_ck CHECK (n_participants <= max_attendance)
 );
 
 -- R07
@@ -402,9 +404,9 @@ INSERT INTO "category" ("name") VALUES ('Card Games');
 INSERT INTO "category" ("name") VALUES ('Role-Playing Games');
 
 -- R06
-INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (1,'2021 FIFA Club Tournament'       ,'Private','Fifa Tournament with big prizes',NULL,'2021-06-10 20:00','2021-06-13 20:00','Virtual',NULL,NULL,'false',2,1,0.5,0,'false');
-INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (3,'2021 VCT Challengers'            ,'Public' ,'Valorant Challengers Competition',NULL,'2021-06-15 18:00','2021-06-18 22:00','Mixed','Smithings Street, Liverpool',30,'false',2,2,1,0,'false');
-INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (4,'Amateur Blitz Chess Tournament'  ,'Public' ,'Test your blitz skills in this amateur chess competition! Players with up to 1500 rating can participate.',NULL,'2021-05-30 10:00','2021-05-30 18:00','InPerson','79 Maroon Street, Toronto',20,'false',1,1,0.5,0,'true');
+INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,n_participants,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (1,'2021 FIFA Club Tournament'       ,'Private','Fifa Tournament with big prizes',NULL,'2021-06-10 20:00','2021-06-13 20:00','Virtual',NULL,NULL,2,'false',2,1,0.5,0,'false');
+INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,n_participants,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (3,'2021 VCT Challengers'            ,'Public' ,'Valorant Challengers Competition',NULL,'2021-06-15 18:00','2021-06-18 22:00','Mixed','Smithings Street, Liverpool',30,1,'false',2,2,1,0,'false');
+INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,n_participants,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (4,'Amateur Blitz Chess Tournament'  ,'Public' ,'Test your blitz skills in this amateur chess competition! Players with up to 1500 rating can participate.',NULL,'2021-05-30 10:00','2021-05-30 18:00','InPerson','79 Maroon Street, Toronto',20,1,'false',1,1,0.5,0,'true');
 
 -- R07
 INSERT INTO "poll" (id_event,question) VALUES (3,'What should the time control be?');

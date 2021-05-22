@@ -289,29 +289,33 @@ class EventController extends Controller {
         }
 
         // Verify if the user is already in this event
-        $participation = DB::table('participation')->where([['id_event', $idEvent], ['id_user', $user->id], ['status', 'Invitation']])->first();
+        $participation = DB::table('participation')->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'Invitation']])->first();
         if (is_null($participation)) {
             return response('User is not invited to this event.', 404);
         }
 
         // Check status input
         if (($request->input('status') !== 'Accepted') && ($request->input('status') !== 'Declined')) {
-            return response('Invalid Status.', 500); // TODO
+            return response('Invalid request: status is not \'Accepted\' or \'Declined\'.', 400);
         }
 
         // TODO: authorization
 
         // Accept / Decline the invitation
-        if (!$event->limitedAttendance()) {
-            DB::table('participation')->where([['id_event', $idEvent], ['id_user', $user->id], ['status', 'Invitation']])
+        DB::beginTransaction();
+        try {
+            DB::table('participation')->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'Invitation']])
                                       ->update(['status' => $request->input('status')]);
+            $participants = DB::table('participation')->where([['id_event', $id], ['status', 'Accepted']])->count();
+            Event::find($id)->update(['n_participants' => $participants]);
         }
-        else {
-            // TODO: transaction
+        catch (QueryException $ex) {
+            DB::rollback();
+            return response('The attendance limit for this event has been reached.', 300); // TODO
         }
+        DB::commit();
 
-        // TODO: Modify for Ajax?
-        return back();
+        return response('');
     }
 
     /**
@@ -444,16 +448,23 @@ class EventController extends Controller {
             return response('Invalid Status.', 500);
         }
 
+        // TODO: authorization
         $this->authorize('update', $event);
         
         // Accept / Decline the join request
-        if ($event->limitedAttendance()) {
-            // TODO: transaction
-        }
-        else {
+        DB::beginTransaction();
+        try {
             DB::table('participation')->where([['id_event', $id], ['id_user', $user->id], ['status', 'JoinRequest']])
                                       ->update(['status' => $request->input('status')]);
+            $participants = DB::table('participation')->where([['id_event', $id], ['status', 'Accepted']])->count();
+            Event::find($id)->update(['n_participants' => $participants]);
         }
+        catch (QueryException $ex) {
+            DB::rollback();
+            return response('The attendance limit has been reached.', 300); // TODO
+        }
+        DB::commit();
+        
 
         return response('');
     }
@@ -476,17 +487,23 @@ class EventController extends Controller {
             return response('Invalid request: status is not \'Accepted\' or \'Declined\'.', 400);
         }
 
-        //TODO: $this->authorize('update', $event);
+        //TODO: Authorization
+        $this->authorize('update', $event);
         
         // Accept / Decline all the join requests
-        if ($event->limitedAttendance()) {
-            // TODO: transaction
-        }
-        else {
+        DB::beginTransaction();
+        try {
             DB::table('participation')->where([['id_event', $id], ['status', 'JoinRequest']])
                                       ->update(['status' => $request->input('status')]);
+            $participants = DB::table('participation')->where([['id_event', $id], ['status', 'Accepted']])->count();
+            Event::find($id)->update(['n_participants' => $participants]);
         }
-
+        catch (QueryException $ex) {
+            DB::rollback();
+            return response('The event doesn\'t have enough space for all the join requests to participate.', 300); // TODO
+        }
+        DB::commit();
+        
         return response('');
     }
 
