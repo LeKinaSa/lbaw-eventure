@@ -445,7 +445,7 @@ class EventController extends Controller {
 
         // Check status input
         if (($request->input('status') !== 'Accepted') && ($request->input('status') !== 'Declined')) {
-            return response('Invalid Status.', 500);
+            return response('Invalid request: status is not \'Accepted\' or \'Declined\'.', 400);
         }
 
         // TODO: authorization
@@ -461,10 +461,9 @@ class EventController extends Controller {
         }
         catch (QueryException $ex) {
             DB::rollback();
-            return response('The attendance limit has been reached.', 300); // TODO
+            return response('The attendance limit has been reached.', 500); // TODO
         }
         DB::commit();
-        
 
         return response('');
     }
@@ -500,7 +499,7 @@ class EventController extends Controller {
         }
         catch (QueryException $ex) {
             DB::rollback();
-            return response('The event doesn\'t have enough space for all the join requests to participate.', 300); // TODO
+            return response('The event doesn\'t have enough space for all the join requests to participate.', 500); // TODO
         }
         DB::commit();
         

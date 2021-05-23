@@ -285,6 +285,23 @@ if (sendInvitationForm != null) {
     sendInvitationForm.addEventListener('submit', sendCreateInvitationRequest);
 }
 
+function clearInvitationsPageErrors() {
+    let invitationsError = document.getElementById('invitationsError');
+    if (invitationsError !== null) {
+        invitationsError.innerHTML = "";
+    }
+
+    let cancelInvitationsError = document.getElementById('cancelInvitationsError');
+    if (cancelInvitationsError !== null) {
+        cancelInvitationsError.innerHTML = "";
+    }
+    
+    let updateJoinRequestError = document.getElementById('updateJoinRequestError');
+    if (updateJoinRequestError !== null) {
+        updateJoinRequestError.innerHTML = "";
+    }
+}
+
 function sendCreateInvitationRequest(event) {
     event.preventDefault();
     let csrfToken = this.querySelector('input[name=_token]').value;
@@ -299,6 +316,7 @@ function sendCreateInvitationRequest(event) {
 }
 
 function createInvitationHandler() {
+    clearInvitationsPageErrors();
     if (this.status !== 200) {
         document.getElementById('invitationsError').innerHTML = this.responseText;
         return;
@@ -333,13 +351,67 @@ function sendDeleteInvitationRequest(event) {
 }
 
 function deleteInvitationHandler(data) {
+    clearInvitationsPageErrors();
     if (this.status !== 200) {
-        document.getElementById('invitationsError').innerHTML = this.responseText;
+        document.getElementById('cancelInvitationsError').innerHTML = this.responseText;
         return;
     }
 
-    document.getElementById('invitationsError').innerHTML = "";
     data.invitationCard.remove();
+}
+
+let deleteAllForm = document.querySelector('.form-delete-all-invitations');
+if (deleteAllForm !== null) {
+    deleteAllForm.addEventListener('submit', sendDeleteAllInvitationsRequest);
+}
+
+function sendDeleteAllInvitationsRequest(event) {
+    event.preventDefault();
+    let csrfToken = this.querySelector('input[name=_token]').value;
+    let method = this.querySelector('input[name=_method]').value;
+
+    let data = {
+        _token: csrfToken,
+    };
+
+    sendAjaxRequest(method, this.action, data, deleteAllInvitationsHandler);
+}
+
+function deleteAllInvitationsHandler() {
+    clearInvitationsPageErrors();
+    if (this.status !== 200) {
+        document.getElementById('cancelInvitationsError').innerHTML = this.responseText;
+        return;
+    }
+
+    document.getElementById('invitations').innerHTML = "";
+}
+
+// TODO: update invitation addListener
+function sendUpdateInvitationRequest(event) {
+    event.preventDefault();
+
+    let csrfToken = this.querySelector('input[name=_token]').value;
+    let method = this.querySelector('input[name=_method]').value;
+    let status = this.querySelector('input[name=status]').value;
+
+    let data = {
+        _token: csrfToken,
+        status: status,
+        invitation: null, // TODO
+    };
+
+    sendAjaxRequest(method, this.action, data, updateAllJoinRequestHandler);
+}
+
+function updateInvitationHandler(data) {
+    if (this.status !== 200) {
+        document.getElementById('updateInvitationError').innerHTML = this.responseText;
+        return;
+    }
+
+    data.invitation.delete();
+    document.getElementById('updateInvitationError').innerHTML = "";
 }
 
 // ----- Join Requests API -----
@@ -374,23 +446,30 @@ for (let form of manageJoinRequestForms) {
 function sendUpdateJoinRequestRequest(event) {
     event.preventDefault();
     let csrfToken = this.querySelector('input[name=_token]').value;
+    let method = this.querySelector('input[name=_method]').value;
+    let status = this.querySelector('input[name=status]').value;
     
+    let joinRequest = this.parentNode;
+    while (joinRequest.className !== 'card') {
+        joinRequest = joinRequest.parentNode;
+    }
+
     let data = {
         _token: csrfToken,
-        join_request: null, // TODO: insert the join request card here
+        status: status,
     };
 
-    sendAjaxRequest(this.method, this.action, data, updateJoinRequestHandler);
+    sendAjaxRequest(method, this.action, data, updateJoinRequestHandler, { joinRequest: joinRequest });
 }
 
 function updateJoinRequestHandler(data) {
+    clearInvitationsPageErrors();
     if (this.status !== 200) {
         document.getElementById('updateJoinRequestError').innerHTML = this.responseText;
         return;
     }
-    
-    document.getElementById('updateJoinRequestError').innerHTML = "";
-    data.join_request.remove();
+
+    data.joinRequest.remove();
 }
 
 
@@ -415,12 +494,12 @@ function sendUpdateAllJoinRequestRequest(event) {
 }
 
 function updateAllJoinRequestHandler() {
+    clearInvitationsPageErrors();
     if (this.status !== 200) {
-        document.getElementById('joinRequestsError').innerHTML = this.responseText;
+        document.getElementById('updateJoinRequestError').innerHTML = this.responseText;
         return;
     }
 
-    document.getElementById('joinRequestsError').innerHTML = "";
     // If the event doesn't have enough space for everyone, the status should be different from 200
     document.getElementById('join-requests').innerHTML = "";
 }
