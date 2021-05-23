@@ -387,7 +387,11 @@ function deleteAllInvitationsHandler() {
     document.getElementById('invitations').innerHTML = "";
 }
 
-// TODO: update invitation addListener
+let manageInvitationForms = document.querySelectorAll('.form-manage-invitation');
+for (let form of manageInvitationForms) {
+    form.addEventListener('submit', sendUpdateInvitationRequest);
+}
+
 function sendUpdateInvitationRequest(event) {
     event.preventDefault();
 
@@ -395,13 +399,17 @@ function sendUpdateInvitationRequest(event) {
     let method = this.querySelector('input[name=_method]').value;
     let status = this.querySelector('input[name=status]').value;
 
+    let invitation = this.parentNode;
+    while (invitation.className !== 'card card-invitation') {
+        invitation = invitation.parentNode;
+    }
+
     let data = {
         _token: csrfToken,
         status: status,
-        invitation: null, // TODO
     };
 
-    sendAjaxRequest(method, this.action, data, updateAllJoinRequestHandler);
+    sendAjaxRequest(method, this.action, data, updateInvitationHandler, { invitation: invitation });
 }
 
 function updateInvitationHandler(data) {
@@ -410,14 +418,13 @@ function updateInvitationHandler(data) {
         return;
     }
 
-    data.invitation.delete();
     document.getElementById('updateInvitationError').innerHTML = "";
+    data.invitation.remove();
 }
 
 // ----- Join Requests API -----
 
 let joinRequestButton = document.getElementById('joinRequestButton');
-
 if (joinRequestButton != null) {
     joinRequestButton.addEventListener('click', sendCreateJoinRequestRequest);
 }

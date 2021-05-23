@@ -13,6 +13,7 @@
 
     <section id="invitations" class="mt-2">
         <h1 class="text-center">Your invitations</h1>
+        <p class="mb-0 mt-2 px-2 text-danger" id="updateInvitationError"></p>
 
         <div class="d-flex flex-wrap gap-3">
             @foreach (Auth::user()->invitations()->get() as $event)

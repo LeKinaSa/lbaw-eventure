@@ -1,4 +1,4 @@
-<article class="card card-invitation" data-id="{{ $event->id }}">
+<article class="card card-invitation">
     <div class="card-body">
         <h5 class="card-title text-center"><a href="{{ route('events.event', ['id' => $event->id]) }}">{{ $event->title }}</a></h5>
         <ul class="list-unstyled mb-0">
@@ -13,13 +13,13 @@
     </div>
     <div class="card-footer">
         <div class="d-flex align-items-center justify-content-evenly">
-            <form method="POST" action="{{ route('users.user.invitations.invitation.update', ['username' => $user->username, 'idEvent' => $event->id]) }}" class="form-manage-join-request">
+            <form method="POST" action="{{ route('users.user.invitations.invitation.update', ['username' => $user->username, 'idEvent' => $event->id]) }}" class="form-manage-invitation">
                 @csrf
                 @method('PATCH')
                 <input type="hidden" id="status" name="status" value="Accepted">
                 <button type="submit" class="btn btn-success" aria-label="Accept"><i class="fa fa-check"></i></button>
             </form>
-            <form method="POST" action="{{ route('users.user.invitations.invitation.update', ['username' => $user->username, 'idEvent' => $event->id]) }}" class="form-manage-join-request">
+            <form method="POST" action="{{ route('users.user.invitations.invitation.update', ['username' => $user->username, 'idEvent' => $event->id]) }}" class="form-manage-invitation">
                 @csrf
                 @method('PATCH')
                 <input type="hidden" id="status" name="status" value="Declined">

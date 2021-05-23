@@ -277,13 +277,13 @@ class EventController extends Controller {
      * @param  int      $idEvent
      * @return \Illuminate\Http\Response
      */
-    public function updateInvitation(Request $request, $id, $idUser) {
-        $event = Event::find($id);
+    public function updateInvitation(Request $request, $username, $idEvent) {
+        $event = Event::find($idEvent);
         if (is_null($event)) {
             return response('Event with the specified ID does not exist.', 404);
         }
         
-        $user = User::find($idUser);
+        $user = User::where('username', $username)->first();
         if (is_null($user)) {
             return response('User with the specified ID does not exist.', 404);
         }
@@ -306,8 +306,8 @@ class EventController extends Controller {
         try {
             DB::table('participation')->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'Invitation']])
                                       ->update(['status' => $request->input('status')]);
-            $participants = DB::table('participation')->where([['id_event', $id], ['status', 'Accepted']])->count();
-            Event::find($id)->update(['n_participants' => $participants]);
+            $participants = DB::table('participation')->where([['id_event', $event->id], ['status', 'Accepted']])->count();
+            Event::find($event->id)->update(['n_participants' => $participants]);
         }
         catch (QueryException $ex) {
             DB::rollback();
