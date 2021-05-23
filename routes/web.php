@@ -57,3 +57,7 @@ Route::post('/sign-in', 'Auth\LoginController@login');
 Route::post('/sign-out', 'Auth\LoginController@logout')->name('sign-out');
 Route::get('/sign-up', 'Auth\RegisterController@showRegistrationForm')->name('sign-up');
 Route::post('/sign-up', 'Auth\RegisterController@register');
+Route::get('/forgot-password', 'Auth\RecoverPasswordController@showForgotPasswordForm')->middleware('guest')->name('forgot-password');
+Route::post('/forgot-password', 'Auth\RecoverPasswordController@forgotPassword');
+Route::get('/recover-password/{token}', 'Auth\RecoverPasswordController@showRecoverPasswordForm')->middleware('guest')->name('recover-password');
+Route::post('/recover-password', 'Auth\RecoverPasswordController@recoverPassword');

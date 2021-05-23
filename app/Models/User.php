@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable {
     use Notifiable;
+    use CanResetPassword;
 
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
