@@ -5,16 +5,17 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
-class AuthServiceProvider extends ServiceProvider
-{
+class AuthServiceProvider extends ServiceProvider {
     /**
      * The policy mappings for the application.
      *
      * @var array
      */
     protected $policies = [
-      'App\Models\User' => 'App\Policies\UserPolicy',
-      'App\Models\Event' => 'App\Policies\EventPolicy'
+        'App\Models\User' => 'App\Policies\UserPolicy',
+        'App\Models\Event' => 'App\Policies\EventPolicy',
+        'App\Models\Poll' => 'App\Policies\PollPolicy',
+        'App\Models\Comment' => 'App\Policies\CommentPolicy',
     ];
 
     /**
@@ -22,8 +23,7 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
+    public function boot() {
         $this->registerPolicies();
     }
 }
