@@ -36,9 +36,9 @@ $admin = Auth::guard('admin')->user();
           </button>
           <div class="collapse navbar-collapse mt-3 mt-md-0" id="navbarContent">
             <div class="col d-flex flex-column flex-md-row align-items-stretch align-items-md-center justify-content-end gap-2 gap-md-3">
-              <form>
+              <form {{ Route::is('events.search-results') ? 'id=searchEventsForm' : ''}} method="GET" action="{{ route('events.search-results') }}">
                 <div class="input-group">
-                  <input type="search" class="form-control" placeholder="Search" aria-label="Search" required>
+                  <input type="search" class="form-control" placeholder="Search events..." aria-label="Search" name="query" value="{{ Request::get('query') ?? old('query') }}" required>
                   <button type="submit" class="btn btn-outline-light"><i class="fa fa-search"></i></button>
                 </div>
               </form>

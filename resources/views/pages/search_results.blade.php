@@ -70,13 +70,12 @@ use App\Models\Event;
         </section>
 
         <section class="col-md-9 pt-3">
-            <h3 class="text-center">Search results</h3>
+            <h3 class="text-center">
+                Search results
+                <div class="spinner-border text-primary" id="searchResultsSpinner" role="status" aria-label="Loading..." aria-hidden="true" hidden></div>
+            </h3>
             <div id="searchResults" class="d-flex flex-column gap-2">
-                @foreach($events as $event)
-                    @can('view', $event)
-                        @include('partials.event_search', ['event' => $event])
-                    @endcan
-                @endforeach
+                @include('partials.search_results')
             </div>
         </section>
     </div>

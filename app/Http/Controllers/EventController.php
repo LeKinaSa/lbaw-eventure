@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Event;
+use App\Policies\EventPolicy;
+
 use DB;
 use DateTime;
 use Illuminate\Database\QueryException;
@@ -402,13 +404,26 @@ class EventController extends Controller {
             'query' => 'string|max:500',
         ]);
 
-        $events = Event::get();
+        $query = $request->input('query');
+        $sql = Event::join('user', 'user.id', '=', 'event.id_organizer')
+                ->select('event.*', 'user.username', 'user.name')
+                ->selectRaw('ts_rank(keywords, to_tsquery(\'english\', ?)) AS "rank"', [$query])
+                ->whereRaw('keywords @@ to_tsquery(\'english\', ?)', [$query])
+                ->orderBy('rank', 'desc');
+
+        $events = $sql->get()->filter(function($v) {
+            $user = Auth::user() ?? Auth::guard('admin')->user();
+            return EventPolicy::view($user, $v);
+        });
+
         $categories = Category::get();
 
         return view('pages.search_results', ['events' => $events, 'categories' => $categories]);
     }
     
     public function getSearchResults(Request $request) {
+        $events = Event::get();
 
+        return view('partials.search_results', ['events' => $events]);
     }
 }
