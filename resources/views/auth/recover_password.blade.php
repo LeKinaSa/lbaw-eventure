@@ -17,12 +17,12 @@
                 Enter a new password for your account.
             </p>
 
-            <form method="POST" class="d-flex flex-column justify-content-center mb-3" action="{{ route('sign-up') }}">
+            <form method="POST" class="d-flex flex-column justify-content-center mb-3" action="{{ route('recover-password') }}">
                 @csrf
 
                 <div class="mb-2">
                     <label for="email" class="form-label">Email address *</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
+                    <input type="email" class="form-control" id="email" name="email" required>
                     @error ('email')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror

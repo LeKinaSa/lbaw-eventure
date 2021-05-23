@@ -17,12 +17,12 @@
                 Enter your account's email and we will send you a link to reset your password.
             </p>
 
-            <form method="POST" class="d-flex flex-column justify-content-center mb-3" action="{{ route('sign-in') }}">
+            <form method="POST" class="d-flex flex-column justify-content-center mb-3" action="{{ route('forgot-password') }}">
                 @csrf
 
                 <div class="mb-2">
                     <label for="email" class="form-label">Email address *</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
+                    <input type="email" class="form-control" id="email" name="email" required>
                 </div>
 
                 <input type="submit" class="btn btn-primary" value="Send Email">
