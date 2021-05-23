@@ -124,7 +124,8 @@ class EventController extends Controller {
      */
     public function show($id) {
         $event = Event::findOrFail($id);
-        $this->authorize('view', $event);
+        $user = Auth::user() ?? Auth::guard('admin')->user();
+        $this->authorizeForUser($user, 'view', $event);
 
         $comments = $event->comments()->leftJoin('user', 'comment.id_author', '=', 'user.id')
                 ->select('comment.*', 'user.name', 'user.username');

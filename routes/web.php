@@ -11,6 +11,9 @@
 |
 */
 // Home
+
+use Illuminate\Support\Facades\Route;
+
 Route::view('/', 'pages.home');
 Route::view('/about', 'pages.about');
 Route::view('/contacts', 'pages.contacts');
@@ -61,3 +64,13 @@ Route::post('/sign-in', 'Auth\LoginController@login');
 Route::post('/sign-out', 'Auth\LoginController@logout')->name('sign-out');
 Route::get('/sign-up', 'Auth\RegisterController@showRegistrationForm')->name('sign-up');
 Route::post('/sign-up', 'Auth\RegisterController@register');
+
+// Administrator authentication
+Route::get('/admin/sign-in', 'Auth\AdminLoginController@showLoginForm')->name('admin.sign-in');
+Route::post('/admin/sign-in', 'Auth\AdminLoginController@login');
+Route::post('/admin/sign-out', 'Auth\AdminLoginController@logout')->name('admin.sign-out');
+
+// Routes exclusive to Administrators
+Route::group(['middleware' => 'admin'], function () {
+    Route::get('/admin/user-management', 'AdminController@showUserManagement')->name('admin.user-management');
+});
