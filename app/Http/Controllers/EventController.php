@@ -389,4 +389,25 @@ class EventController extends Controller {
     public function destroy(Event $event) {
         //
     }
+
+    /**
+     * Show the results page for event search.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function showSearchResults(Request $request) {
+        $request->validate([
+            'query' => 'string|max:500',
+        ]);
+
+        $events = Event::get();
+        $categories = Category::get();
+
+        return view('pages.search_results', ['events' => $events, 'categories' => $categories]);
+    }
+    
+    public function getSearchResults(Request $request) {
+
+    }
 }
