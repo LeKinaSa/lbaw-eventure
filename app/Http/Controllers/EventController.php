@@ -311,7 +311,7 @@ class EventController extends Controller {
         }
         catch (QueryException $ex) {
             DB::rollback();
-            return response('The attendance limit for this event has been reached.', 300); // TODO
+            return response('The attendance limit for this event has been reached.', 406); // TODO
         }
         DB::commit();
 
@@ -461,7 +461,7 @@ class EventController extends Controller {
         }
         catch (QueryException $ex) {
             DB::rollback();
-            return response('The attendance limit has been reached.', 500); // TODO
+            return response('The attendance limit has been reached.', 406); // TODO
         }
         DB::commit();
 
