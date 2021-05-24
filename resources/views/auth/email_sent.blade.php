@@ -18,7 +18,7 @@
             </p>
             
             <p class="text-center">
-                <a href="{{ url('/') }}" role="button" class="btn btn-outline-primary text-center">Back to Homepage</a>
+                <a href="{{ url('/') }}" role="button" class="btn btn-primary text-center">Back to Homepage</a>
             </p>
         </div>
     </div>

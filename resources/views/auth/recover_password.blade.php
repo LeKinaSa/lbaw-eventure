@@ -41,8 +41,14 @@
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-                <input type="hidden" id="token" value="{{ $token }}">
 
+                <div class="mb-3">
+                    <input type="hidden" id="token" name="token" value="{{ $token }}">
+                    @error('token')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+                
                 <input type="submit" class="btn btn-primary" value="Recover Password">
             </form>
         </div>
