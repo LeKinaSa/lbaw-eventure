@@ -422,7 +422,19 @@ class EventController extends Controller {
     }
     
     public function getSearchResults(Request $request) {
-        $events = Event::get();
+        // TODO: move to separate function
+        $query = $request->input('query');
+
+        $sql = Event::join('user', 'user.id', '=', 'event.id_organizer')
+                ->select('event.*', 'user.username', 'user.name')
+                ->selectRaw('ts_rank(keywords, to_tsquery(\'english\', ?)) AS "rank"', [$query])
+                ->whereRaw('keywords @@ to_tsquery(\'english\', ?)', [$query])
+                ->orderBy('rank', 'desc');
+
+        $events = $sql->get()->filter(function($v) {
+            $user = Auth::user() ?? Auth::guard('admin')->user();
+            return EventPolicy::view($user, $v);
+        });
 
         return view('partials.search_results', ['events' => $events]);
     }

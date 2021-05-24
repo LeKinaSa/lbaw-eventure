@@ -48,6 +48,10 @@ function encodeForAjax(data) {
 function sendAjaxRequest(method, url, data, handler, handlerData = {}, acceptHeader = 'text/html') {
     let request = new XMLHttpRequest();
 
+    if (method.toUpperCase() === 'GET') {
+        url += '?' + encodeForAjax(data);
+    }
+
     request.open(method, url, true);
     request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -55,7 +59,15 @@ function sendAjaxRequest(method, url, data, handler, handlerData = {}, acceptHea
     request.addEventListener('load', function() {
         handler.call(this, handlerData);
     });
-    request.send(encodeForAjax(data));
+
+    console.log(url);
+
+    if (method.toUpperCase() === 'GET') {
+        request.send();
+    }
+    else {
+        request.send(encodeForAjax(data));
+    }
 }
 
 // ----- Polls API -----
@@ -396,4 +408,42 @@ function deleteInvitationHandler(data) {
     }
 
     data.invitationCard.remove();
+}
+
+// ----- Search API -----
+
+// Ajax will be used for the search events form only when in the search results page
+let searchEventsForm = document.getElementById('searchEventsForm');
+if (searchEventsForm !== null) {
+    searchEventsForm.addEventListener('submit', sendSearchEventsRequest);
+}
+
+let searchEventsSpinner = document.getElementById('searchResultsSpinner');
+
+function sendSearchEventsRequest(event) {
+    if (event.type === 'submit') {
+        event.preventDefault();
+    }
+
+    let query = searchEventsForm.querySelector('input[name=query]').value;
+    
+    let data = {
+        query: query,
+    };
+
+    searchEventsSpinner.ariaHidden = false;
+    searchEventsSpinner.removeAttribute('hidden');
+    sendAjaxRequest(searchEventsForm.method, searchEventsForm.action, data, searchEventsHandler);
+}
+
+function searchEventsHandler() {
+    searchEventsSpinner.ariaHidden = true;
+    searchEventsSpinner.setAttribute('hidden', '');
+
+    if (this.status !== 200) {
+        // TODO: error message?
+        return;
+    }
+
+    document.getElementById('searchResults').innerHTML = this.responseText;
 }
