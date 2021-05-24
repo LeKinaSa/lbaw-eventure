@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+// use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -11,6 +13,19 @@ use Illuminate\Support\Str;
 
 
 class RecoverPasswordController extends Controller {
+    protected $redirectTo = '/';
+    use SendsPasswordResetEmails;
+    // use ResetsPasswords;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct() {
+        $this->middleware('guest');
+    }
+
     /**
      * The view that is returned by this route should have a form containing an email field,
      * which will allow the user to request a password reset link for a given email address.
@@ -28,7 +43,7 @@ class RecoverPasswordController extends Controller {
         );
 
         return $status === Password::RESET_LINK_SENT
-                ? back()->with(['status' => __($status)])
+                ? view('auth.email_sent')
                 : back()->withErrors(['email' => __($status)]);
     }
     
@@ -44,6 +59,7 @@ class RecoverPasswordController extends Controller {
     }
 
     public function recoverPassword(Request $request) {
+        // TODO: This function still doesn't work
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
@@ -64,7 +80,7 @@ class RecoverPasswordController extends Controller {
         );
     
         return $status == Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('status', __($status))
+                    ? redirect()->route('login')->with('status', __($status)) // TODO
                     : back()->withErrors(['email' => [__($status)]]);
     }
 }

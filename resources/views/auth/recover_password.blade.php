@@ -17,7 +17,7 @@
                 Enter a new password for your account.
             </p>
 
-            <form method="POST" class="d-flex flex-column justify-content-center mb-3" action="{{ route('recover-password') }}">
+            <form method="POST" class="d-flex flex-column justify-content-center mb-3" action="{{ route('password.update') }}">
                 @csrf
 
                 <div class="mb-2">

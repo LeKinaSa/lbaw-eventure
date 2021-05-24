@@ -27,7 +27,7 @@
                 <div class="mb-3">
                     <div class="d-flex justify-content-between">
                         <label for="password" class="form-label">Password *</label>
-                        <a class="text-primary" href="{{ route('forgot-password') }}">Forgot your password?</a>
+                        <a class="text-primary" href="{{ route('password.request') }}">Forgot your password?</a>
                     </div>
                     <input type="password" class="form-control" id="password" name="password" required>
                     @error ('password')
