@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Utils;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Event;
@@ -54,6 +55,7 @@ class EventController extends Controller {
             'finishDate' => ['nullable', 'date_format:Y-m-d', Rule::requiredIf($request->has('finishTime') && $request->finishTime !== NULL)],
             'startTime' => 'nullable|date_format:H:i',
             'finishTime' => 'nullable|date_format:H:i',
+            'picture' => 'nullable|file|image|max:1000',
         ]);
     }
 
@@ -94,6 +96,17 @@ class EventController extends Controller {
             ]);
         }
 
+        $pictureBase64 = NULL;
+        $picture = $request->file('picture');
+
+        if ($request->hasFile('picture') && $picture->isValid()) {
+            $pictureBase64 = Utils::convertImageToBase64($picture);
+            
+            if (is_null($pictureBase64)) {
+                return back()->withErrors(['picture' => 'Uploaded picture has unsupported extension.']);
+            }
+        }
+
         try {
             $event = Event::create([
                 'title' => $request->input('title'),
@@ -106,6 +119,7 @@ class EventController extends Controller {
                 'id_category' => $request->input('category'),
                 'start_date' => $startTimestamp,
                 'end_date' => $finishTimestamp,
+                'picture' => $pictureBase64,
             ]);
         }
         catch (QueryException $ex) {
@@ -181,6 +195,17 @@ class EventController extends Controller {
             ]);
         }
 
+        $pictureBase64 = NULL;
+        $picture = $request->file('picture');
+
+        if ($request->hasFile('picture') && $picture->isValid()) {
+            $pictureBase64 = Utils::convertImageToBase64($picture);
+            
+            if (is_null($pictureBase64)) {
+                return back()->withErrors(['picture' => 'Uploaded picture has unsupported extension.']);
+            }
+        }
+
         try {
             $event->update([
                 'title' => $request->input('title'),
@@ -193,6 +218,7 @@ class EventController extends Controller {
                 'id_category' => $request->input('category'),
                 'start_date' => $startTimestamp,
                 'end_date' => $finishTimestamp,
+                'picture' => $pictureBase64,
             ]);
         }
         catch (QueryException $ex) {

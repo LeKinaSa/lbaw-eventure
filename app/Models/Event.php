@@ -25,7 +25,7 @@ class Event extends Model {
      * @var array
      */
     protected $fillable = [
-        'title', 'id_organizer', 'visibility', 'description', 'start_date', 'end_date',
+        'title', 'id_organizer', 'visibility', 'description', 'picture', 'start_date', 'end_date',
         'type', 'location', 'max_attendance', 'cancelled', 'id_category', 
         'win_points', 'draw_points', 'loss_points', 'leaderboard',
     ];
