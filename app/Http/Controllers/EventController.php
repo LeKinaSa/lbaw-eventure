@@ -299,7 +299,8 @@ class EventController extends Controller {
             return response('Invalid request: status is not \'Accepted\' or \'Declined\'.', 400);
         }
 
-        // TODO: authorization
+        // TODO: Authorization
+        $this->authorize('updateInvitation', $user);
 
         // Accept / Decline the invitation
         DB::beginTransaction();
@@ -311,7 +312,7 @@ class EventController extends Controller {
         }
         catch (QueryException $ex) {
             DB::rollback();
-            return response('The attendance limit for this event has been reached.', 406); // TODO
+            return response('The attendance limit for this event has been reached.', 400);
         }
         DB::commit();
 
@@ -448,7 +449,7 @@ class EventController extends Controller {
             return response('Invalid request: status is not \'Accepted\' or \'Declined\'.', 400);
         }
 
-        // TODO: authorization
+        // TODO: Authorization
         $this->authorize('update', $event);
         
         // Accept / Decline the join request
@@ -461,7 +462,7 @@ class EventController extends Controller {
         }
         catch (QueryException $ex) {
             DB::rollback();
-            return response('The attendance limit has been reached.', 406); // TODO
+            return response('The attendance limit has been reached.', 400);
         }
         DB::commit();
 
@@ -486,7 +487,7 @@ class EventController extends Controller {
             return response('Invalid request: status is not \'Accepted\' or \'Declined\'.', 400);
         }
 
-        //TODO: Authorization
+        // TODO: Authorization
         $this->authorize('update', $event);
         
         // Accept / Decline all the join requests
@@ -499,7 +500,7 @@ class EventController extends Controller {
         }
         catch (QueryException $ex) {
             DB::rollback();
-            return response('The event doesn\'t have enough space for all the join requests to participate.', 500); // TODO
+            return response('The event doesn\'t have enough space for all the join requests to participate.', 400);
         }
         DB::commit();
         
