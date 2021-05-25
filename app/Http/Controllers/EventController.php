@@ -380,12 +380,61 @@ class EventController extends Controller {
         return redirect(route('events.event.invitations', ['id' => $event->id]));
     }
 
-    public function showResults(Request $request, $id){
+    public function updateLeaderboardSettings(Request $request, $id) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+
+        // TODO: input validation
+
+        $this->authorize('update', $event);
+
+        try {
+            $event->update([
+                'win_points' => $request->input('winPoints'),
+                'draw_points' => $request->input('drawPoints'),
+                'loss_points' => $request->input('lossPoints'),
+                'leaderboard' => $request->input('generateLeaderboard'),
+            ]);
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        return response('');
+    }
+    
+    public function buildLeaderboard($event, $matches, $competitors) {
+        
+        $leaderboard = array();
+        foreach ($competitors as $competitor) {
+            $leaderboard[$competitor->id] = ['name' => $competitor->name, 'games' => 0, 'wins' => 0, 'ties' => 0, 'losses' => 0, 'points' => 0.0];
+        }
+        unset($competitor);
+
+        foreach ($matches as $match) {
+            switch ($match->result) {
+                case "Winner1":
+                    break;
+                case "Winner2":
+                    break;
+                case "Winner1":
+                    break;
+            }
+        }
+    }
+
+    public function showResults(Request $request, $id) {
         $event = Event::find($id);
         $this->authorize('view', $event);
 
-        $matches = $event->results()->get();
-        $competitors = $event->players()->get();
+        $matches = $event->matches()
+                ->join('competitor AS c1', 'c1.id', '=', 'match.id_competitor1')
+                ->join('competitor AS c2', 'c2.id', '=', 'match.id_competitor2')
+                ->select('match.*', 'c1.name AS name_competitor1', 'c2.name AS name_competitor2')->get();
+
+        $competitors = $event->competitors()->get();
 
         return view('pages.results', ['event' => $event, 'matches' => $matches, 'competitors' => $competitors]);
     }

@@ -10,7 +10,7 @@ class Match extends Model {
 
     // Don't add create and update timestamps in database.
     public $timestamps = false;
-    protected $table = 'comment';
+    protected $table = 'match';
 
     protected $fillable = [
         'id_event', 'date', 'description', 'result', 'id_competitor1', 'id_competitor2',
@@ -21,11 +21,11 @@ class Match extends Model {
     }
 
     public function competitor1() {
-        return $this->belongsTo(User::class, 'id_competitor1');
+        return $this->belongsTo(Competitor::class, 'id_competitor1');
     }
 
     public function competitor2() {
-        return $this->belongsTo(User::class, 'id_competitor2');
+        return $this->belongsTo(Competitor::class, 'id_competitor2');
     }
 
     

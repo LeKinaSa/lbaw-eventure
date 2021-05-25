@@ -340,3 +340,40 @@ function deleteInvitationHandler(data) {
 
     data.invitationCard.remove();
 }
+
+// ----- Match Results API -----
+
+let leaderboardSettingsForm = document.getElementById('leaderboardSettingsForm');
+if (leaderboardSettingsForm !== null) {
+    leaderboardSettingsForm.addEventListener('submit', sendUpdateLeaderboardSettingsRequest);
+}
+
+function sendUpdateLeaderboardSettingsRequest(event) {
+    event.preventDefault();
+
+    let method = this.querySelector('input[name=_method]').value;
+    let winPoints = this.querySelector('input[name=winPoints]').value;
+    let drawPoints = this.querySelector('input[name=drawPoints]').value;
+    let lossPoints = this.querySelector('input[name=lossPoints]').value;
+    let generateLeaderboard = this.querySelector('input[name=generateLeaderboard]').checked;
+
+    let data = {
+        winPoints: winPoints,
+        drawPoints: drawPoints,
+        lossPoints: lossPoints,
+        generateLeaderboard: generateLeaderboard,
+    };
+
+    console.log(data);
+
+    sendAjaxRequest(method, this.action, data, updateLeaderboardSettingsHandler);
+}
+
+function updateLeaderboardSettingsHandler() {
+    console.log(this.responseText);
+
+    if (this.status !== 200) {
+        // TODO: error handling
+        return;
+    }
+}

@@ -109,10 +109,10 @@
             <div class="p-3">
                 <h5>Players / Teams</h5>
                 <ul class="list-unstyled d-flex flex-column gap-1">
-                    @each('partials.player', $competitors, 'competitors')
+                    @each('partials.player', $competitors, 'competitor')
                 </ul>
                 <form method="POST" class="py-3" action="{{ route('events.event.players.new', ['id' => $event->id]) }}" id="addPlayersForm">
-                @csrf
+                    @csrf
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Name" aria-label="Name">
                         <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i></button>
@@ -122,7 +122,8 @@
         </div>
 
         <div class="collapse mb-2 bg-light" id="collapseSettings">
-            <form class="p-3">
+            <form class="p-3" method="POST" action="{{ route('api.events.event.leaderboard-settings.update', ['id' => $event->id]) }}" id="leaderboardSettingsForm">
+                @method ('PATCH')
                 <h5>Points</h5>
                 <div class="d-inline-flex flex-column flex-md-row mb-3 gap-2">
                     <div class="input-group">
@@ -154,60 +155,9 @@
     </section>
 
     <section id="leaderboard">
-        <h4>Leaderboard</h4>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Position</th>
-                        <th>Name</th>
-                        <th>Games</th>
-                        <th>Wins</th>
-                        <th>Draws</th>
-                        <th>Losses</th>
-                        <th>Points</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Dmitri Dolyakov</td>
-                        <td>3</td>
-                        <td>2</td>
-                        <td>1</td>
-                        <td>0</td>
-                        <td>2.5</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Martin Fowler</td>
-                        <td>3</td>
-                        <td>2</td>
-                        <td>0</td>
-                        <td>1</td>
-                        <td>2</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Jane Caldwin</td>
-                        <td>3</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1.5</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Santiago Neves</td>
-                        <td>3</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>3</td>
-                        <td>0</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        @if ($event->leaderboard)
+        @include('partials.leaderboard')
+        @endif
     </section>
 </div>
 @endsection

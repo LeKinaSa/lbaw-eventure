@@ -29,6 +29,7 @@ Route::post('/events/{id}/edit', 'EventController@update');
 
 Route::get('/events/{id}/matches', 'EventController@showResults')->name('events.event.results');
 Route::post('/api/events/{id}/competitors', 'EventController@createPlayer')->name('events.event.players.new');
+Route::patch('/api/events/{id}/leaderboard-settings', 'EventController@updateLeaderboardSettings')->name('api.events.event.leaderboard-settings.update');
 
 // TODO: next route is not complete
 //Route::get('/events/{id}/matches', 'EventController@show')->name('events.event.matches');

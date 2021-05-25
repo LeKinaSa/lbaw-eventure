@@ -414,6 +414,18 @@ INSERT INTO "poll_option" (id_poll,"option") VALUES (1,'5 + 0');
 INSERT INTO "poll_option" (id_poll,"option") VALUES (1,'5 + 3');
 INSERT INTO "poll_option" (id_poll,"option") VALUES (1,'5 + 5');
 
+-- R11
+INSERT INTO "competitor" (id_event,"name") VALUES (1,'Mosaad Aldossary'     );
+INSERT INTO "competitor" (id_event,"name") VALUES (1,'Stefano Pinna'        );
+INSERT INTO "competitor" (id_event,"name") VALUES (1,'Kai Wollin'           );
+INSERT INTO "competitor" (id_event,"name") VALUES (2,'Sentinels'            );
+INSERT INTO "competitor" (id_event,"name") VALUES (2,'Imortals'             );
+
+-- R12
+INSERT INTO "match" (id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (1,'2021-06-12 15:00','Very close match'                               ,'Winner2', 1, 2);
+INSERT INTO "match" (id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (1,'2021-06-12 18:00',NULL                                             ,'TBD'    , 2, 3);
+INSERT INTO "match" (id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (2,'2021-06-16 19:00','The match was going back and forth all the time','Tie'    , 4, 5);
+
 -- R14
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (2, 1,'Accepted');
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (3, 1,'Accepted');
