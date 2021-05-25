@@ -300,7 +300,9 @@ class EventController extends Controller {
         }
 
         // TODO: Authorization
-        $this->authorize('updateInvitation', $user);
+        if (!Auth::check() || (Auth::id() !== $user->id)) {
+            return response('This user can\'t update this invitation.', 403);
+        }
 
         // Accept / Decline the invitation
         DB::beginTransaction();

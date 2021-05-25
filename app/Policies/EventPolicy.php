@@ -72,14 +72,6 @@ class EventPolicy {
     }
 
     /**
-     * Determine whether the user can update an invitation.
-     */
-    public function updateInvitation(User $user, User $invitedUser) {
-        // Only the invited user can update his own invitation
-        return $user->id === $invitedUser->id;
-    }
-
-    /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
