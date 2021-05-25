@@ -41,17 +41,19 @@
                                     <div class="col">
                                         <label for="first" class="h5 form-label">First *</label>
                                         <select class="form-select" name="first" required>
-                                            @foreach ($competitors)
-                                                <option>{{ $competitors->name }}</option>
-                                            @endforeach
+                                            <option selected>Dmitri Dolyakov</option>
+                                            <option>Martin Fowler</option>
+                                            <option>Jane Caldwin</option>
+                                            <option>Santiago Neves</option>
                                         </select>
                                     </div>
                                     <div class="col">
                                         <label for="second" class="h5 form-label">Second *</label>
                                         <select class="form-select" name="second" required>
-                                            @foreach ($competitors)
-                                                <option>{{ $competitors->name }}</option>
-                                            @endforeach
+                                            <option>Dmitri Dolyakov</option>
+                                            <option selected>Martin Fowler</option>
+                                            <option>Jane Caldwin</option>
+                                            <option>Santiago Neves</option>
                                         </select>
                                     </div>
                                 </div>
