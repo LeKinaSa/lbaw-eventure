@@ -109,9 +109,7 @@
             <div class="p-3">
                 <h5>Players / Teams</h5>
                 <ul class="list-unstyled d-flex flex-column gap-1">
-                    @foreach ($event->players()->get() as $competitor)
-                        @include('partials.player', ['competitor' => $competitor])
-                    @endforeach
+                    @each('partials.player', $competitors, 'competitors')
                 </ul>
                 <form method="POST" class="py-3" action="{{ route('events.event.players.new', ['id' => $event->id]) }}" id="addPlayersForm">
                 @csrf

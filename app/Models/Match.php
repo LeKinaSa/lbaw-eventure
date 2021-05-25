@@ -16,6 +16,10 @@ class Match extends Model {
         'id_event', 'date', 'description', 'result', 'id_competitor1', 'id_competitor2',
     ];
 
+    public function fromEvent() {
+        return $this->belongsTo(Event::class, 'id_event');
+    }
+
     public function competitor1() {
         return $this->belongsTo(User::class, 'id_competitor1');
     }
