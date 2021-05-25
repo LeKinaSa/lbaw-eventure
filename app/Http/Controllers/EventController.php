@@ -385,8 +385,9 @@ class EventController extends Controller {
         $this->authorize('view', $event);
 
         $matches = $event->results()->get();
+        $competitors = $event->players()->get();
 
-        return view('pages.results', ['event' => $event, 'matches' => $matches]);
+        return view('pages.results', ['event' => $event, 'matches' => $matches, 'competitors' => $competitors]);
     }
 
     public function createPlayer(Request $request, $id){
