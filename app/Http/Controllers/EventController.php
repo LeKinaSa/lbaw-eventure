@@ -394,8 +394,38 @@ class EventController extends Controller {
     }
 
     /**
+     * Returns the events that match the specified search request.
+     * Queries are limited to a maximum of 50 events, to prevent generic searches.
+     * @param \Illuminate\Http\Request $request
+     */
+    public function getSearchEvents(Request $request) {
+        $query = $request->input('query');
+        $sql = Event::join('user', 'user.id', '=', 'event.id_organizer')
+                ->select('event.*', 'user.username', 'user.name')
+                ->selectRaw('ts_rank(keywords, to_tsquery(\'english\', ?)) AS "rank"', [$query])
+                ->whereRaw('keywords @@ to_tsquery(\'english\', ?)', [$query]);
+        
+        if ($request->input('startDate') !== null) {
+            $sql = $sql->where('start_date', '>=', $request->input('startDate'));
+        }
+
+        if ($request->input('endDate') !== null) {
+            $sql = $sql->where('end_date', '<=', $request->input('endDate'));
+        }
+
+        $sql = $sql->orderBy('rank', 'desc')
+                ->limit(50);
+        
+        $events = $sql->get()->filter(function($v) {
+            $user = Auth::user() ?? Auth::guard('admin')->user();
+            return EventPolicy::view($user, $v);
+        });
+        
+        return $events;
+    }
+
+    /**
      * Show the results page for event search.
-     * 
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
@@ -404,18 +434,7 @@ class EventController extends Controller {
             'query' => 'string|max:500',
         ]);
 
-        $query = $request->input('query');
-        $sql = Event::join('user', 'user.id', '=', 'event.id_organizer')
-                ->select('event.*', 'user.username', 'user.name')
-                ->selectRaw('ts_rank(keywords, to_tsquery(\'english\', ?)) AS "rank"', [$query])
-                ->whereRaw('keywords @@ to_tsquery(\'english\', ?)', [$query])
-                ->orderBy('rank', 'desc');
-
-        $events = $sql->get()->filter(function($v) {
-            $user = Auth::user() ?? Auth::guard('admin')->user();
-            return EventPolicy::view($user, $v);
-        });
-
+        $events = $this->getSearchEvents($request);
         $categories = Category::get();
 
         return view('pages.search_results', ['events' => $events, 'categories' => $categories]);
@@ -423,18 +442,7 @@ class EventController extends Controller {
     
     public function getSearchResults(Request $request) {
         // TODO: move to separate function
-        $query = $request->input('query');
-
-        $sql = Event::join('user', 'user.id', '=', 'event.id_organizer')
-                ->select('event.*', 'user.username', 'user.name')
-                ->selectRaw('ts_rank(keywords, to_tsquery(\'english\', ?)) AS "rank"', [$query])
-                ->whereRaw('keywords @@ to_tsquery(\'english\', ?)', [$query])
-                ->orderBy('rank', 'desc');
-
-        $events = $sql->get()->filter(function($v) {
-            $user = Auth::user() ?? Auth::guard('admin')->user();
-            return EventPolicy::view($user, $v);
-        });
+        $events = $this->getSearchEvents($request);
 
         return view('partials.search_results', ['events' => $events]);
     }

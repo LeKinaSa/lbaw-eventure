@@ -418,7 +418,12 @@ if (searchEventsForm !== null) {
     searchEventsForm.addEventListener('submit', sendSearchEventsRequest);
 }
 
+let searchFiltersSection = document.getElementById('searchFilters');
 let searchEventsSpinner = document.getElementById('searchResultsSpinner');
+
+for (let input of document.querySelectorAll('#searchFilters input, select')) {
+    input.addEventListener('change', sendSearchEventsRequest);
+}
 
 function sendSearchEventsRequest(event) {
     if (event.type === 'submit') {
@@ -426,10 +431,15 @@ function sendSearchEventsRequest(event) {
     }
 
     let query = searchEventsForm.querySelector('input[name=query]').value;
-    
+    let startDate = searchFiltersSection.querySelector('input[name=startDate]').value;
+    let endDate = searchFiltersSection.querySelector('input[name=endDate]').value;
+
     let data = {
         query: query,
     };
+
+    if (startDate !== null && startDate !== '') data.startDate = startDate;
+    if (endDate !== null && endDate !== '') data.endDate = endDate;
 
     searchEventsSpinner.ariaHidden = false;
     searchEventsSpinner.removeAttribute('hidden');

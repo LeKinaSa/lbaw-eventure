@@ -13,7 +13,7 @@ use App\Models\Event;
     </nav>
 
     <div class="row g-md-5">
-        <section class="col-md-3 p-3 bg-light">
+        <section class="col-md-3 p-3 bg-light" id="searchFilters">
             <h4 class="text-center">Filters</h4>
 
             <div class="mb-3">
