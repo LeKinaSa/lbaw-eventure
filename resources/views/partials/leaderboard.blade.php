@@ -1,3 +1,4 @@
+@if (!is_null($leaderboard))
 <h4>Leaderboard</h4>
 <div class="table-responsive">
     <table class="table table-striped">
@@ -13,42 +14,18 @@
             </tr>
         </thead>
         <tbody>
+        @foreach($leaderboard as $competitor)
             <tr>
-                <td>1</td>
-                <td>Dmitri Dolyakov</td>
-                <td>3</td>
-                <td>2</td>
-                <td>1</td>
-                <td>0</td>
-                <td>2.5</td>
+                <td>{{ $competitor['position'] }}</td>
+                <td>{{ $competitor['name'] }}</td>
+                <td>{{ $competitor['games'] }}</td>
+                <td>{{ $competitor['wins'] }}</td>
+                <td>{{ $competitor['draws'] }}</td>
+                <td>{{ $competitor['losses'] }}</td>
+                <td>{{ $competitor['points'] }}</td>
             </tr>
-            <tr>
-                <td>2</td>
-                <td>Martin Fowler</td>
-                <td>3</td>
-                <td>2</td>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Jane Caldwin</td>
-                <td>3</td>
-                <td>1</td>
-                <td>1</td>
-                <td>1</td>
-                <td>1.5</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Santiago Neves</td>
-                <td>3</td>
-                <td>0</td>
-                <td>0</td>
-                <td>3</td>
-                <td>0</td>
-            </tr>
+        @endforeach
         </tbody>
     </table>
 </div>
+@endif

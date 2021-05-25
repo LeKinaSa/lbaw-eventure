@@ -128,21 +128,21 @@
                 <div class="d-inline-flex flex-column flex-md-row mb-3 gap-2">
                     <div class="input-group">
                         <span class="input-group-text" id="winPointsLabel">Win</span>
-                        <input type="number" class="form-control" aria-label="Win" aria-describedby="winPointsLabel" name="winPoints" min="0" max="100" step="0.1" value="1">
+                        <input type="number" class="form-control" aria-label="Win" aria-describedby="winPointsLabel" name="winPoints" min="0" max="100" step="0.1" value="{{ $event->win_points }}">
                     </div>
                     <div class="input-group">
                         <span class="input-group-text" id="drawPointsLabel">Draw</span>
-                        <input type="number" class="form-control" aria-label="Draw" aria-describedby="drawPointsLabel" name="drawPoints" min="0" max="100" step="0.1" value="0.5">
+                        <input type="number" class="form-control" aria-label="Draw" aria-describedby="drawPointsLabel" name="drawPoints" min="0" max="100" step="0.1" value="{{ $event->draw_points }}">
                     </div>
                     <div class="input-group">
                         <span class="input-group-text" id="lossPointsLabel">Loss</span>
-                        <input type="number" class="form-control" aria-label="Loss" aria-describedby="lossPointsLabel" name="lossPoints" min="0" max="100" step="0.1" value="0">
+                        <input type="number" class="form-control" aria-label="Loss" aria-describedby="lossPointsLabel" name="lossPoints" min="0" max="100" step="0.1" value="{{ $event->loss_points }}">
                     </div>
                 </div>
 
                 <div class="form-check mb-3">
                     <label for="generateLeaderboard" class="form-check-label">Generate leaderboard</label>
-                    <input type="checkbox" class="form-check-input" id="generateLeaderboard" name="generateLeaderboard" checked>
+                    <input type="checkbox" class="form-check-input" id="generateLeaderboard" name="generateLeaderboard" {{ $event->leaderboard ? 'checked' : '' }}>
                 </div>
 
                 <input type="submit" class="btn btn-primary" value="Apply">
@@ -155,9 +155,7 @@
     </section>
 
     <section id="leaderboard">
-        @if ($event->leaderboard)
-        @include('partials.leaderboard')
-        @endif
+        @include('partials.leaderboard', ['leaderboard' => $leaderboard])
     </section>
 </div>
 @endsection

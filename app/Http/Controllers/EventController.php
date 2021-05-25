@@ -402,27 +402,67 @@ class EventController extends Controller {
             return response('A database error occurred.', 500);
         }
 
-        return response('');
+        $leaderboard = null;
+        if ($event->leaderboard) {
+            $leaderboard = $this->buildLeaderboard($event, $matches, $competitors);
+        }
+
+        return view('partials.leaderboard', ['leaderboard' => $leaderboard]);
     }
-    
+
     public function buildLeaderboard($event, $matches, $competitors) {
-        
         $leaderboard = array();
         foreach ($competitors as $competitor) {
-            $leaderboard[$competitor->id] = ['name' => $competitor->name, 'games' => 0, 'wins' => 0, 'ties' => 0, 'losses' => 0, 'points' => 0.0];
+            $leaderboard[$competitor->id] = ['name' => $competitor->name, 'games' => 0, 'wins' => 0, 'draws' => 0, 'losses' => 0, 'points' => 0.0];
         }
         unset($competitor);
 
         foreach ($matches as $match) {
             switch ($match->result) {
                 case "Winner1":
+                    $leaderboard[$match->id_competitor1]['games'] += 1;
+                    $leaderboard[$match->id_competitor1]['wins'] += 1;
+                    $leaderboard[$match->id_competitor1]['points'] += $event->win_points;
+
+                    $leaderboard[$match->id_competitor2]['games'] += 1;
+                    $leaderboard[$match->id_competitor2]['losses'] += 1;
+                    $leaderboard[$match->id_competitor2]['points'] += $event->loss_points;
                     break;
                 case "Winner2":
+                    $leaderboard[$match->id_competitor1]['games'] += 1;
+                    $leaderboard[$match->id_competitor1]['losses'] += 1;
+                    $leaderboard[$match->id_competitor1]['points'] += $event->loss_points;
+                    
+                    $leaderboard[$match->id_competitor2]['games'] += 1; 
+                    $leaderboard[$match->id_competitor2]['wins'] += 1; 
+                    $leaderboard[$match->id_competitor2]['points'] += $event->win_points;
                     break;
-                case "Winner1":
+                case "Tie":
+                    $leaderboard[$match->id_competitor1]['games'] += 1;
+                    $leaderboard[$match->id_competitor1]['draws'] += 1;
+                    $leaderboard[$match->id_competitor1]['points'] += $event->draw_points;
+
+                    $leaderboard[$match->id_competitor2]['games'] += 1;
+                    $leaderboard[$match->id_competitor2]['draws'] += 1;
+                    $leaderboard[$match->id_competitor2]['points'] += $event->draw_points;
+                    break;
+                default:
                     break;
             }
         }
+
+        uasort($leaderboard, function($a, $b) {
+            return $b['points'] - $a['points'];
+        });
+
+        $position = 1;
+
+        foreach ($leaderboard as $id => $competitor) {
+            $leaderboard[$id]['position'] = $position;
+            ++$position;
+        }
+
+        return $leaderboard;
     }
 
     public function showResults(Request $request, $id) {
@@ -436,7 +476,12 @@ class EventController extends Controller {
 
         $competitors = $event->competitors()->get();
 
-        return view('pages.results', ['event' => $event, 'matches' => $matches, 'competitors' => $competitors]);
+        $leaderboard = null;
+        if ($event->leaderboard) {
+            $leaderboard = $this->buildLeaderboard($event, $matches, $competitors);
+        }
+
+        return view('pages.results', ['event' => $event, 'matches' => $matches, 'competitors' => $competitors, 'leaderboard' => $leaderboard]);
     }
 
     public function createPlayer(Request $request, $id){
