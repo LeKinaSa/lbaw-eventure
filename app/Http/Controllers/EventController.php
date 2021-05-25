@@ -241,7 +241,11 @@ class EventController extends Controller {
             return response('Event with the specified ID does not exist.', 404);
         }
 
-        $this->authorize('update', $event);
+        // Authorization
+        $user = Auth::user();
+        if (!EventPolicy::update($user, $event)) {
+            return response('No permission to perform this request.', 403);
+        }
         
         // The input may be username or email
         $usernameOrEmail = $request->input('invite');
@@ -299,9 +303,10 @@ class EventController extends Controller {
             return response('Invalid request: status is not \'Accepted\' or \'Declined\'.', 400);
         }
 
-        // TODO: Authorization
-        if (!Auth::check() || (Auth::id() !== $user->id)) {
-            return response('This user can\'t update this invitation.', 403);
+        // Authorization
+        $authenticatedUser = Auth::user();
+        if (!EventPolicy::updateInvitation($authenticatedUser, $user)) {
+            return response('No permission to perform this request.', 403);
         }
 
         // Accept / Decline the invitation
@@ -340,7 +345,11 @@ class EventController extends Controller {
             return response('User with the specified ID does not exist.', 404);
         }
 
-        $this->authorize('update', $event);
+        // Authorization
+        $user = Auth::user();
+        if (!EventPolicy::update($user, $event)) {
+            return response('No permission to perform this request.', 403);
+        }
         
         try {
             DB::table('participation')
@@ -367,7 +376,11 @@ class EventController extends Controller {
             return response('Event with the specified ID does not exist.', 404);
         }
 
-        $this->authorize('update', $event);
+        // Authorization
+        $user = Auth::user();
+        if (!EventPolicy::update($user, $event)) {
+            return response('No permission to perform this request.', 403);
+        }
 
         try {
             DB::table('participation')
@@ -394,7 +407,7 @@ class EventController extends Controller {
             return response('Event with the specified ID does not exist.', 404);
         }
 
-        // Check if user is allowed to make a join request
+        // Check if user is allowed to make a join request (Authorization)
         $user = Auth::user();
         if (!EventPolicy::requestToJoin($user, $event)) {
             return response('No permission to perform this request.', 403);
@@ -451,8 +464,11 @@ class EventController extends Controller {
             return response('Invalid request: status is not \'Accepted\' or \'Declined\'.', 400);
         }
 
-        // TODO: Authorization
-        $this->authorize('update', $event);
+        // Authorization
+        $user = Auth::user();
+        if (!EventPolicy::update($user, $event)) {
+            return response('No permission to perform this request.', 403);
+        }
         
         // Accept / Decline the join request
         DB::beginTransaction();
@@ -489,8 +505,11 @@ class EventController extends Controller {
             return response('Invalid request: status is not \'Accepted\' or \'Declined\'.', 400);
         }
 
-        // TODO: Authorization
-        $this->authorize('update', $event);
+        // Authorization
+        $user = Auth::user();
+        if (!EventPolicy::update($user, $event)) {
+            return response('No permission to perform this request.', 403);
+        }
         
         // Accept / Decline all the join requests
         DB::beginTransaction();
