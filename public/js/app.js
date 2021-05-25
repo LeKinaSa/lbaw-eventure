@@ -433,6 +433,7 @@ function sendSearchEventsRequest(event) {
     let query = searchEventsForm.querySelector('input[name=query]').value;
     let startDate = searchFiltersSection.querySelector('input[name=startDate]').value;
     let endDate = searchFiltersSection.querySelector('input[name=endDate]').value;
+    let category = searchFiltersSection.querySelector('select[name=category]').value;
 
     let data = {
         query: query,
@@ -440,6 +441,20 @@ function sendSearchEventsRequest(event) {
 
     if (startDate !== null && startDate !== '') data.startDate = startDate;
     if (endDate !== null && endDate !== '') data.endDate = endDate;
+    if (category !== null && category !== '') data.category = category;
+
+    let checkboxes = searchFiltersSection.querySelectorAll('#typeCheckboxes input');
+    let types = [];
+
+    for (let checkbox of searchFiltersSection.querySelectorAll('#typeCheckboxes input')) {
+        if (checkbox.checked) {
+            types.push(checkbox.value);
+        }
+    }
+
+    if (types.length !== 0 && types.length !== checkboxes.length) {
+        data.types = types;
+    }
 
     searchEventsSpinner.ariaHidden = false;
     searchEventsSpinner.removeAttribute('hidden');

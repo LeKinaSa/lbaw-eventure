@@ -26,7 +26,7 @@ use App\Models\Event;
                 <input class="form-control" id="endDate" name="endDate" type="date">
             </div>
 
-            <div class="mb-3">
+            <div class="mb-3" id="typeCheckboxes">
                 <h5>Type</h5>
                 @foreach(Event::FORMATTED_TYPES as $type => $formatted)
                 <div class="form-check">
@@ -61,7 +61,7 @@ use App\Models\Event;
             <div class="mb-3">
                 <label for="category" class="h5 form-label">Category</label>
                 <select class="form-select" id="category" name="category">
-                    <option value="-1" selected>Any</option>
+                    <option value="" selected>Any</option>
                     @foreach($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach

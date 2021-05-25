@@ -413,6 +413,22 @@ class EventController extends Controller {
             $sql = $sql->where('end_date', '<=', $request->input('endDate'));
         }
 
+        if ($request->input('category') !== null) {
+            $sql = $sql->where('id_category', '=', $request->input('category'));
+        }
+
+        if ($request->input('types') !== null) {
+            $types = explode(',', $request->input('types'));
+            foreach ($types as $idx => $type) {
+                if ($idx === 0) {
+                    $sql = $sql->where('type', '=', $type);
+                }
+                else {
+                    $sql = $sql->orWhere('type', '=', $type);
+                }
+            }
+        }
+
         $sql = $sql->orderBy('rank', 'desc')
                 ->limit(50);
         
