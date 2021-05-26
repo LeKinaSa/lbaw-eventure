@@ -11,7 +11,14 @@
 |
 */
 // Home
+
+use Illuminate\Support\Facades\Route;
+
 Route::view('/', 'pages.home');
+Route::view('/about', 'pages.about');
+Route::view('/contacts', 'pages.contacts');
+Route::view('/faq', 'pages.faq');
+
 
 // User Profile
 Route::get('/users/{username}', 'UserController@show')->name('users.profile');
@@ -44,8 +51,11 @@ Route::post('/api/events/{id}/join-requests', 'EventController@createJoinRequest
 Route::patch('/api/events/{id}/join-requests/{idUser}', 'EventController@updateJoinRequest')->name('events.event.join-requests.join-request.update');
 Route::patch('/api/events/{id}/join-requests', 'EventController@updateAllJoinRequests')->name('events.event.join-requests.update');
 
-// API
+// Polls API
 Route::post('/api/events/{id}/polls', 'PollController@store')->name('api.events.event.polls.new');
+Route::put('/api/events/{id}/polls/{idPoll}/answer', 'PollController@putAnswer')->name('api.events.event.polls.poll.answer.put');
+Route::delete('/api/events/{id}/polls/{idPoll}/answer', 'PollController@deleteAnswer')->name('api.events.event.polls.poll.answer.delete');
+
 Route::post('/api/events/{id}/comments', 'CommentController@store')->name('api.events.event.comments.new');
 Route::delete('/api/events/{idEvent}/comments/{id}', 'CommentController@destroy')->name('api.events.event.comments.comment.delete');
 
@@ -55,3 +65,13 @@ Route::post('/sign-in', 'Auth\LoginController@login');
 Route::post('/sign-out', 'Auth\LoginController@logout')->name('sign-out');
 Route::get('/sign-up', 'Auth\RegisterController@showRegistrationForm')->name('sign-up');
 Route::post('/sign-up', 'Auth\RegisterController@register');
+
+// Administrator authentication
+Route::get('/admin/sign-in', 'Auth\AdminLoginController@showLoginForm')->name('admin.sign-in');
+Route::post('/admin/sign-in', 'Auth\AdminLoginController@login');
+Route::post('/admin/sign-out', 'Auth\AdminLoginController@logout')->name('admin.sign-out');
+
+// Routes exclusive to Administrators
+Route::group(['middleware' => 'admin'], function () {
+    Route::get('/admin/user-management', 'AdminController@showUserManagement')->name('admin.user-management');
+});
