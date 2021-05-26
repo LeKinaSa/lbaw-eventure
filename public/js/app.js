@@ -60,8 +60,6 @@ function sendAjaxRequest(method, url, data, handler, handlerData = {}, acceptHea
         handler.call(this, handlerData);
     });
 
-    console.log(url);
-
     if (method.toUpperCase() === 'GET') {
         request.send();
     }
@@ -420,6 +418,7 @@ if (searchEventsForm !== null) {
 
 let searchFiltersSection = document.getElementById('searchFilters');
 let searchEventsSpinner = document.getElementById('searchResultsSpinner');
+let searchEventsError = document.getElementById('searchEventsError');
 
 for (let input of document.querySelectorAll('#searchFilters input, select')) {
     input.addEventListener('change', sendSearchEventsRequest);
@@ -466,7 +465,7 @@ function searchEventsHandler() {
     searchEventsSpinner.setAttribute('hidden', '');
 
     if (this.status !== 200) {
-        // TODO: error message?
+        searchEventsError.innerHTML = this.responseText;
         return;
     }
 

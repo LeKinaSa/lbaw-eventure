@@ -67,6 +67,8 @@ use App\Models\Event;
                     @endforeach
                 </select>
             </div>
+
+            <p class="mb-0 text-danger text-center" id="searchEventsError"></p>
         </section>
 
         <section class="col-md-9 pt-3">

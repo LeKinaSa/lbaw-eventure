@@ -10,8 +10,8 @@ use App\Policies\EventPolicy;
 
 use DB;
 use DateTime;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -445,14 +445,16 @@ class EventController extends Controller {
 
         if ($request->input('types') !== null) {
             $types = explode(',', $request->input('types'));
-            foreach ($types as $idx => $type) {
-                if ($idx === 0) {
-                    $sql = $sql->where('type', '=', $type);
+            $sql = $sql->where(function ($query) use($types) {
+                foreach ($types as $idx => $type) {
+                    if ($idx === 0) {
+                        $query->where('type', '=', $type);
+                    }
+                    else {
+                        $query->orWhere('type', '=', $type);
+                    }
                 }
-                else {
-                    $sql = $sql->orWhere('type', '=', $type);
-                }
-            }
+            });
         }
 
         $sql = $sql->orderBy('rank', 'desc')
@@ -467,24 +469,50 @@ class EventController extends Controller {
     }
 
     /**
+     * @return \
+     */
+    private static function searchValidator(Request $request) {
+        return Validator::make($request->all(), [
+            'query' => 'required|string|max:500',
+            'startDate' => 'nullable|date',
+            'endDate' => 'nullable|date',
+            'category' => 'nullable|integer|exists:category,id',
+            'types' => 'nullable|string',
+        ]);
+    }
+
+    /**
      * Show the results page for event search.
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function showSearchResults(Request $request) {
-        $request->validate([
-            'query' => 'string|max:500',
-        ]);
+        EventController::searchValidator($request)->validate();
 
-        $events = $this->getSearchEvents($request);
+        try {
+            $events = $this->getSearchEvents($request);
+        }
+        catch (QueryException $e) {
+            return response('A database error occurred.', 500);
+        }
+
         $categories = Category::get();
 
         return view('pages.search_results', ['events' => $events, 'categories' => $categories]);
     }
     
     public function getSearchResults(Request $request) {
-        // TODO: move to separate function
-        $events = $this->getSearchEvents($request);
+        $validator = EventController::searchValidator($request);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
+        }
+
+        try {
+            $events = $this->getSearchEvents($request);
+        }
+        catch (QueryException $e) {
+            return response('A database error occurred.', 500);
+        }
 
         return view('partials.search_results', ['events' => $events]);
     }
