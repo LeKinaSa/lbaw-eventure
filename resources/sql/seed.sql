@@ -383,10 +383,10 @@ CREATE INDEX search_idx ON "event" USING GIST (keywords);
 -- POPULATION
 
 -- R01
-INSERT INTO "administrator" (id,username,"password") VALUES (1,'amanda'   ,'$2y$10$SMwx7vnXDrdpNSM9W/4vhOVGs/Wb6MrYDpDPhzz1YHmsPwWjN3YWS');
-INSERT INTO "administrator" (id,username,"password") VALUES (2,'kiona'    ,'$2y$10$gZHa7j1vNTXFQXskFgRET.A4n0Cxpp5kAwswrGzP.3B67oirEcFvm');
-INSERT INTO "administrator" (id,username,"password") VALUES (3,'shaeleigh','$2y$10$eTrJiN0bt.yw46GL8N.VOO4W2AtvQ6ecQHOjFs2G8xgao/8Y6qZzu');
-INSERT INTO "administrator" (id,username,"password") VALUES (4,'ina'      ,'$2y$10$0GXPGF8m/rC4av6v57u3xO7LDKRSvy4EiGoNVZB9rlGnN7C6rCHvu');
+INSERT INTO "administrator" (username,"password") VALUES ('amanda'   ,'$2y$10$SMwx7vnXDrdpNSM9W/4vhOVGs/Wb6MrYDpDPhzz1YHmsPwWjN3YWS');
+INSERT INTO "administrator" (username,"password") VALUES ('kiona'    ,'$2y$10$gZHa7j1vNTXFQXskFgRET.A4n0Cxpp5kAwswrGzP.3B67oirEcFvm');
+INSERT INTO "administrator" (username,"password") VALUES ('shaeleigh','$2y$10$eTrJiN0bt.yw46GL8N.VOO4W2AtvQ6ecQHOjFs2G8xgao/8Y6qZzu');
+INSERT INTO "administrator" (username,"password") VALUES ('ina'      ,'$2y$10$0GXPGF8m/rC4av6v57u3xO7LDKRSvy4EiGoNVZB9rlGnN7C6rCHvu');
 
 -- R02
 INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('cballard'   ,'Cooper Ballard'   ,'cooperbal@outlook.com','$2y$10$myqDITxpP1uw4.Dkq.Mk7elaht.kiyRQ3cnaQdcDVU3/a./fXH9M2','Michigan, USA'     ,'Male'  ,23,'www.cballard.com'    ,NULL,'I enjoy driving, exercising and playing board games.'           );
@@ -394,6 +394,13 @@ INSERT INTO "user" (username,"name",email,"password","address",gender,age,websit
 INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('wblake'     ,'Wynter Blake'     ,'wblak@gmail.com'      ,'$2y$10$NVfSx13SsS6ye8mS39KGz.ptXppbMVgmf8j63i.kfOdP8eSZwqdNS','Sydney, AU'        ,'Female',42,NULL                  ,NULL,'I like playing chess, video games and meeting new people.'      );
 INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('fgallegos'  ,'Forrest Gallegos' ,'forrestgal@gmail.com' ,'$2y$10$hPeYJ64jAIUamFR.WAYkGuEDuBQ6ST0D3Z10hw/D5RMBi3zF1WycO','Catalonia'         ,NULL    ,20,'www.gallegoshub.com' ,NULL,'My interests are wide and I am open to all sort of events'      );
 INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('sebowens'   ,'Sebastian Owens'  ,'sebowens87@yahoo.com' ,'$2y$10$xhq55I1msKSODAYvMzh.aeFEl.ltMGlt1ur4n5QHTlLk8/4Vwdtv.',NULL                ,'Male'  ,28,'www.sebowensblog.com',NULL,'I am looking for online events as a way to interact with people');
+INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('phillong'   ,'Phillip Long'     ,'phillip@graviti.net'  ,'$2y$10$Dc3CUUuq83.kwE.IrOw2ouxk15pZxaf.vgW2TQOtDd6po0wo/4KRK','Hawaii'            ,'Male'  ,32,NULL                  ,NULL,'I like to interact with people that are in the same event as me');
+
+-- R03
+INSERT INTO banned_user (id_user, since, reason) VALUES (6, '2021-05-10', 'Repeated use of highly offensive language.');
+
+-- R04
+INSERT INTO suspension (id_user, "from", until, reason) VALUES (4, '2021-05-15', '2021-05-19', 'Spamming in comments.');
 
 -- R05
 INSERT INTO "category" ("name") VALUES ('Board Games');

@@ -11,6 +11,9 @@
 |
 */
 // Home
+
+use Illuminate\Support\Facades\Route;
+
 Route::view('/', 'pages.home');
 Route::view('/about', 'pages.about');
 Route::view('/contacts', 'pages.contacts');
@@ -61,3 +64,13 @@ Route::get('/forgot-password', 'Auth\ForgotPasswordController@show')->name('pass
 Route::post('/reset-password', 'Auth\ForgotPasswordController@sendEmail')->name('password.email');
 Route::get('/recover-password/{token}', 'Auth\ResetPasswordController@show')->name('password.reset');
 Route::post('/recover-password', 'Auth\ResetPasswordController@recoverPassword')->name('password.update');
+
+// Administrator authentication
+Route::get('/admin/sign-in', 'Auth\AdminLoginController@showLoginForm')->name('admin.sign-in');
+Route::post('/admin/sign-in', 'Auth\AdminLoginController@login');
+Route::post('/admin/sign-out', 'Auth\AdminLoginController@logout')->name('admin.sign-out');
+
+// Routes exclusive to Administrators
+Route::group(['middleware' => 'admin'], function () {
+    Route::get('/admin/user-management', 'AdminController@showUserManagement')->name('admin.user-management');
+});
