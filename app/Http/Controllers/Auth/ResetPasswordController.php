@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\PasswordReset;
 
 class ResetPasswordController extends Controller {
@@ -21,7 +23,6 @@ class ResetPasswordController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($token) {
-        // TODO: authorization
         return view('auth.recover_password', ['token' => $token]);
     }
 
@@ -52,8 +53,11 @@ class ResetPasswordController extends Controller {
         );
 
         if ($status === Password::PASSWORD_RESET) {
-            // TODO
-            return back();
+            $user = User::where('email', $request->input('email'))->first();
+            if (!is_null($user)) {
+                Auth::login($user);
+            }
+            return redirect(url('/'));
         }
 
         return back()->withErrors(['token' => [__($status)]]);
