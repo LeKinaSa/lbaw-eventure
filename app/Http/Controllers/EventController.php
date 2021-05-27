@@ -32,7 +32,7 @@ class EventController extends Controller {
     public function create() {
         $this->authorize('create', Event::class);
         $categories = Category::get();
-        
+
         return view('pages.event_edit', ['categories' => $categories]);
     }
 
@@ -62,7 +62,7 @@ class EventController extends Controller {
         $startTimestamp = NULL;
         $finishTimestamp = NULL;
 
-        if ($request->input('startDate') !== NULL) {    
+        if ($request->input('startDate') !== NULL) {
             $startDate = new DateTime($request->input('startDate') . ' ' . $request->input('startTime'));
             $startTimestamp = $startDate->format('Y-m-d H:i');
         }
@@ -110,7 +110,7 @@ class EventController extends Controller {
         catch (QueryException $ex) {
             return redirect(route('events.new'));
         }
-        
+
         // TODO: Event Tags
 
         $event->save();
@@ -197,7 +197,7 @@ class EventController extends Controller {
         catch (QueryException $ex) {
             return redirect(route('events.event.edit', ['id' => $event->id]));
         }
-        
+
         $event->save();
         return redirect(route('events.event', ['id' => $event->id]));
     }
@@ -217,7 +217,7 @@ class EventController extends Controller {
 
     /**
      * Show the participants page.
-     * 
+     *
      * @param \Illuminate\Http\Request $request
      * @param int $id
      * @return \Illuminate\Http\Response
@@ -247,10 +247,10 @@ class EventController extends Controller {
         if (!EventPolicy::update($user, $event)) {
             return response('No permission to perform this request.', 403);
         }
-        
+
         // The input may be username or email
         $usernameOrEmail = $request->input('invite');
-        
+
         // Obtain user
         $user = User::where('username', $usernameOrEmail)->orWhere('email', $usernameOrEmail)->first();
         if (is_null($user))  {
@@ -276,7 +276,7 @@ class EventController extends Controller {
 
     /**
      * Manage an event invitation.
-     * 
+     *
      * @param  \Illuminate\Http\Request  $request
      * @param  String   $id
      * @param  int      $idEvent
@@ -287,7 +287,7 @@ class EventController extends Controller {
         if (is_null($event)) {
             return response('Event with the specified ID does not exist.', 404);
         }
-        
+
         $user = User::where('username', $username)->first();
         if (is_null($user)) {
             return response('User with the specified ID does not exist.', 404);
@@ -340,7 +340,7 @@ class EventController extends Controller {
         if (is_null($event)) {
             return response('Event with the specified ID does not exist.', 404);
         }
-        
+
         $user = User::find($idUser);
         if (is_null($user)) {
             return response('User with the specified ID does not exist.', 404);
@@ -351,7 +351,7 @@ class EventController extends Controller {
         if (!EventPolicy::update($user, $event)) {
             return response('No permission to perform this request.', 403);
         }
-        
+
         try {
             DB::table('participation')
                     ->where([['id_event', $id], ['id_user', $idUser], ['status', 'Invitation']])
@@ -366,7 +366,7 @@ class EventController extends Controller {
 
     /**
      * Cancel all the invitations for this event.
-     * 
+     *
      * @param \Illuminate\Http\Request $request
      * @param int $id
      * @return \Illuminate\Http\Response
@@ -397,7 +397,7 @@ class EventController extends Controller {
 
     /**
      * Send a request to join the event.
-     * 
+     *
      * @param \Illuminate\Http\Request $request
      * @param int $id
      * @return \Illuminate\Http\Response
@@ -437,7 +437,7 @@ class EventController extends Controller {
 
     /**
      * Manage a request to join the event.
-     * 
+     *
      * @param \Illuminate\Http\Request $request
      * @param int $id
      * @param string idUser
@@ -448,7 +448,7 @@ class EventController extends Controller {
         if (is_null($event)) {
             return response('Event with the specified ID does not exist.', 404);
         }
-        
+
         $user = User::find($idUser);
         if (is_null($user)) {
             return response('User with the specified ID does not exist.', 404);
@@ -470,7 +470,7 @@ class EventController extends Controller {
         if (!EventPolicy::update($user, $event)) {
             return response('No permission to perform this request.', 403);
         }
-        
+
         // Accept / Decline the join request
         DB::beginTransaction();
         try {
@@ -490,7 +490,7 @@ class EventController extends Controller {
 
     /**
      * Manage all the requests to join the event.
-     * 
+     *
      * @param \Illuminate\Http\Request $request
      * @param int $id
      * @return \Illuminate\Http\Response
@@ -511,7 +511,7 @@ class EventController extends Controller {
         if (!EventPolicy::update($user, $event)) {
             return response('No permission to perform this request.', 403);
         }
-        
+
         // Accept / Decline all the join requests
         DB::beginTransaction();
         try {
@@ -525,7 +525,7 @@ class EventController extends Controller {
             return response('The event doesn\'t have enough space for all the join requests to participate.', 400);
         }
         DB::commit();
-        
+
         return response('');
     }
 
