@@ -170,7 +170,14 @@ if ($editing) {
                 <input type="file" class="form-control" id="image" name="image" accept="image/x-png,image/jpeg">
             </div>
 
-            <input type="submit" class="btn btn-primary" value="{{ $editing ? "Edit" : "Create" }}">
+            <div class="row justify-content-around">
+                <div class="col-1">
+                    <input type="submit" class="btn btn-primary" value="{{ $editing ? "Edit" : "Create" }}">
+                </div>
+                <div class="col-1">
+                    <a href="{{ route('events.event.cancel', ['id' => $event->id]) }}" role="button" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
         </form>
     </div>
 </div>

@@ -382,6 +382,22 @@ class EventController extends Controller {
     }
 
     /**
+     * Cancel the specified event.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function cancel(Request $request, $id) {
+        $event = Event::findOrFail($id);
+
+        $this->authorize('update', $event);
+
+        $event->update(['cancelled' => 'true']);
+        return redirect(route('events.event', ['id' => $event->id]));
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Event  $event
