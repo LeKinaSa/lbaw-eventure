@@ -542,6 +542,7 @@ class EventController extends Controller {
         $this->authorize('update', $event);
 
         $event->update(['cancelled' => 'true']);
+        DB::table('participation')->where([['id_event', $event->id], ['status', 'JoinRequest']])->update(['status' => 'Declined']);
         return redirect(route('events.event', ['id' => $event->id]));
     }
 

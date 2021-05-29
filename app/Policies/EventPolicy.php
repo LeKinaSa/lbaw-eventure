@@ -128,11 +128,15 @@ class EventPolicy {
         if ($event->visibility === 'Private') {
             return false;
         }
-        
+
+        if ($event->cancelled) {
+            return false;
+        }
+
         if ($user->id === $event->id_organizer) {
             return false;
         }
-        
+
         return true;
     }
 
