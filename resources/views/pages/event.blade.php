@@ -14,7 +14,11 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
         </ol>
     </nav>
 
-    <h1 class="text-center mb-3">{{ $event->title }} <i class="fa {{ $event->visibility === 'Public' ? "fa-globe" : "fa-lock" }}"></i></h1>
+    <h1 class="text-center mb-3">
+        <i class="text-danger {{ $event->cancelled ? "fa fa-ban" : "" }}" title="Event Cancelled" aria-label="Event Cancelled"></i>
+        {{ $event->title }}
+        <i class="fa {{ $event->visibility === 'Public' ? "fa-globe" : "fa-lock" }}" title="{{ $event->visibility }} Event" aria-label="{{ $event->visibility }}"></i>
+    </h1>
 
     <div class="row mb-3">
         <div class="col-md-5 d-flex align-items-center justify-content-center">
@@ -41,6 +45,11 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
 
             <hr>
             
+            @if ($event->cancelled)
+            <p class="text-danger">
+                Event Cancelled
+            </p>
+            @endif
             <p>
                 {{ $event->description }}
             </p>
