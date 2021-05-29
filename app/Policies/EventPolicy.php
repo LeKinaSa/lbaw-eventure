@@ -78,11 +78,56 @@ class EventPolicy {
     }
 
     /**
-     * Determine whether the user can update an invitation.
+     * Determine whether the user can update the specified event's participations.
+     * 
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Event  $event
+     * @return mixed
      */
-    public function updateInvitation(User $user, User $invitedUser) {
+    public static function updateParticipation(?User $user, Event $event) {
+        if (is_null($user)) {
+            return false;
+        }
+        return $user->id === $event->id_organizer;
+    }
+
+    /**
+     * Determine whether the user can update an invitation.
+     * 
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\User  $invitedUser
+     * @return mixed
+     */
+    public static function updateInvitation(User $user, User $invitedUser) {
         // Only the invited user can update his own invitation
         return $user->id === $invitedUser->id;
+    }
+    
+    /**
+     * Determine whether the user can request to join the specified event.
+     * 
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Event  $event
+     * @return mixed
+     */
+    public static function requestToJoin(?User $user, Event $event) {
+        if (is_null($user)) {
+            return false;
+        }
+
+        if ($event->visibility === 'Private') {
+            return false;
+        }
+
+        if ($event->cancelled) {
+            return false;
+        }
+
+        if ($user->id === $event->id_organizer) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -118,26 +163,6 @@ class EventPolicy {
      */
     public function forceDelete(User $user, Event $event) {
         //
-    }
-
-    public static function requestToJoin(?User $user, Event $event) {
-        if (is_null($user)) {
-            return false;
-        }
-
-        if ($event->visibility === 'Private') {
-            return false;
-        }
-
-        if ($event->cancelled) {
-            return false;
-        }
-
-        if ($user->id === $event->id_organizer) {
-            return false;
-        }
-
-        return true;
     }
 
     public static function answerPolls(?User $user, Event $event) {

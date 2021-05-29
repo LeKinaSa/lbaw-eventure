@@ -244,7 +244,7 @@ class EventController extends Controller {
 
         // Authorization
         $user = Auth::user();
-        if (!EventPolicy::update($user, $event)) {
+        if (!EventPolicy::updateParticipation($user, $event)) {
             return response('No permission to perform this request.', 403);
         }
 
@@ -348,7 +348,7 @@ class EventController extends Controller {
 
         // Authorization
         $user = Auth::user();
-        if (!EventPolicy::update($user, $event)) {
+        if (!EventPolicy::updateParticipation($user, $event)) {
             return response('No permission to perform this request.', 403);
         }
 
@@ -379,7 +379,7 @@ class EventController extends Controller {
 
         // Authorization
         $user = Auth::user();
-        if (!EventPolicy::update($user, $event)) {
+        if (!EventPolicy::updateParticipation($user, $event)) {
             return response('No permission to perform this request.', 403);
         }
 
@@ -467,7 +467,7 @@ class EventController extends Controller {
 
         // Authorization
         $user = Auth::user();
-        if (!EventPolicy::update($user, $event)) {
+        if (!EventPolicy::updateParticipation($user, $event)) {
             return response('No permission to perform this request.', 403);
         }
 
@@ -508,7 +508,7 @@ class EventController extends Controller {
 
         // Authorization
         $user = Auth::user();
-        if (!EventPolicy::update($user, $event)) {
+        if (!EventPolicy::updateParticipation($user, $event)) {
             return response('No permission to perform this request.', 403);
         }
 
