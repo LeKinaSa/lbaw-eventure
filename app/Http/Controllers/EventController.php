@@ -248,6 +248,10 @@ class EventController extends Controller {
             return response('No permission to perform this request.', 403);
         }
 
+        if ($event->cancelled) {
+            return response('The event has been cancelled.', 400);
+        }
+
         // The input may be username or email
         $usernameOrEmail = $request->input('invite');
 

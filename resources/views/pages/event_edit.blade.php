@@ -171,11 +171,13 @@ if ($editing) {
             </div>
 
             <div class="row justify-content-around">
-                <div class="col-1">
+                <div class="col-3">
                     <input type="submit" class="btn btn-primary" value="{{ $editing ? "Edit" : "Create" }}">
                 </div>
-                <div class="col-1">
-                    <a href="{{ route('events.event.cancel', ['id' => $event->id]) }}" role="button" class="btn btn-danger">Cancel</a>
+                <div class="col-3">
+                    @if(!$event->cancelled)
+                    <a href="{{ route('events.event.cancel', ['id' => $event->id]) }}" role="button" class="btn btn-danger">Cancel this event</a>
+                    @endif
                 </div>
             </div>
         </form>
