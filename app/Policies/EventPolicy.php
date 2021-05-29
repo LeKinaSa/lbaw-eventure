@@ -85,6 +85,8 @@ class EventPolicy {
      * @return mixed
      */
     public static function updateParticipation(?User $user, Event $event) {
+        // Only the event organizer can update the event's participants
+        // Creating and deleting invitations, and updating join requests
         if (is_null($user)) {
             return false;
         }
@@ -128,6 +130,21 @@ class EventPolicy {
         }
 
         return true;
+    }
+
+    /**
+     * Determines whether the user can cancel the specified event.
+     * 
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Event  $event
+     * @return mixed
+     */
+    public static function cancel(?User $user, Event $event) {
+        // Only the event organizer can cancel the event
+        if (is_null($user)) {
+            return false;
+        }
+        return $user->id === $event->id_organizer;
     }
 
     /**

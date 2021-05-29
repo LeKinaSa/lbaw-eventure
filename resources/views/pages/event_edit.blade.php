@@ -169,14 +169,15 @@ if ($editing) {
                 <label for="image" class="h5 form-label">Event image</label>
                 <input type="file" class="form-control" id="image" name="image" accept="image/x-png,image/jpeg">
             </div>
-
+                
             <div class="row justify-content-around">
+                <span class="text-danger" id="eventCancellationError"></span>
                 <div class="col-3">
                     <input type="submit" class="btn btn-primary" value="{{ $editing ? "Edit" : "Create" }}">
                 </div>
                 <div class="col-3">
                     @if(!$event->cancelled)
-                    <a href="{{ route('events.event.cancel', ['id' => $event->id]) }}" role="button" class="btn btn-danger">Cancel this event</a>
+                    <a href="{{ route('events.event.cancel', ['id' => $event->id]) }}" role="button" class="btn btn-danger" id="eventCancellation">Cancel this event</a>
                     @endif
                 </div>
             </div>

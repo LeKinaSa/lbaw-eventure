@@ -33,7 +33,7 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
                     <a href="{{ route('events.event.participants', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Participants <i class="fa fa-users"></i></a>
                     @endif
                 </div>
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center p-2">
                     @if (Auth::id() === $event->id_organizer)
                     <a class="btn btn-secondary" href="{{ route('events.event.edit', ['id' => $event->id]) }}"><i class="fa fa-pencil"></i></a>
                     @endif

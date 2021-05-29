@@ -568,3 +568,22 @@ function updateAllJoinRequestHandler() {
     document.getElementById('join-requests').innerHTML = "";
 }
 
+
+// ----- Event Cancellation -----
+let eventCancellationButton = document.getElementById('eventCancellation');
+if (eventCancellationButton != null) {
+    eventCancellationButton.addEventListener('click', sendEventCancellationRequest);
+}
+
+function sendEventCancellationRequest(event) {
+    event.preventDefault();
+    sendAjaxRequest('POST', this.href, {}, eventCancellationHandler);
+}
+
+function eventCancellationHandler() {
+    if (this.status !== 200) {
+        document.getElementById('eventCancellationError').innerHTML = this.responseText;
+        return;
+    }
+    window.location.href = this.responseText;
+}
