@@ -98,8 +98,8 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
-        @endif
 
         <div class="col-md-9 pt-3">
             <section id="eventsOrganizer" class="row bg-light m-2 p-3">
