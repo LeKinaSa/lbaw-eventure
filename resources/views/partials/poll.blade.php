@@ -6,7 +6,7 @@ foreach ($options as $option) {
 }
 
 $canAnswer = App\Policies\EventPolicy::answerPolls(Auth::user(), $event);
-$answer = optional(optional(Auth::user())->pollAnswer($poll)->first())->id_poll_option;
+$answer = optional(optional(optional(Auth::user())->pollAnswer($poll))->first())->id_poll_option;
 @endphp
 
 <article class="col-md-6 mb-3" data-id="{{ $poll->id }}">

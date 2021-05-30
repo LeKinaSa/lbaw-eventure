@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Utils;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Event;
+use App\Policies\EventPolicy;
+
 use DB;
 use DateTime;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -52,6 +55,7 @@ class EventController extends Controller {
             'finishDate' => ['nullable', 'date_format:Y-m-d', Rule::requiredIf($request->has('finishTime') && $request->finishTime !== NULL)],
             'startTime' => 'nullable|date_format:H:i',
             'finishTime' => 'nullable|date_format:H:i',
+            'picture' => 'nullable|file|image|max:1000',
         ]);
     }
 
@@ -92,6 +96,17 @@ class EventController extends Controller {
             ]);
         }
 
+        $pictureBase64 = NULL;
+        $picture = $request->file('picture');
+
+        if ($request->hasFile('picture') && $picture->isValid()) {
+            $pictureBase64 = Utils::convertImageToBase64($picture);
+            
+            if (is_null($pictureBase64)) {
+                return back()->withErrors(['picture' => 'Uploaded picture has unsupported extension.']);
+            }
+        }
+
         try {
             $event = Event::create([
                 'title' => $request->input('title'),
@@ -104,6 +119,7 @@ class EventController extends Controller {
                 'id_category' => $request->input('category'),
                 'start_date' => $startTimestamp,
                 'end_date' => $finishTimestamp,
+                'picture' => $pictureBase64,
             ]);
         }
         catch (QueryException $ex) {
@@ -179,6 +195,17 @@ class EventController extends Controller {
             ]);
         }
 
+        $pictureBase64 = NULL;
+        $picture = $request->file('picture');
+
+        if ($request->hasFile('picture') && $picture->isValid()) {
+            $pictureBase64 = Utils::convertImageToBase64($picture);
+            
+            if (is_null($pictureBase64)) {
+                return back()->withErrors(['picture' => 'Uploaded picture has unsupported extension.']);
+            }
+        }
+
         try {
             $event->update([
                 'title' => $request->input('title'),
@@ -191,6 +218,7 @@ class EventController extends Controller {
                 'id_category' => $request->input('category'),
                 'start_date' => $startTimestamp,
                 'end_date' => $finishTimestamp,
+                'picture' => $pictureBase64,
             ]);
         }
         catch (QueryException $ex) {
@@ -389,5 +417,103 @@ class EventController extends Controller {
      */
     public function destroy(Event $event) {
         //
+    }
+
+    /**
+     * Returns the events that match the specified search request.
+     * Queries are limited to a maximum of 50 events, to prevent generic searches.
+     * @param \Illuminate\Http\Request $request
+     */
+    public function getSearchEvents(Request $request) {
+        $query = $request->input('query');
+        $sql = Event::join('user', 'user.id', '=', 'event.id_organizer')
+                ->select('event.*', 'user.username', 'user.name')
+                ->selectRaw('ts_rank(keywords, to_tsquery(\'english\', ?)) AS "rank"', [$query])
+                ->whereRaw('keywords @@ to_tsquery(\'english\', ?)', [$query]);
+        
+        if ($request->input('startDate') !== null) {
+            $sql = $sql->where('start_date', '>=', $request->input('startDate'));
+        }
+
+        if ($request->input('endDate') !== null) {
+            $sql = $sql->where('end_date', '<=', $request->input('endDate'));
+        }
+
+        if ($request->input('category') !== null) {
+            $sql = $sql->where('id_category', '=', $request->input('category'));
+        }
+
+        if ($request->input('types') !== null) {
+            $types = explode(',', $request->input('types'));
+            $sql = $sql->where(function ($query) use($types) {
+                foreach ($types as $idx => $type) {
+                    if ($idx === 0) {
+                        $query->where('type', '=', $type);
+                    }
+                    else {
+                        $query->orWhere('type', '=', $type);
+                    }
+                }
+            });
+        }
+
+        $sql = $sql->orderBy('rank', 'desc')
+                ->limit(50);
+        
+        $events = $sql->get()->filter(function($v) {
+            $user = Auth::user() ?? Auth::guard('admin')->user();
+            return EventPolicy::view($user, $v);
+        });
+        
+        return $events;
+    }
+
+    /**
+     * @return \
+     */
+    private static function searchValidator(Request $request) {
+        return Validator::make($request->all(), [
+            'query' => 'required|string|max:500',
+            'startDate' => 'nullable|date',
+            'endDate' => 'nullable|date',
+            'category' => 'nullable|integer|exists:category,id',
+            'types' => 'nullable|string',
+        ]);
+    }
+
+    /**
+     * Show the results page for event search.
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function showSearchResults(Request $request) {
+        EventController::searchValidator($request)->validate();
+
+        try {
+            $events = $this->getSearchEvents($request);
+        }
+        catch (QueryException $e) {
+            return response('A database error occurred.', 500);
+        }
+
+        $categories = Category::get();
+
+        return view('pages.search_results', ['events' => $events, 'categories' => $categories]);
+    }
+    
+    public function getSearchResults(Request $request) {
+        $validator = EventController::searchValidator($request);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
+        }
+
+        try {
+            $events = $this->getSearchEvents($request);
+        }
+        catch (QueryException $e) {
+            return response('A database error occurred.', 500);
+        }
+
+        return view('partials.search_results', ['events' => $events]);
     }
 }
