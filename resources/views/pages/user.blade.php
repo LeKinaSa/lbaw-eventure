@@ -39,12 +39,12 @@
                 @if (!is_null(Auth::guard('admin')->user()))
                     @include('partials.suspension_ban_status')
                     @if (is_null($ban) && is_null($suspension))
-                    <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#suspendUserModal">
+                    <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#suspendUserModal" id="suspendUserButton">
                     Suspend user <i class="fa fa-calendar"></i>
                     </button>
                     @endif
                     @if (is_null($ban))
-                    <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#banUserModal">
+                    <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#banUserModal" id="banUserButton">
                     Ban user <i class="fa fa-ban"></i>
                     </button>
                     @endif
@@ -60,7 +60,9 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form>
+                            <form method="POST" action="{{ route('api.users.user.suspensions', ['username' => $user->username]) }}" id="suspendUserForm">
+                                @csrf
+
                                 <div class="mb-3">
                                     <label for="duration" class="form-label">Duration (days) <span class="text-danger fw-bold">*</span></label>
                                     <input type="number" class="form-control" id="duration" name="duration" min="1" max="100" required>
@@ -68,8 +70,10 @@
                                 
                                 <div class="mb-3">
                                     <label for="suspensionReason" class="form-label">Reason <span class="text-danger fw-bold">*</span></label>
-                                    <input type="text" class="form-control" id="suspensionReason" name="reason" required>
+                                    <input type="text" class="form-control" id="suspensionReason" name="reason" maxlength="300" required>
                                 </div>
+
+                                <p class="px-1 text-danger" id="suspendUserError"></p>
                                 
                                 <div class="modal-footer">
                                     <input type="submit" class="btn btn-warning" value="Suspend">
@@ -90,25 +94,6 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <!--
-                            <p><b>Warning:</b> deleting your account is irreversible. All the events you are organizing and
-                            comments you have posted will be permanently deleted. Votes you made on polls will also be removed.</p>
-
-                            <p>If you are sure you wish to delete your account, please enter your current password below.</p>
-                            
-                            <form method="POST" action="{{ route('users.profile.delete', ['username' => $user->username]) }}">
-                                {{ csrf_field() }}
-
-                                @method('DELETE')
-                                <div class="mb-3">
-                                    <label for="passwordDelete" class="form-label">Current Password *</label>
-                                    <input type="password" class="form-control" id="passwordDelete" name="password" required>
-                                </div>
-                                <div class="modal-footer">
-                                    <input type="submit" class="btn btn-danger" value="Delete">
-                                </div>
-                            </form>
-                            -->
                         </div>
                     </div>
                 </div>

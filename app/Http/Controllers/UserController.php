@@ -68,7 +68,7 @@ class UserController extends Controller {
             }
         }
 
-        $suspension = Suspension::where('id_user', $user->id)->where('until', '<=', date('Y-m-d'))->first();
+        $suspension = Suspension::where('id_user', $user->id)->where('until', '>', date('Y-m-d'))->first();
         $ban = BannedUser::where('id_user', $user->id)->first();
 
         return view('pages.user', ['user' => $user, 'eventsOrganizing' => $eventsOrganizing, 'eventsParticipatingIn' => $eventsParticipatingIn,
