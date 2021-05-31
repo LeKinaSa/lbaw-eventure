@@ -33,6 +33,7 @@ DROP FUNCTION IF EXISTS match_during_event();
 DROP FUNCTION IF EXISTS account_deletion();
 DROP FUNCTION IF EXISTS update_event_keywords();
 
+DROP TABLE IF EXISTS password_resets;
 DROP TABLE IF EXISTS event_tag;
 DROP TABLE IF EXISTS participation;
 DROP TABLE IF EXISTS comment;
@@ -206,6 +207,12 @@ CREATE TABLE event_tag (
     id_event INTEGER REFERENCES "event"(id) ON DELETE CASCADE,
     tag_name TEXT NOT NULL,
     PRIMARY KEY (id_event, tag_name)
+);
+
+CREATE TABLE password_resets (
+    email TEXT,
+    token TEXT,
+    created_at TIMESTAMP
 );
 
 
