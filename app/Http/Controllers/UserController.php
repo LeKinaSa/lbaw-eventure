@@ -187,6 +187,13 @@ class UserController extends Controller {
         return view('pages.user_events', ['user' => $user, 'eventsOrganizing' => $eventsOrganizing, 'eventsParticipatingIn' => $eventsParticipatingIn]);
     }
 
+    public function showInvitations($username) {
+        $user = User::where('username', $username)->firstOrFail();
+        $this->authorize('update', $user); // Other users cannot view a user's invitations
+
+        return view('pages.user_invitations', ['user' => $user]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

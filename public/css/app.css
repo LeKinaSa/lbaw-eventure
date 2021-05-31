@@ -70,3 +70,8 @@ img.google {
 .show-whitespace {
     white-space: pre-wrap;
 }
+
+.card-invitation {
+    width: 100%;
+    max-width: 200px;
+}

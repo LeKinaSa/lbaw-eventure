@@ -21,20 +21,24 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
             <img src="{{ is_null($event->picture) ? asset('img/event_default.png') : 'data:image/jpeg;base64, ' . $event->picture }}" class="img-fluid rounded" alt="Event image">
         </div>
         <div class="col-md-7 p-3">
-            <div class="d-flex justify-content-between mb-2">
-                <div class="d-flex gap-2">
-                    <a href="#" role="button" class="btn btn-primary">Results</a>
+            <div class="d-flex justify-content-between">
+                <div class="d-flex gap-2 align-items-center">
+                    <a href="#" role="button" class="btn btn-primary">Results <i class="fa fa-trophy"></i></a>
                     @if (Auth::id() === $event->id_organizer)
-                    <a href="{{ route('events.event.invitations', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Invitations</a>
-                    @endif
-                    @if (Auth::check() && (App\Policies\UserPolicy::canRequestToJoin(Auth::user(), $event)))
-                    <a href="{{ route('events.event.joinrequest', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Request to Join</a>
+                    <a href="{{ route('events.event.invitations', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Invitations <i class="fa fa-envelope"></i></a>
+                    <a href="{{ route('events.event.participants', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Participants <i class="fa fa-users"></i></a>
                     @endif
                 </div>
-                @if (Auth::id() === $event->id_organizer)
-                <a class="btn btn-secondary" href="{{ route('events.event.edit', ['id' => $event->id]) }}"><i class="fa fa-pencil"></i></a>
-                @endif
+                <div class="d-flex align-items-center">
+                    @if (Auth::id() === $event->id_organizer)
+                    <a class="btn btn-secondary" href="{{ route('events.event.edit', ['id' => $event->id]) }}"><i class="fa fa-pencil"></i></a>
+                    @endif
+                    <div id="requestToJoin" class="d-flex gap-2 align-items-center">
+                        @include('partials.event_request_to_join')
+                    </div>
+                </div>
             </div>
+
             <hr>
             
             <p>

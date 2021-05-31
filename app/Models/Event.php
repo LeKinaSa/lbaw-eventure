@@ -26,7 +26,7 @@ class Event extends Model {
      */
     protected $fillable = [
         'title', 'id_organizer', 'visibility', 'description', 'picture', 'start_date', 'end_date',
-        'type', 'location', 'max_attendance', 'cancelled', 'id_category', 
+        'type', 'location', 'max_attendance', 'n_participants', 'cancelled', 'id_category',
         'win_points', 'draw_points', 'loss_points', 'leaderboard',
     ];
 
@@ -69,7 +69,15 @@ class Event extends Model {
         return $this->usersRelatedTo()->where('status', 'JoinRequest');
     }
 
+    public function rejectedParticipants() {
+        return $this->usersRelatedTo()->where('status', 'Declined');
+    }
+
     public function getTypeFormatted() {
         return Event::FORMATTED_TYPES[$this->type];
+    }
+
+    public function limitedAttendance() {
+        return $this->max_attendance !== null;
     }
 }
