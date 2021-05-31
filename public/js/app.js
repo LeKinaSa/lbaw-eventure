@@ -48,6 +48,10 @@ function encodeForAjax(data) {
 function sendAjaxRequest(method, url, data, handler, handlerData = {}, acceptHeader = 'text/html') {
     let request = new XMLHttpRequest();
 
+    if (method.toUpperCase() === 'GET') {
+        url += '?' + encodeForAjax(data);
+    }
+
     request.open(method, url, true);
     request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -55,7 +59,13 @@ function sendAjaxRequest(method, url, data, handler, handlerData = {}, acceptHea
     request.addEventListener('load', function() {
         handler.call(this, handlerData);
     });
-    request.send(encodeForAjax(data));
+
+    if (method.toUpperCase() === 'GET') {
+        request.send();
+    }
+    else {
+        request.send(encodeForAjax(data));
+    }
 }
 
 // ----- Polls API -----
@@ -568,3 +578,66 @@ function updateAllJoinRequestHandler() {
     document.getElementById('join-requests').innerHTML = "";
 }
 
+// ----- Search API -----
+
+// Ajax will be used for the search events form only when in the search results page
+let searchEventsForm = document.getElementById('searchEventsForm');
+if (searchEventsForm !== null) {
+    searchEventsForm.addEventListener('submit', sendSearchEventsRequest);
+}
+
+let searchFiltersSection = document.getElementById('searchFilters');
+let searchEventsSpinner = document.getElementById('searchResultsSpinner');
+let searchEventsError = document.getElementById('searchEventsError');
+
+for (let input of document.querySelectorAll('#searchFilters input, select')) {
+    input.addEventListener('change', sendSearchEventsRequest);
+}
+
+function sendSearchEventsRequest(event) {
+    if (event.type === 'submit') {
+        event.preventDefault();
+    }
+
+    let query = searchEventsForm.querySelector('input[name=query]').value;
+    let startDate = searchFiltersSection.querySelector('input[name=startDate]').value;
+    let endDate = searchFiltersSection.querySelector('input[name=endDate]').value;
+    let category = searchFiltersSection.querySelector('select[name=category]').value;
+
+    let data = {
+        query: query,
+    };
+
+    if (startDate !== null && startDate !== '') data.startDate = startDate;
+    if (endDate !== null && endDate !== '') data.endDate = endDate;
+    if (category !== null && category !== '') data.category = category;
+
+    let checkboxes = searchFiltersSection.querySelectorAll('#typeCheckboxes input');
+    let types = [];
+
+    for (let checkbox of searchFiltersSection.querySelectorAll('#typeCheckboxes input')) {
+        if (checkbox.checked) {
+            types.push(checkbox.value);
+        }
+    }
+
+    if (types.length !== 0 && types.length !== checkboxes.length) {
+        data.types = types;
+    }
+
+    searchEventsSpinner.ariaHidden = false;
+    searchEventsSpinner.removeAttribute('hidden');
+    sendAjaxRequest(searchEventsForm.method, searchEventsForm.action, data, searchEventsHandler);
+}
+
+function searchEventsHandler() {
+    searchEventsSpinner.ariaHidden = true;
+    searchEventsSpinner.setAttribute('hidden', '');
+
+    if (this.status !== 200) {
+        searchEventsError.innerHTML = this.responseText;
+        return;
+    }
+
+    document.getElementById('searchResults').innerHTML = this.responseText;
+}

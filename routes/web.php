@@ -51,11 +51,15 @@ Route::post('/api/events/{id}/join-requests', 'EventController@createJoinRequest
 Route::patch('/api/events/{id}/join-requests/{idUser}', 'EventController@updateJoinRequest')->name('events.event.join-requests.join-request.update');
 Route::patch('/api/events/{id}/join-requests', 'EventController@updateAllJoinRequests')->name('events.event.join-requests.update');
 
+Route::get('/events', 'EventController@showSearchResults')->name('events.search-results');
+Route::get('/api/events', 'EventController@getSearchResults')->name('api.events.search-results');
+
 // Polls API
 Route::post('/api/events/{id}/polls', 'PollController@store')->name('api.events.event.polls.new');
 Route::put('/api/events/{id}/polls/{idPoll}/answer', 'PollController@putAnswer')->name('api.events.event.polls.poll.answer.put');
 Route::delete('/api/events/{id}/polls/{idPoll}/answer', 'PollController@deleteAnswer')->name('api.events.event.polls.poll.answer.delete');
 
+// Comments API
 Route::post('/api/events/{id}/comments', 'CommentController@store')->name('api.events.event.comments.new');
 Route::delete('/api/events/{idEvent}/comments/{id}', 'CommentController@destroy')->name('api.events.event.comments.comment.delete');
 
@@ -65,6 +69,10 @@ Route::post('/sign-in', 'Auth\LoginController@login');
 Route::post('/sign-out', 'Auth\LoginController@logout')->name('sign-out');
 Route::get('/sign-up', 'Auth\RegisterController@showRegistrationForm')->name('sign-up');
 Route::post('/sign-up', 'Auth\RegisterController@register');
+Route::get('/forgot-password', 'Auth\ForgotPasswordController@show')->name('password.request');
+Route::post('/reset-password', 'Auth\ForgotPasswordController@sendEmail')->name('password.email');
+Route::get('/recover-password/{token}', 'Auth\ResetPasswordController@show')->name('password.reset');
+Route::post('/recover-password', 'Auth\ResetPasswordController@recoverPassword')->name('password.update');
 
 // Administrator authentication
 Route::get('/admin/sign-in', 'Auth\AdminLoginController@showLoginForm')->name('admin.sign-in');
