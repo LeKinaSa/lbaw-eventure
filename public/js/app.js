@@ -193,7 +193,7 @@ function pollAnswerHandler(data) {
         return;
     }
 
-    let query = 'article[data-id=\"' + data.id + '\"';
+    let query = '#polls article[data-id=\"' + data.id + '\"';
 
     let article = document.querySelector(query);
     article.outerHTML = this.responseText;
