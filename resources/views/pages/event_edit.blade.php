@@ -20,8 +20,8 @@ if ($editing) {
     </nav>
     
     <div class="row justify-content-md-center">
-        <form method="POST" class="col-md-8" action="{{ $editing ? route('events.event.edit', ['id' => $event->id]) : route('events.new') }}">
-            {{ csrf_field() }}
+        <form method="POST" enctype="multipart/form-data" class="col-md-8" action="{{ $editing ? route('events.event.edit', ['id' => $event->id]) : route('events.new') }}">
+            @csrf
 
             <h1 class="text-center">{{ $editing ? "Edit" : "Create" }} Event</h1>
 
@@ -166,8 +166,11 @@ if ($editing) {
             </div>
 
             <div class="mb-3">
-                <label for="image" class="h5 form-label">Event image</label>
-                <input type="file" class="form-control" id="image" name="image" accept="image/x-png,image/jpeg">
+                <label for="picture" class="h5 form-label">Event image</label>
+                <input type="file" class="form-control" id="picture" name="picture" accept="image/x-png,image/jpeg">
+                @error ('picture')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
                 
             <div class="row justify-content-around">

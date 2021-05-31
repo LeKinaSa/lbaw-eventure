@@ -1,0 +1,1 @@
+@each('partials.event_search', $events, 'event', 'partials.search_results_empty')
