@@ -21,21 +21,21 @@
                 @csrf
 
                 <div class="mb-2">
-                    <label for="email" class="form-label">Email address *</label>
+                    <label for="email" class="form-label">Email address <span class="text-danger">*</span></label>
                     <input type="email" class="form-control" id="email" name="email" required>
                     @error ('email')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="mb-2">
-                    <label for="password" class="form-label">Password *</label>
+                    <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
                     <input type="password" class="form-control" id="password" name="password" required>
                     @error ('password')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="passwordConfirmation" class="form-label">Confirm your Password *</label>
+                    <label for="passwordConfirmation" class="form-label">Confirm your Password <span class="text-danger">*</span></label>
                     <input type="password" class="form-control" id="passwordConfirmation" name="password_confirmation" required>
                     @error ('password_confirmation')
                     <span class="text-danger">{{ $message }}</span>

@@ -21,7 +21,7 @@
                 @csrf
 
                 <div class="mb-2">
-                    <label for="email" class="form-label">Email address *</label>
+                    <label for="email" class="form-label">Email address <span class="text-danger">*</span></label>
                     <input type="email" class="form-control" id="email" name="email" required>
                     @error ('email')
                     <span class="text-danger">{{ $message }}</span>
