@@ -45,7 +45,11 @@ class ForgotPasswordController extends Controller {
         );
 
         return $status === Password::RESET_LINK_SENT
-                ? view('auth.email_sent')
+                ? redirect(route('password.email.sent'))
                 : back()->withErrors(['email' => __($status)]);
+    }
+
+    public showEmailSent() {
+        return view('auth.email_sent');
     }
 }
