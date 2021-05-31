@@ -63,7 +63,10 @@ class CommentPolicy {
      * @return mixed
      */
     public function delete(?User $user, Comment $comment) {
-        // TODO: admins can also delete comments
+        if (!is_null($user) && $user instanceof Administrator) {
+            // Admnistrators can delete any comment
+            return true;
+        }
         return optional($user)->id === $comment->id_author;
     }
 
