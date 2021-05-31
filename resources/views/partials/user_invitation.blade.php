@@ -1,6 +1,9 @@
 <article class="card card-invitation">
     <div class="card-body">
-        <h5 class="card-title text-center"><a href="{{ route('events.event', ['id' => $event->id]) }}">{{ $event->title }}</a></h5>
+        <h5 class="card-title text-center">
+            <i class="text-danger {{ $event->cancelled ? "fa fa-ban" : "" }}" title="Event Cancelled" aria-label="Event Cancelled"></i>
+            <a href="{{ route('events.event', ['id' => $event->id]) }}">{{ $event->title }}</a>
+        </h5>
         <ul class="list-unstyled mb-0">
             <li class="card-text"><i class="fs-5 col-2 fa fa-info" aria-label="Date"></i>{{ $event->getTypeFormatted() }}</li>
             @if (!is_null($event->start_date))

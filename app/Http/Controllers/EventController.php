@@ -270,8 +270,12 @@ class EventController extends Controller {
 
         // Authorization
         $user = Auth::user();
-        if (!EventPolicy::update($user, $event)) {
+        if (!EventPolicy::updateParticipation($user, $event)) {
             return response('No permission to perform this request.', 403);
+        }
+
+        if ($event->cancelled) {
+            return response('The event has been cancelled.', 400);
         }
 
         // The input may be username or email
@@ -374,7 +378,7 @@ class EventController extends Controller {
 
         // Authorization
         $user = Auth::user();
-        if (!EventPolicy::update($user, $event)) {
+        if (!EventPolicy::updateParticipation($user, $event)) {
             return response('No permission to perform this request.', 403);
         }
 
@@ -405,7 +409,7 @@ class EventController extends Controller {
 
         // Authorization
         $user = Auth::user();
-        if (!EventPolicy::update($user, $event)) {
+        if (!EventPolicy::updateParticipation($user, $event)) {
             return response('No permission to perform this request.', 403);
         }
 
@@ -493,7 +497,7 @@ class EventController extends Controller {
 
         // Authorization
         $user = Auth::user();
-        if (!EventPolicy::update($user, $event)) {
+        if (!EventPolicy::updateParticipation($user, $event)) {
             return response('No permission to perform this request.', 403);
         }
 
@@ -534,7 +538,7 @@ class EventController extends Controller {
 
         // Authorization
         $user = Auth::user();
-        if (!EventPolicy::update($user, $event)) {
+        if (!EventPolicy::updateParticipation($user, $event)) {
             return response('No permission to perform this request.', 403);
         }
 
@@ -553,6 +557,38 @@ class EventController extends Controller {
         DB::commit();
 
         return response('');
+    }
+
+    /**
+     * Cancel the specified event.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function cancel(Request $request, $id) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+        if ($event->cancelled) {
+            return response('');
+        }
+
+        // Authorization
+        $user = Auth::user();
+        if (!EventPolicy::cancel($user, $event)) {
+            return response('No permission to perform this request.', 403);
+        }
+
+        try {
+            $event->update(['cancelled' => 'true']);
+            DB::table('participation')->where([['id_event', $event->id], ['status', 'JoinRequest']])->update(['status' => 'Declined']);
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+        return response(route('events.event', ['id' => $event->id]));
     }
 
     /**
