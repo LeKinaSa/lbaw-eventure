@@ -179,7 +179,7 @@ if ($editing) {
                     <input type="submit" class="btn btn-primary" value="{{ $editing ? "Edit" : "Create" }}">
                 </div>
                 <div class="col-3">
-                    @if(!$event->cancelled)
+                    @if($editing && !$event->cancelled)
                     <a href="{{ route('events.event.cancel', ['id' => $event->id]) }}" role="button" class="btn btn-danger" id="eventCancellation">Cancel this event</a>
                     @endif
                 </div>
