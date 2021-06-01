@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Utils;
 use App\Models\User;
 use App\Policies\EventPolicy;
 
@@ -107,35 +108,11 @@ class UserController extends Controller {
         $picture = $request->file('picture');
 
         if ($request->hasFile('picture') && $picture->isValid()) {
-            // A valid image was uploaded
-            // TODO: move this to a separate function
+            $pictureBase64 = Utils::convertImageToBase64($picture);
 
-            list($width, $height) = getimagesize($picture);
-
-            if ($picture->extension() === 'png') {
-                $original = imagecreatefrompng($picture);
+            if (is_null($pictureBase64)) {
+                return back()->withErrors(['picture' => 'Uploaded picture has unsupported extension.']);
             }
-            else if ($picture->extension() === 'jpeg' || $picture->extension() === 'jpg') {
-                $original = imagecreatefromjpeg($picture);
-            }
-            else {
-                return back()->withErrors(['picture' => 'Uploaded picture has an unsupported extension.']);
-            }
-
-            $square = min($width, $height);
-
-            // Resize the uploaded image to 500x500 pixels
-            $resized = imagecreatetruecolor(500, 500);
-            imagecopyresized($resized, $original, 0, 0, ($width > $square) ? ($width - $square) / 2 : 0,
-                    ($height > $square) ? ($height - $square) / 2 : 0, 500, 500, $square, $square);
-
-            // Using output buffering to store the result of imagejpeg into a string
-            ob_start();
-            imagejpeg($resized);
-            $pictureString = ob_get_contents(); // Read string from buffer
-            ob_end_clean();
-
-            $pictureBase64 = base64_encode($pictureString);
         }
 
         $gender = $request->input('gender') === 'Unspecified' ? NULL : $request->input('gender');
@@ -208,6 +185,13 @@ class UserController extends Controller {
         }
 
         return view('pages.user_events', ['user' => $user, 'eventsOrganizing' => $eventsOrganizing, 'eventsParticipatingIn' => $eventsParticipatingIn]);
+    }
+
+    public function showInvitations($username) {
+        $user = User::where('username', $username)->firstOrFail();
+        $this->authorize('update', $user); // Other users cannot view a user's invitations
+
+        return view('pages.user_invitations', ['user' => $user]);
     }
 
     /**

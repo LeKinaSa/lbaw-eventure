@@ -48,6 +48,10 @@ function encodeForAjax(data) {
 function sendAjaxRequest(method, url, data, handler, handlerData = {}, acceptHeader = 'text/html') {
     let request = new XMLHttpRequest();
 
+    if (method.toUpperCase() === 'GET') {
+        url += '?' + encodeForAjax(data);
+    }
+
     request.open(method, url, true);
     request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -55,8 +59,16 @@ function sendAjaxRequest(method, url, data, handler, handlerData = {}, acceptHea
     request.addEventListener('load', function() {
         handler.call(this, handlerData);
     });
-    request.send(encodeForAjax(data));
+
+    if (method.toUpperCase() === 'GET') {
+        request.send();
+    }
+    else {
+        request.send(encodeForAjax(data));
+    }
 }
+
+// ----- Polls API -----
 
 let createPollForm = document.getElementById('createPollForm');
 let createPollOptions = document.getElementById('createPollOptions');
@@ -159,6 +171,63 @@ function addPollOption() {
     }
 }
 
+function sendPutPollAnswerRequest() {
+    let form = this.closest('form');
+
+    let csrfToken = form.querySelector('input[name=_token]').value;
+    let method = form.querySelector('input[name=_method]').value;
+
+    let option = this.value;
+
+    let data = {
+        _token: csrfToken,
+        option: option,
+    };
+
+    sendAjaxRequest(method, form.action, data, pollAnswerHandler, { id: this.closest('article').getAttribute('data-id') });
+}
+
+function pollAnswerHandler(data) {
+    if (this.status !== 200) {
+        document.getElementById('pollError').innerHTML = this.responseText;
+        return;
+    }
+
+    let query = '#polls article[data-id=\"' + data.id + '\"';
+
+    let article = document.querySelector(query);
+    article.outerHTML = this.responseText;
+    article = document.querySelector(query); // We need to run querySelector again since the article HTML has changed
+
+    // Add event listeners
+    let inputs = article.querySelectorAll('.input-poll-answer');
+    for (let input of inputs) {
+        input.addEventListener('change', sendPutPollAnswerRequest);
+    }
+
+    let deleteForm = article.querySelector('.form-remove-poll-answer');
+    if (deleteForm != null) deleteForm.addEventListener('submit', sendDeletePollAnswerRequest);
+}
+
+function sendDeletePollAnswerRequest(event) {
+    event.preventDefault();
+
+    let csrfToken = this.querySelector('input[name=_token]').value;
+    let method = this.querySelector('input[name=_method]').value;
+
+    sendAjaxRequest(method, this.action, { _token: csrfToken }, pollAnswerHandler, {id: this.closest('article').getAttribute('data-id') });
+}
+
+let pollAnswerInputs = document.querySelectorAll('.input-poll-answer');
+for (let input of pollAnswerInputs) {
+    input.addEventListener('change', sendPutPollAnswerRequest);
+}
+
+let removePollAnswerForms = document.querySelectorAll('.form-remove-poll-answer');
+for (let form of removePollAnswerForms) {
+    form.addEventListener('submit', sendDeletePollAnswerRequest);
+}
+
 // ----- Comments API -----
 
 // ----- Button Event Listeners -----
@@ -244,7 +313,7 @@ function postCommentHandler(data) {
 
             replyForm.hidden = true;
             replyForm.querySelector('textarea[name=text]').value = "";
-            parentCommentChildren.innerHTML = this.responseText + parentCommentChildren.innerHTML;
+            parentCommentChildren.insertAdjacentHTML('afterbegin', this.responseText);
 
             newForm = parentCommentChildren.querySelector('form.form-comment-post');
             replyButton = parentCommentChildren.querySelector('button.button-comment-reply');
@@ -283,6 +352,23 @@ if (sendInvitationForm != null) {
     sendInvitationForm.addEventListener('submit', sendCreateInvitationRequest);
 }
 
+function clearInvitationsPageErrors() {
+    let invitationsError = document.getElementById('invitationsError');
+    if (invitationsError !== null) {
+        invitationsError.innerHTML = "";
+    }
+
+    let cancelInvitationsError = document.getElementById('cancelInvitationsError');
+    if (cancelInvitationsError !== null) {
+        cancelInvitationsError.innerHTML = "";
+    }
+    
+    let updateJoinRequestError = document.getElementById('updateJoinRequestError');
+    if (updateJoinRequestError !== null) {
+        updateJoinRequestError.innerHTML = "";
+    }
+}
+
 function sendCreateInvitationRequest(event) {
     event.preventDefault();
     let csrfToken = this.querySelector('input[name=_token]').value;
@@ -297,6 +383,7 @@ function sendCreateInvitationRequest(event) {
 }
 
 function createInvitationHandler() {
+    clearInvitationsPageErrors();
     if (this.status !== 200) {
         document.getElementById('invitationsError').innerHTML = this.responseText;
         return;
@@ -306,7 +393,7 @@ function createInvitationHandler() {
     invite.value = '';
     
     let invitations = document.getElementById('invitations');
-    invitations.innerHTML = this.responseText + invitations.innerHTML;
+    invitations.insertAdjacentHTML('afterbegin', this.responseText);
 
     let deleteForm = invitations.querySelector('.form-delete-invitation');
     deleteForm.addEventListener('submit', sendDeleteInvitationRequest);
@@ -318,8 +405,6 @@ for (let form of deleteInvitationForms) {
 }
 
 function sendDeleteInvitationRequest(event) {
-    console.log('got here!');
-
     event.preventDefault();
     let csrfToken = this.querySelector('input[name=_token]').value;
     let method = this.querySelector('input[name=_method]').value;
@@ -333,8 +418,9 @@ function sendDeleteInvitationRequest(event) {
 }
 
 function deleteInvitationHandler(data) {
+    clearInvitationsPageErrors();
     if (this.status !== 200) {
-        document.getElementById('invitationsError').innerHTML = this.responseText;
+        document.getElementById('cancelInvitationsError').innerHTML = this.responseText;
         return;
     }
 
@@ -376,4 +462,236 @@ function updateLeaderboardSettingsHandler() {
         // TODO: error handling
         return;
     }
+let deleteAllForm = document.querySelector('.form-delete-all-invitations');
+if (deleteAllForm !== null) {
+    deleteAllForm.addEventListener('submit', sendDeleteAllInvitationsRequest);
+}
+
+function sendDeleteAllInvitationsRequest(event) {
+    event.preventDefault();
+    let csrfToken = this.querySelector('input[name=_token]').value;
+    let method = this.querySelector('input[name=_method]').value;
+
+    let data = {
+        _token: csrfToken,
+    };
+
+    sendAjaxRequest(method, this.action, data, deleteAllInvitationsHandler);
+}
+
+function deleteAllInvitationsHandler() {
+    clearInvitationsPageErrors();
+    if (this.status !== 200) {
+        document.getElementById('cancelInvitationsError').innerHTML = this.responseText;
+        return;
+    }
+
+    document.getElementById('invitations').innerHTML = "";
+}
+
+let manageInvitationForms = document.querySelectorAll('.form-manage-invitation');
+for (let form of manageInvitationForms) {
+    form.addEventListener('submit', sendUpdateInvitationRequest);
+}
+
+function sendUpdateInvitationRequest(event) {
+    event.preventDefault();
+
+    let csrfToken = this.querySelector('input[name=_token]').value;
+    let method = this.querySelector('input[name=_method]').value;
+    let status = this.querySelector('input[name=status]').value;
+
+    let invitation = this.parentNode;
+    while (invitation.className !== 'card card-invitation') {
+        invitation = invitation.parentNode;
+    }
+
+    let data = {
+        _token: csrfToken,
+        status: status,
+    };
+
+    sendAjaxRequest(method, this.action, data, updateInvitationHandler, { invitation: invitation });
+}
+
+function updateInvitationHandler(data) {
+    if (this.status !== 200) {
+        document.getElementById('updateInvitationError').innerHTML = this.responseText;
+        return;
+    }
+
+    document.getElementById('updateInvitationError').innerHTML = "";
+    data.invitation.remove();
+}
+
+// ----- Join Requests API -----
+
+let joinRequestButton = document.getElementById('joinRequestButton');
+if (joinRequestButton != null) {
+    joinRequestButton.addEventListener('click', sendCreateJoinRequestRequest);
+}
+
+function sendCreateJoinRequestRequest(event) {
+    event.preventDefault();
+    sendAjaxRequest('POST', this.href, {}, createJoinRequestHandler);
+}
+
+function createJoinRequestHandler() {
+    if (this.status !== 200) {
+        document.getElementById('joinRequestError').innerHTML = this.responseText;
+        return;
+    }
+    
+    document.getElementById('joinRequestError').innerHTML = "";
+    let requestToJoinDiv = document.getElementById('requestToJoin');
+    requestToJoinDiv.innerHTML = this.responseText;
+}
+
+let manageJoinRequestForms = document.querySelectorAll('.form-manage-join-request');
+for (let form of manageJoinRequestForms) {
+    form.addEventListener('submit', sendUpdateJoinRequestRequest);
+}
+
+function sendUpdateJoinRequestRequest(event) {
+    event.preventDefault();
+    let csrfToken = this.querySelector('input[name=_token]').value;
+    let method = this.querySelector('input[name=_method]').value;
+    let status = this.querySelector('input[name=status]').value;
+    
+    let joinRequest = this.parentNode;
+    while (joinRequest.className !== 'card') {
+        joinRequest = joinRequest.parentNode;
+    }
+
+    let data = {
+        _token: csrfToken,
+        status: status,
+    };
+
+    sendAjaxRequest(method, this.action, data, updateJoinRequestHandler, { joinRequest: joinRequest });
+}
+
+function updateJoinRequestHandler(data) {
+    clearInvitationsPageErrors();
+    if (this.status !== 200) {
+        document.getElementById('updateJoinRequestError').innerHTML = this.responseText;
+        return;
+    }
+
+    data.joinRequest.remove();
+}
+
+
+let manageAllJoinRequestForms = document.querySelectorAll('.form-manage-all-join-request');
+for (let form of manageAllJoinRequestForms) {
+    form.addEventListener('submit', sendUpdateAllJoinRequestRequest);
+}
+
+function sendUpdateAllJoinRequestRequest(event) {
+    event.preventDefault();
+
+    let csrfToken = this.querySelector('input[name=_token]').value;
+    let method = this.querySelector('input[name=_method]').value;
+    let status = this.querySelector('input[name=status]').value;
+
+    let data = {
+        _token: csrfToken,
+        status: status,
+    };
+
+    sendAjaxRequest(method, this.action, data, updateAllJoinRequestHandler);
+}
+
+function updateAllJoinRequestHandler() {
+    clearInvitationsPageErrors();
+    if (this.status !== 200) {
+        document.getElementById('updateJoinRequestError').innerHTML = this.responseText;
+        return;
+    }
+
+    // If the event doesn't have enough space for everyone, the status should be different from 200
+    document.getElementById('join-requests').innerHTML = "";
+}
+
+// ----- Event Cancellation -----
+let eventCancellationButton = document.getElementById('eventCancellation');
+if (eventCancellationButton != null) {
+    eventCancellationButton.addEventListener('click', sendEventCancellationRequest);
+}
+
+function sendEventCancellationRequest(event) {
+    event.preventDefault();
+    sendAjaxRequest('POST', this.href, {}, eventCancellationHandler);
+}
+
+function eventCancellationHandler() {
+    if (this.status !== 200) {
+        document.getElementById('eventCancellationError').innerHTML = this.responseText;
+        return;
+    }
+    window.location.href = this.responseText;
+}
+
+// ----- Search API -----
+
+// Ajax will be used for the search events form only when in the search results page
+let searchEventsForm = document.getElementById('searchEventsForm');
+if (searchEventsForm !== null) {
+    searchEventsForm.addEventListener('submit', sendSearchEventsRequest);
+}
+
+let searchFiltersSection = document.getElementById('searchFilters');
+let searchEventsSpinner = document.getElementById('searchResultsSpinner');
+let searchEventsError = document.getElementById('searchEventsError');
+
+for (let input of document.querySelectorAll('#searchFilters input, select')) {
+    input.addEventListener('change', sendSearchEventsRequest);
+}
+
+function sendSearchEventsRequest(event) {
+    if (event.type === 'submit') {
+        event.preventDefault();
+    }
+
+    let query = searchEventsForm.querySelector('input[name=query]').value;
+    let startDate = searchFiltersSection.querySelector('input[name=startDate]').value;
+    let endDate = searchFiltersSection.querySelector('input[name=endDate]').value;
+    let category = searchFiltersSection.querySelector('select[name=category]').value;
+
+    let data = {
+        query: query,
+    };
+
+    if (startDate !== null && startDate !== '') data.startDate = startDate;
+    if (endDate !== null && endDate !== '') data.endDate = endDate;
+    if (category !== null && category !== '') data.category = category;
+
+    let checkboxes = searchFiltersSection.querySelectorAll('#typeCheckboxes input');
+    let types = [];
+
+    for (let checkbox of searchFiltersSection.querySelectorAll('#typeCheckboxes input')) {
+        if (checkbox.checked) {
+            types.push(checkbox.value);
+        }
+    }
+
+    if (types.length !== 0 && types.length !== checkboxes.length) {
+        data.types = types;
+    }
+
+    searchEventsSpinner.ariaHidden = false;
+    searchEventsSpinner.removeAttribute('hidden');
+    sendAjaxRequest(searchEventsForm.method, searchEventsForm.action, data, searchEventsHandler);
+}
+
+function searchEventsHandler() {
+    searchEventsSpinner.ariaHidden = true;
+    searchEventsSpinner.setAttribute('hidden', '');
+
+    if (this.status !== 200) {
+        searchEventsError.innerHTML = this.responseText;
+        return;
+    }
+
+    document.getElementById('searchResults').innerHTML = this.responseText;
 }

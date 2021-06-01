@@ -14,29 +14,43 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
         </ol>
     </nav>
 
-    <h1 class="text-center mb-3">{{ $event->title }} <i class="fa {{ $event->visibility === 'Public' ? "fa-globe" : "fa-lock" }}"></i></h1>
+    <h1 class="text-center mb-3">
+        <i class="text-danger {{ $event->cancelled ? "fa fa-ban" : "" }}" title="Event Cancelled" aria-label="Event Cancelled"></i>
+        {{ $event->title }}
+        <i class="fa {{ $event->visibility === 'Public' ? "fa-globe" : "fa-lock" }}" title="{{ $event->visibility }} Event" aria-label="{{ $event->visibility }}"></i>
+    </h1>
 
     <div class="row mb-3">
         <div class="col-md-5 d-flex align-items-center justify-content-center">
             <img src="{{ is_null($event->picture) ? asset('img/event_default.png') : 'data:image/jpeg;base64, ' . $event->picture }}" class="img-fluid rounded" alt="Event image">
         </div>
         <div class="col-md-7 p-3">
-            <div class="d-flex justify-content-between mb-2">
-                <div class="d-flex gap-2">
-                    <a href="{{ route('events.event.results', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Results</a>
+
+            <div class="d-flex justify-content-between">
+                <div class="d-flex gap-2 align-items-center">
+                    <a href="{{ route('events.event.results', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Results <i class="fa fa-trophy"></i></a>
                     @if (Auth::id() === $event->id_organizer)
-                    <a href="{{ route('events.event.invitations', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Invitations</a>
-                    @endif
-                    @if (Auth::check() && (App\Policies\UserPolicy::canRequestToJoin(Auth::user(), $event)))
-                    <a href="{{ route('events.event.joinrequest', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Request to Join</a>
+                    <a href="{{ route('events.event.invitations', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Invitations <i class="fa fa-envelope"></i></a>
+                    <a href="{{ route('events.event.participants', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Participants <i class="fa fa-users"></i></a>
                     @endif
                 </div>
-                @if (Auth::id() === $event->id_organizer)
-                <a class="btn btn-secondary" href="{{ route('events.event.edit', ['id' => $event->id]) }}"><i class="fa fa-pencil"></i></a>
-                @endif
+                <div class="d-flex align-items-center p-2">
+                    @if (Auth::id() === $event->id_organizer)
+                    <a class="btn btn-secondary" href="{{ route('events.event.edit', ['id' => $event->id]) }}"><i class="fa fa-pencil"></i></a>
+                    @endif
+                    <div id="requestToJoin" class="d-flex gap-2 align-items-center">
+                        @include('partials.event_request_to_join')
+                    </div>
+                </div>
             </div>
+
             <hr>
             
+            @if ($event->cancelled)
+            <p class="text-danger">
+                Event Cancelled
+            </p>
+            @endif
             <p>
                 {{ $event->description }}
             </p>
@@ -189,7 +203,10 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
             @endif
 
             <section id="polls" class="row mt-3">
-                @each('partials.poll', $event->polls()->get(), 'poll')
+                <p class="text-danger" id="pollError"></p>
+                @foreach($event->polls()->get() as $poll)
+                    @include('partials.poll', ['poll' => $poll])
+                @endforeach
             </section>
         </div>
     </div>
