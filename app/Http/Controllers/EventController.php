@@ -341,12 +341,15 @@ class EventController extends Controller {
         }
 
         // Accept / Decline the invitation
+        $status = $request->input('status');
         DB::beginTransaction();
         try {
-            DB::table('participation')->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'Invitation']])
-                                      ->update(['status' => $request->input('status')]);
-            $participants = DB::table('participation')->where([['id_event', $event->id], ['status', 'Accepted']])->count();
-            Event::find($event->id)->update(['n_participants' => $participants]);
+            $participants = DB::table('participation')
+                                ->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'Invitation']])
+                                ->update(['status' => $status]);
+            if ($status === 'Accepted') {
+                $event->update(['n_participants' => $event->n_participants + $participants]);
+            }
         }
         catch (QueryException $ex) {
             DB::rollback();
@@ -502,12 +505,15 @@ class EventController extends Controller {
         }
 
         // Accept / Decline the join request
+        $status = $request->input('status');
         DB::beginTransaction();
         try {
-            DB::table('participation')->where([['id_event', $id], ['id_user', $user->id], ['status', 'JoinRequest']])
-                                      ->update(['status' => $request->input('status')]);
-            $participants = DB::table('participation')->where([['id_event', $id], ['status', 'Accepted']])->count();
-            Event::find($id)->update(['n_participants' => $participants]);
+            $participants = DB::table('participation')
+                                ->where([['id_event', $id], ['id_user', $user->id], ['status', 'JoinRequest']])
+                                ->update(['status' => $status]);
+            if ($status === 'Accepted') {
+                $event->update(['n_participants' => $event->n_participants + $participants]);
+            }
         }
         catch (QueryException $ex) {
             DB::rollback();
@@ -543,12 +549,15 @@ class EventController extends Controller {
         }
 
         // Accept / Decline all the join requests
+        $status = $request->input('status');
         DB::beginTransaction();
         try {
-            DB::table('participation')->where([['id_event', $id], ['status', 'JoinRequest']])
-                                      ->update(['status' => $request->input('status')]);
-            $participants = DB::table('participation')->where([['id_event', $id], ['status', 'Accepted']])->count();
-            Event::find($id)->update(['n_participants' => $participants]);
+            $participants = DB::table('participation')
+                                ->where([['id_event', $id], ['status', 'JoinRequest']])
+                                ->update(['status' => $status]);
+            if ($status === 'Accepted') {
+                $event->update(['n_participants' => $event->n_participants + $participants]);
+            }
         }
         catch (QueryException $ex) {
             DB::rollback();
