@@ -94,6 +94,20 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                            <form method="POST" action="{{ route('api.users.user.ban', ['username' => $user->username]) }}" id="banUserForm">
+                                @csrf
+
+                                <div class="mb-3">
+                                    <label for="banReason" class="form-label">Reason <span class="text-danger fw-bold">*</span></label>
+                                    <input type="text" class="form-control" id="banReason" name="reason" maxlength="300" required>
+                                </div>
+
+                                <p class="px-1 text-danger" id="banUserError"></p>
+                                
+                                <div class="modal-footer">
+                                    <input type="submit" class="btn btn-danger" value="Ban">
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

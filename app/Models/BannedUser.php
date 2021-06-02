@@ -11,6 +11,7 @@ class BannedUser extends Model {
     // Don't add create and update timestamps in database.
     public $timestamps = false;
     protected $table = 'banned_user';
+    protected $primaryKey = 'id_user';
 
     protected $fillable = [
         'id_user', 'since', 'reason',

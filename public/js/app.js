@@ -697,3 +697,49 @@ function suspendUserHandler() {
         document.getElementById('suspendUserModal').remove();
     }, 1000);
 }
+
+// Ban API
+let banUserForm = document.getElementById('banUserForm');
+if (banUserForm != null) {
+    banUserForm.addEventListener('submit', sendBanUserRequest);
+}
+
+function sendBanUserRequest(event) {
+    event.preventDefault();
+
+    let reason = this.querySelector('input[name=reason]').value;
+
+    let data = {
+        reason: reason,
+    };
+    
+    sendAjaxRequest(this.method, this.action, data, banUserHandler);
+}
+
+function banUserHandler() {
+    if (this.status !== 200) {
+        document.getElementById('banUserError').innerHTML = this.responseText;
+        return;
+    }
+
+    document.querySelector('#banUserModal .btn-close').click();
+
+    document.getElementById('suspensionBanStatus').outerHTML = this.responseText;
+    document.getElementById('banUserButton').remove();
+
+    let suspendUserButton = document.getElementById('suspendUserButton');
+    let suspendUserModal = document.getElementById('suspendUserModal');
+
+    if (suspendUserButton != null) {
+        suspendUserButton.remove();
+    }
+
+    if (suspendUserModal != null) {
+        suspendUserModal.remove();
+    }
+
+    // Remove the ban user modal after a timeout so that the closing animation can finish
+    setTimeout(() => {
+        document.getElementById('banUserModal').remove();
+    }, 1000);
+}
