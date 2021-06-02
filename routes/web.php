@@ -85,4 +85,5 @@ Route::post('/admin/sign-out', 'Auth\AdminLoginController@logout')->name('admin.
 Route::group(['middleware' => 'admin'], function () {
     Route::get('/admin/user-management', 'AdminController@showUserManagement')->name('admin.user-management');
     Route::post('/api/users/{username}/suspensions', 'SuspensionController@store')->name('api.users.user.suspensions');
+    Route::post('/api/users/{username}/ban', 'BannedUserController@store')->name('api.users.user.ban');
 });
