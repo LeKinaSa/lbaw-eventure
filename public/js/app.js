@@ -660,3 +660,40 @@ function searchEventsHandler() {
 
     document.getElementById('searchResults').innerHTML = this.responseText;
 }
+
+// Suspension API
+let suspendUserForm = document.getElementById('suspendUserForm');
+if (suspendUserForm != null) {
+    suspendUserForm.addEventListener('submit', sendSuspendUserRequest);
+}
+
+function sendSuspendUserRequest(event) {
+    event.preventDefault();
+
+    let duration = this.querySelector('input[name=duration]').value;
+    let reason = this.querySelector('input[name=reason]').value;
+
+    let data = {
+        duration: duration,
+        reason: reason,
+    };
+
+    sendAjaxRequest(this.method, this.action, data, suspendUserHandler);
+}
+
+function suspendUserHandler() {
+    if (this.status !== 200) {
+        document.getElementById('suspendUserError').innerHTML = this.responseText;
+        return;
+    }
+
+    document.querySelector('#suspendUserModal .btn-close').click();
+
+    document.getElementById('suspensionBanStatus').outerHTML = this.responseText;
+    document.getElementById('suspendUserButton').remove();
+
+    // Remove the modal after a timeout so that the closing animation can finish
+    setTimeout(() => {
+        document.getElementById('suspendUserModal').remove();
+    }, 1000);
+}
