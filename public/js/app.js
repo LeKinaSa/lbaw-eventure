@@ -523,10 +523,7 @@ function sendUpdateJoinRequestRequest(event) {
     let method = this.querySelector('input[name=_method]').value;
     let status = this.querySelector('input[name=status]').value;
     
-    let joinRequest = this.parentNode;
-    while (joinRequest.className !== 'card') {
-        joinRequest = joinRequest.parentNode;
-    }
+    let joinRequest = this.closest('.card');
 
     let data = {
         _token: csrfToken,
