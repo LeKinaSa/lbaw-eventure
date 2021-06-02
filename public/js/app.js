@@ -713,10 +713,10 @@ function sendBanUserRequest(event) {
         reason: reason,
     };
     
-    sendAjaxRequest(this.method, this.action, data, suspendUserHandler);
+    sendAjaxRequest(this.method, this.action, data, banUserHandler);
 }
 
-function suspendUserHandler() {
+function banUserHandler() {
     if (this.status !== 200) {
         document.getElementById('banUserError').innerHTML = this.responseText;
         return;
