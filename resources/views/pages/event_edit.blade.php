@@ -172,8 +172,18 @@ if ($editing) {
                 <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
-
-            <input type="submit" class="btn btn-primary" value="{{ $editing ? "Edit" : "Create" }}">
+                
+            <div class="row justify-content-around">
+                <span class="text-danger" id="eventCancellationError"></span>
+                <div class="col-3">
+                    <input type="submit" class="btn btn-primary" value="{{ $editing ? "Edit" : "Create" }}">
+                </div>
+                <div class="col-3">
+                    @if($editing && !$event->cancelled)
+                    <a href="{{ route('events.event.cancel', ['id' => $event->id]) }}" role="button" class="btn btn-danger" id="eventCancellation">Cancel this event</a>
+                    @endif
+                </div>
+            </div>
         </form>
     </div>
 </div>
