@@ -24,11 +24,12 @@
         <section id="sent" class="col-md mb-4 mb-md-0">
             <h4>Sent</h4>
 
-            <form method="POST" action="{{ route('events.event.invitations.cancel.all', ['id' => $event->id]) }}">
+            <form method="POST" action="{{ route('events.event.invitations.delete', ['id' => $event->id]) }}" class="form-delete-all-invitations">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-outline-danger">Cancel all</button>
+                <button type="submit" name="cancelAllInvitations" class="btn btn-outline-danger">Cancel all</button>
             </form>
+            <p class="mb-0 mt-2 px-2 text-danger" id="cancelInvitationsError"></p>
 
             <div class="d-flex flex-wrap mt-2 gap-3" id="invitations">
                 @foreach ($event->invitations()->get() as $user)
@@ -39,23 +40,24 @@
 
         <section id="requests" class="col-md">
             <h4>Requests to participate</h4>
-            
-            <div class="d-flex gap-2">
-                <form method="POST" action="{{ route('events.event.joinrequest.manage.all', ['id' => $event->id]) }}">
-                    {{ csrf_field() }}
 
+            <div class="d-flex gap-2">
+                <form method="POST" action="{{ route('events.event.join-requests.update', ['id' => $event->id]) }}" class="form-manage-all-join-request">
+                    @csrf
                     @method('PATCH')
+                    <input type="hidden" name="status" value="Accepted">
                     <button type="submit" class="btn btn-outline-success">Accept all</button>
                 </form>
-                <form method="POST" action="{{ route('events.event.joinrequest.manage.all', ['id' => $event->id]) }}">
-                    {{ csrf_field() }}
-
+                <form method="POST" action="{{ route('events.event.join-requests.update', ['id' => $event->id]) }}" class="form-manage-all-join-request">
+                    @csrf
                     @method('PATCH')
+                    <input type="hidden" name="status" value="Declined">
                     <button type="submit" class="btn btn-outline-danger">Reject all</button>
                 </form>
             </div>
+            <p class="mb-0 mt-2 px-2 text-danger" id="updateJoinRequestError"></p>
 
-            <div class="d-flex flex-wrap mt-2 gap-3">
+            <div class="d-flex flex-wrap mt-2 gap-3" id="join-requests">
                 @foreach ($event->joinRequests()->get() as $user)
                     @include('partials.join_request', ['user' => $user])
                 @endforeach

@@ -52,6 +52,8 @@ $admin = Auth::guard('admin')->user();
                   <ul id="dropdownUserItems" class="dropdown-menu dropdown-menu-end ps-0 gap-2" aria-labelledby="dropdownUser">
                     <li><a href="{{ route('users.profile', ['username' => $user->username]) }}" class="dropdown-item d-block">My Profile</a></li>
                     <li><a href="{{ route('users.profile.edit', ['username' => $user->username]) }}" class="dropdown-item d-block">Edit Profile</a></li>
+                    <li><a href="{{ route('users.profile.events', ['username' => $user->username]) }}" class="dropdown-item d-block">My Events</a></li>
+                    <li><a href="{{ route('users.profile.invitations', ['username' => $user->username]) }}" class="dropdown-item d-block">My Invitations</a></li>
                     <li>
                       <form method="POST" action="{{ route('sign-out') }}" class="d-flex flex-column align-items-stretch">
                         @csrf

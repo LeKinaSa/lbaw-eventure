@@ -17,35 +17,35 @@
                 {{ csrf_field() }}
 
                 <div class="mb-2">
-                    <label for="name" class="form-label">Name *</label>
+                    <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
                     @error ('name')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="mb-2">
-                    <label for="username" class="form-label">Username *</label>
+                    <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="username" name="username" value="{{ old('username') }}" required>
                     @error ('username')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="mb-2">
-                    <label for="email" class="form-label">Email address *</label>
+                    <label for="email" class="form-label">Email address <span class="text-danger">*</span></label>
                     <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
                     @error ('email')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="mb-2">
-                    <label for="password" class="form-label">Password *</label>
+                    <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
                     <input type="password" class="form-control" id="password" name="password" required>
                     @error ('password')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="passwordConfirmation" class="form-label">Confirm your Password *</label>
+                    <label for="passwordConfirmation" class="form-label">Confirm your Password <span class="text-danger">*</span></label>
                     <input type="password" class="form-control" id="passwordConfirmation" name="password_confirmation" required>
                     @error ('password_confirmation')
                     <span class="text-danger">{{ $message }}</span>
@@ -65,41 +65,4 @@
         </div>
     </div>
 </div>
-{{--
-<form method="POST" action="{{ route('sign-up') }}">
-    {{ csrf_field() }}
-
-    <label for="name">Name</label>
-    <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
-    @if ($errors->has('name'))
-      <span class="error">
-          {{ $errors->first('name') }}
-      </span>
-    @endif
-
-    <label for="email">E-Mail Address</label>
-    <input id="email" type="email" name="email" value="{{ old('email') }}" required>
-    @if ($errors->has('email'))
-      <span class="error">
-          {{ $errors->first('email') }}
-      </span>
-    @endif
-
-    <label for="password">Password</label>
-    <input id="password" type="password" name="password" required>
-    @if ($errors->has('password'))
-      <span class="error">
-          {{ $errors->first('password') }}
-      </span>
-    @endif
-
-    <label for="password-confirm">Confirm Password</label>
-    <input id="password-confirm" type="password" name="password_confirmation" required>
-
-    <button type="submit">
-      Register
-    </button>
-    <a class="button button-outline" href="{{ route('sign-in') }}">Login</a>
-</form>
---}}
 @endsection
