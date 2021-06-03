@@ -795,6 +795,8 @@ if (createMatchForm !== null) {
         disableSameCompetitor(firstSelect.value);
     });
     disableSameCompetitor(firstSelect.value);
+
+    createMatchForm.addEventListener('submit', sendCreateMatchRequest);
 }
 
 function disableSameCompetitor(id) {
@@ -807,6 +809,49 @@ function disableSameCompetitor(id) {
 
     sameOption.disabled = true;
     sameOption.selected = false;
+}
+
+function sendCreateMatchRequest(event) {
+    event.preventDefault();
+
+    let first = this.querySelector('select[name=first]').value;
+    let second = this.querySelector('select[name=second]').value;
+
+    let resultRadio = this.querySelector('input[name=result]:checked');
+    let result = resultRadio === null ? null : resultRadio.value;
+
+    let date = this.querySelector('input[name=date]').value;
+    let time = this.querySelector('input[name=time]').value;
+
+    let description = this.querySelector('textarea[name=description]').value;
+
+    let data = {
+        first: first,
+        second: second,
+        result: result,
+    }
+
+    if (date !== '') data.date = date;
+    if (time !== '') data.time = time;
+    if (description !== '') data.description = description;
+
+    sendAjaxRequest(this.method, this.action, data, createMatchHandler);
+}
+
+function createMatchHandler() {
+    if (this.status !== 200) {
+        document.getElementById('createMatchError').innerHTML = this.responseText;
+        return;
+    }
+    
+    document.getElementById('createMatchError').innerHTML = '';
+
+    document.querySelector('#createMatchForm input[name=date]').value = '';
+    document.querySelector('#createMatchForm input[name=time]').value = '';
+    document.querySelector('#createMatchForm textarea[name=description]').value = '';
+
+    document.querySelector('#matchModal button.btn-close').click();
+    document.getElementById('matchList').insertAdjacentHTML('beforeend', this.responseText);
 }
 
 // ----- Competitors API -----

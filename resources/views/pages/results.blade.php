@@ -39,7 +39,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="matchModalLabel">Add match</h4>
+                            <h4 class="modal-title" id="matchModalLabel">Create match</h4>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -97,11 +97,14 @@
 
                                 <div class="mb-3">
                                     <label for="matchDescription" class="h5 form-label">Additional information</label>
-                                    <textarea class="form-control" id="matchDescription" name="description"></textarea>
+                                    <textarea class="form-control" id="matchDescription" name="description" maxlength="500"></textarea>
                                 </div>
 
-                                <div class="modal-footer">
-                                    <input type="submit" class="btn btn-primary" value="Add">
+                                <div class="modal-footer px-1 d-block">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <p class="text-danger mb-0" id="createMatchError"></p>
+                                        <input type="submit" class="btn btn-primary" value="Create">
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -142,7 +145,7 @@
             </form>
         </div>
 
-        <div class="d-inline-flex flex-column flex-md-row flex-md-wrap gap-2">
+        <div class="d-inline-flex flex-column flex-md-row flex-md-wrap gap-2" id="matchList">
             @each('partials.match', $matches, 'match')
         </div>
     </section>
