@@ -121,9 +121,7 @@ class PollController extends Controller {
 
         // Authentication
         $user = Auth::user() ?? Auth::guard('admin')->user();
-        $this->authorizeForUser($user, 'delete', $poll);
-
-        if (!PollPolicy::delete(Auth::user(), $event)) {
+        if (!PollPolicy::delete($user, $poll)) {
             return response('No permission to perform this request.', 403);
         }
 

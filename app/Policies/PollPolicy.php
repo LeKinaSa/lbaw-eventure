@@ -6,6 +6,7 @@ use App\Models\Poll;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Administrator;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 
@@ -59,16 +60,11 @@ class PollPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
+     * @param  Authenticatable  $user
      * @param  \App\Models\Poll  $poll
      * @return mixed
      */
-    public function delete(?Authenticatable $user, Poll $poll) {
-        // TODO: check the next if statement
-        if (is_null($user)) {
-            $user = Auth::user() ?? Auth::guard('admin')->user();
-        }
-        
+    public static function delete(?Authenticatable $user, Poll $poll) {
         if (!is_null($user) && $user instanceof Administrator) {
             // Admnistrators can delete any poll
             return true;

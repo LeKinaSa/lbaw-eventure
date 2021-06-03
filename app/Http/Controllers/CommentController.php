@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Event;
+use App\Policies\CommentPolicy;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -102,8 +103,9 @@ class CommentController extends Controller {
 
         //Authorization
         $user = Auth::user() ?? Auth::guard('admin')->user();
-        $this->authorizeForUser($user, 'delete', $comment);
-
+        if (!CommentPolicy::delete($user, $comment)) {
+            return response('No permission to perform this request.', 403);
+        }
 
         $event = Event::find($idEvent);
         if (is_null($event)) {

@@ -12,14 +12,13 @@ $answer = optional(optional(optional(Auth::user())->pollAnswer($poll))->first())
 <article class="col-md-6 mb-3" data-id="{{ $poll->id }}">
     <header class="mb-2 mx-1 d-flex align-items-center justify-content-between">
         <h5>{{ $poll->question }}</h5>
-        <!-- TODO: next line may need rework -->
-        @can('delete', $poll)
+        @if (App\Policies\PollPolicy::delete(Auth::user() ?? Auth::guard('admin')->user(), $poll))
         <form method="POST" action="{{ route('api.events.event.polls.poll.delete', ['id' => $event->id, 'idPoll' => $poll->id]) }}">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-outline-danger">Delete this poll</button>
         </form>
-        @endcan
+        @endif
         @if (!is_null($answer))
         <form method="POST" action="{{ route('api.events.event.polls.poll.answer.delete', ['id' => $event->id, 'idPoll' => $poll->id]) }}" class="form-remove-poll-answer">
             @csrf

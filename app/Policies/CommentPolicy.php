@@ -6,6 +6,7 @@ use App\Models\Comment;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Administrator;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 
@@ -60,16 +61,11 @@ class CommentPolicy {
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
+     * @param  Authenticatable  $user
      * @param  \App\Models\Comment  $comment
      * @return mixed
      */
-    public function delete(?Authenticatable $user, Comment $comment) {
-        // TODO: check the next if statement
-        if (is_null($user)) {
-            $user = Auth::user() ?? Auth::guard('admin')->user();
-        }
-
+    public static function delete(?Authenticatable $user, Comment $comment) {
         if (!is_null($user) && $user instanceof Administrator) {
             // Admnistrators can delete any comment
             return true;

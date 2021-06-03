@@ -17,14 +17,13 @@
             @can ('update', $comment)
             <button type="button" class="btn btn-secondary button-comment-edit" aria-label="Edit"><i class="fa fa-pencil"></i></button>
             @endcan
-            <!-- TODO: rework next line -->
-            @can ('delete', $comment)
+            @if (App\Policies\CommentPolicy::delete(Auth::user() ?? Auth::guard('admin')->user(), $comment))
             <form method="POST" action="{{ route('api.events.event.comments.comment.delete', ['idEvent' => $event->id, 'id' => $comment->id]) }}">
             @csrf
             @method ('delete')
             <button type="submit" class="btn btn-danger button-comment-delete" aria-label="Delete"><i class="fa fa-remove"></i></button>
             </form>
-            @endcan
+            @endif
         </div>
     </header>
     <div class="mt-2 mb-3 mx-3">
