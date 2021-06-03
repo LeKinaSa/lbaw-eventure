@@ -16,7 +16,7 @@ $answer = optional(optional(optional(Auth::user())->pollAnswer($poll))->first())
         <form method="POST" action="{{ route('api.events.event.polls.poll.delete', ['id' => $event->id, 'idPoll' => $poll->id]) }}" class="form-delete-poll">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-outline-danger">Delete this poll</button>
+            <button type="submit" class="btn btn-outline-danger" aria-label="Delete Poll">Delete this poll</button>
         </form>
         @endif
         @if (!is_null($answer))

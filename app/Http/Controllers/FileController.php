@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\File;
+use App\Policies\FilePolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -52,5 +53,36 @@ class FileController extends Controller {
 
         $fileData = stream_get_contents($file->data);
         return response($fileData)->withHeaders(['Content-Type' => 'application/octet-stream']);
+    }
+
+    public function delete($idEvent, $id) {
+        $file = File::find($id);
+        if (is_null($file)) {
+            return response('Request has an invalid file id.', 400);
+        }
+
+        // Authentication
+        $user = Auth::user() ?? Auth::guard('admin')->user();
+        if (!FilePolicy::delete($user, $file)) {
+            return response('No permission to perform this request.', 403);
+        }
+
+        $event = Event::find($idEvent);
+        if (is_null($event)) {
+            return response('Request has an invalid event id.', 400);
+        }
+
+        if ($event->files()->where('id', $id)->first() === NULL) {
+            return response('The specified file does not belong to the event.', 400);
+        }
+
+        try {
+            $file->delete();
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        return response('');
     }
 }
