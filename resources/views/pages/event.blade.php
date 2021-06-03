@@ -215,13 +215,16 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
         </div>
         <div class="tab-pane fade p-3" id="filesTab" role="tabpanel" aria-labelledby="filesLabel">
             @if (App\Policies\FilePolicy::create(Auth::user(), $event))
-            <form enctype="multipart/form-data" method="POST" action="{{ route('api.events.event.files.new', ['id' => $event->id]) }}" class="mb-3">
+            <form enctype="multipart/form-data" method="POST" action="{{ route('events.event.files.new', ['id' => $event->id]) }}" class="mb-3" id="uploadFileForm">
                 @csrf
                 <div class="input-group">
-                    <input type="file" class="form-control" name="file">
+                    <input type="file" class="form-control" name="file" required>
                     <input type="submit" class="btn btn-primary" value="Upload file">
                 </div>
             </form>
+            @error ('file')
+            <p class="text-danger mx-1">{{ $message }}</p>
+            @enderror
             @endif
             
             <section id="files" class="d-flex flex-wrap gap-2">

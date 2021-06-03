@@ -4,18 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\File;
-use App\Policies\FilePolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 class FileController extends Controller {
-    public static function validator(Request $request) {
-        return Validator::make($request->all(), [
-            'file' => 'file|max:5000',
-        ]);
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -24,14 +16,10 @@ class FileController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, $id) {
-        $event = Event::find($id);
-        if (is_null($event)) {
-            return response('Event with the specified ID does not exist.', 404);
-        }
+        $event = Event::findOrFail($id);
+        $this->authorize('create', [File::class, $event]);
 
-        if (!FilePolicy::create(Auth::user(), $event)) {
-            return response('No permission to perform this request.', 403);
-        }
+        $request->validate(['file' => 'file|max:3000']);
 
         // Get file from request
         $uploadedFile = $request->file('file');
@@ -49,10 +37,10 @@ class FileController extends Controller {
             $file->save();
         }
         catch (QueryException $ex) {
-            return response('A database error occurred.', 500);
+            return back()->withErrors(['file' => 'A database error occurred.']);
         }
 
-        return view('');
+        return back();
     }
 
     public function download(Request $request, $id, $fileName) {
