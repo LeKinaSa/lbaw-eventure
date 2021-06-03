@@ -608,10 +608,18 @@ class EventController extends Controller {
                 'loss_points' => $request->input('lossPoints'),
                 'leaderboard' => $request->input('generateLeaderboard'),
             ]);
+            $event->save();
         }
         catch (QueryException $ex) {
             return response('A database error occurred.', 500);
         }
+
+        $matches = $event->matches()
+                ->join('competitor AS c1', 'c1.id', '=', 'match.id_competitor1')
+                ->join('competitor AS c2', 'c2.id', '=', 'match.id_competitor2')
+                ->select('match.*', 'c1.name AS name_competitor1', 'c2.name AS name_competitor2')->get();
+
+        $competitors = $event->competitors()->get();
 
         $leaderboard = null;
         if ($event->leaderboard) {

@@ -145,7 +145,10 @@
                     <input type="checkbox" class="form-check-input" id="generateLeaderboard" name="generateLeaderboard" {{ $event->leaderboard ? 'checked' : '' }}>
                 </div>
 
-                <input type="submit" class="btn btn-primary" value="Apply">
+                <div class="d-flex align-items-center gap-3">
+                    <input type="submit" class="btn btn-primary" value="Apply">
+                    <p class="mb-0 text-danger" id="leaderboardSettingsError"></p>
+                </div>
             </form>
         </div>
 

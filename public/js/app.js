@@ -775,10 +775,10 @@ function sendUpdateLeaderboardSettingsRequest(event) {
 }
 
 function updateLeaderboardSettingsHandler() {
-    console.log(this.responseText);
-
     if (this.status !== 200) {
-        // TODO: error handling
+        document.getElementById('leaderboardSettingsError').innerHTML = this.responseText;
         return;
     }
+
+    document.getElementById('leaderboard').innerHTML = this.responseText;
 }
