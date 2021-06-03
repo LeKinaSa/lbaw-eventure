@@ -467,7 +467,7 @@ function sendUpdateInvitationRequest(event) {
     let status = this.querySelector('input[name=status]').value;
 
     let invitation = this.parentNode;
-    while (invitation.className !== 'card card-invitation') {
+    while ((invitation !== null) && (invitation.className !== 'card card-invitation')) {
         invitation = invitation.parentNode;
     }
 
@@ -481,12 +481,21 @@ function sendUpdateInvitationRequest(event) {
 
 function updateInvitationHandler(data) {
     if (this.status !== 200) {
+        if (data.invitation === null) {
+            document.getElementById('updateInvitationInfo').innerHTML = "";
+        }
         document.getElementById('updateInvitationError').innerHTML = this.responseText;
         return;
     }
 
     document.getElementById('updateInvitationError').innerHTML = "";
-    data.invitation.remove();
+    if (data.invitation === null) {
+        let requestToJoinDiv = document.getElementById('requestToJoin');
+        requestToJoinDiv.innerHTML = this.responseText;
+    }
+    else {
+        data.invitation.remove();
+    }
 }
 
 // ----- Join Requests API -----

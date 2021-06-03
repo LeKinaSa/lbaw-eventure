@@ -364,7 +364,7 @@ class EventController extends Controller {
         }
         DB::commit();
 
-        return response('');
+        return view('partials.event_request_to_join', ['event' => $event]);
     }
 
     /**
