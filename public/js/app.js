@@ -661,7 +661,8 @@ function searchEventsHandler() {
     document.getElementById('searchResults').innerHTML = this.responseText;
 }
 
-// Suspension API
+// ----- Suspension API -----
+
 let suspendUserForm = document.getElementById('suspendUserForm');
 if (suspendUserForm != null) {
     suspendUserForm.addEventListener('submit', sendSuspendUserRequest);
@@ -698,7 +699,8 @@ function suspendUserHandler() {
     }, 1000);
 }
 
-// Ban API
+// ----- Ban API -----
+
 let banUserForm = document.getElementById('banUserForm');
 if (banUserForm != null) {
     banUserForm.addEventListener('submit', sendBanUserRequest);
