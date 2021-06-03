@@ -18,6 +18,7 @@
 
             <div class="d-flex gap-2">
                 <a role="button" class="btn btn-primary" href="{{ route('events.event.competitors', ['id' => $event->id]) }}">Competitors <i class='fa fa-list-ul'></i></a>
+                @can('update', $event)
                 @if (count($competitors) < 2)
                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="To create a match, your event needs to have at least 2 competitors">
                     <button class="btn btn-success" type="button" disabled>
@@ -32,8 +33,10 @@
                 <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSettings" aria-expanded="false" aria-controls="collapseSettings" aria-label="Settings">
                     <i class="fa fa-wrench"></i>
                 </button>
+                @endcan
             </div>
 
+            @can('update', $event)
             @if (count($competitors) >= 2)
             <div class="modal fade" id="matchModal" tabindex="-1" aria-labelledby="matchModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -112,8 +115,10 @@
                 </div>
             </div>
             @endif
+            @endcan
         </header>
 
+        @can('update', $event)
         <div class="collapse mb-2 bg-light" id="collapseSettings">
             <form class="p-3" method="POST" action="{{ route('api.events.event.leaderboard-settings.update', ['id' => $event->id]) }}" id="leaderboardSettingsForm">
                 @method ('PATCH')
@@ -144,6 +149,7 @@
                 </div>
             </form>
         </div>
+        @endcan
 
         <div class="d-inline-flex flex-column flex-md-row flex-md-wrap gap-2" id="matchList">
             @each('partials.match', $matches, 'match')
