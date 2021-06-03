@@ -17,11 +17,9 @@
             <h4>Matches</h4>
 
             <div class="d-flex gap-2">
+                <a role="button" class="btn btn-primary" href="{{ route('events.event.competitors', ['id' => $event->id]) }}">Competitors <i class='fa fa-list-ul'></i></a>
                 <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#matchModal" aria-label="Add match">
                     <i class="fa fa-plus"></i>
-                </button>
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePlayers" aria-expanded="false" aria-controls="collapsePlayers" aria-label="Players">
-                    <i class='fa fa-users'></i>
                 </button>
                 <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSettings" aria-expanded="false" aria-controls="collapseSettings" aria-label="Settings">
                     <i class="fa fa-wrench"></i>
@@ -111,7 +109,7 @@
                 <ul class="list-unstyled d-flex flex-column gap-1">
                     @each('partials.player', $competitors, 'competitor')
                 </ul>
-                <form method="POST" class="py-3" action="{{ route('events.event.players.new', ['id' => $event->id]) }}" id="addPlayersForm">
+                <form method="POST" class="py-3" action="{{ route('events.event.competitors.new', ['id' => $event->id]) }}" id="addPlayersForm">
                     @csrf
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Name" aria-label="Name">
