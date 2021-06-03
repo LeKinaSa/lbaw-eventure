@@ -13,7 +13,20 @@ class MatchController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, $id) {
-        //
+        $event = Event::findOrFail($id);
+        $this->authorize('create', [Match::class, $event]);
+
+        try {
+            $match = Match::create([
+                'id_event' => $id,
+                'date' => $date,
+                'description' => $description,
+                'result' => $result,
+                'id_competitor1' => $id_competitor1,
+                'id_competitor2' => $id_competitor2,
+            ]);
+            $match->save();
+        }
     }
 
     /**
@@ -57,3 +70,4 @@ class MatchController extends Controller {
         //
     }
 }
+n

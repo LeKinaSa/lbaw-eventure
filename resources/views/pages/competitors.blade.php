@@ -21,11 +21,12 @@
     @can('update', $event)
     <form method="POST" class="py-3" action="{{ route('api.events.event.competitors.new', ['id' => $event->id]) }}" id="addCompetitorForm">
         @csrf
-        <h5>Add competitor</h5>
+        <h5 class="mx-1">Add competitor</h5>
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="Name" aria-label="Name" name="name">
+            <input type="text" class="form-control" placeholder="Name" aria-label="Name" name="name" required>
             <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i></button>
         </div>
+        <p class="mt-2 mx-1 text-danger" id="addCompetitorError"></p>
     </form>
     @endcan
 </div>

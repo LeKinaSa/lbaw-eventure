@@ -782,3 +782,35 @@ function updateLeaderboardSettingsHandler() {
 
     document.getElementById('leaderboard').innerHTML = this.responseText;
 }
+
+// ----- Competitors API -----
+
+let addCompetitorForm = document.getElementById('addCompetitorForm');
+if (addCompetitorForm !== null) {
+    addCompetitorForm.addEventListener('submit', sendCreateCompetitorRequest);
+}
+
+function sendCreateCompetitorRequest(event) {
+    event.preventDefault();
+
+    let name = this.querySelector('input[name=name]').value;
+
+    let data = {
+        name: name
+    };
+
+    sendAjaxRequest(this.method, this.action, data, createCompetitorHandler);
+}
+
+function createCompetitorHandler() {
+    let addCompetitorError = document.getElementById('addCompetitorError');
+
+    if (this.status !== 200) {
+        addCompetitorError.innerHTML = this.responseText;
+        return;
+    }
+
+    addCompetitorError.innerHTML = '';
+    document.querySelector('#addCompetitorForm input[name=name]').value = '';
+    document.getElementById('competitors').insertAdjacentHTML('beforeend', this.responseText);
+}
