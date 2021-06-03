@@ -661,6 +661,91 @@ function searchEventsHandler() {
     document.getElementById('searchResults').innerHTML = this.responseText;
 }
 
+// ----- Suspension API -----
+
+let suspendUserForm = document.getElementById('suspendUserForm');
+if (suspendUserForm != null) {
+    suspendUserForm.addEventListener('submit', sendSuspendUserRequest);
+}
+
+function sendSuspendUserRequest(event) {
+    event.preventDefault();
+
+    let duration = this.querySelector('input[name=duration]').value;
+    let reason = this.querySelector('input[name=reason]').value;
+
+    let data = {
+        duration: duration,
+        reason: reason,
+    };
+
+    sendAjaxRequest(this.method, this.action, data, suspendUserHandler);
+}
+
+function suspendUserHandler() {
+    if (this.status !== 200) {
+        document.getElementById('suspendUserError').innerHTML = this.responseText;
+        return;
+    }
+
+    document.querySelector('#suspendUserModal .btn-close').click();
+
+    document.getElementById('suspensionBanStatus').outerHTML = this.responseText;
+    document.getElementById('suspendUserButton').remove();
+
+    // Remove the modal after a timeout so that the closing animation can finish
+    setTimeout(() => {
+        document.getElementById('suspendUserModal').remove();
+    }, 1000);
+}
+
+// ----- Ban API -----
+
+let banUserForm = document.getElementById('banUserForm');
+if (banUserForm != null) {
+    banUserForm.addEventListener('submit', sendBanUserRequest);
+}
+
+function sendBanUserRequest(event) {
+    event.preventDefault();
+
+    let reason = this.querySelector('input[name=reason]').value;
+
+    let data = {
+        reason: reason,
+    };
+    
+    sendAjaxRequest(this.method, this.action, data, banUserHandler);
+}
+
+function banUserHandler() {
+    if (this.status !== 200) {
+        document.getElementById('banUserError').innerHTML = this.responseText;
+        return;
+    }
+
+    document.querySelector('#banUserModal .btn-close').click();
+
+    document.getElementById('suspensionBanStatus').outerHTML = this.responseText;
+    document.getElementById('banUserButton').remove();
+
+    let suspendUserButton = document.getElementById('suspendUserButton');
+    let suspendUserModal = document.getElementById('suspendUserModal');
+
+    if (suspendUserButton != null) {
+        suspendUserButton.remove();
+    }
+
+    if (suspendUserModal != null) {
+        suspendUserModal.remove();
+    }
+
+    // Remove the ban user modal after a timeout so that the closing animation can finish
+    setTimeout(() => {
+        document.getElementById('banUserModal').remove();
+    }, 1000);
+}
+
 // ----- Match Results API -----
 
 let leaderboardSettingsForm = document.getElementById('leaderboardSettingsForm');

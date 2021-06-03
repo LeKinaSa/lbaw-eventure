@@ -127,6 +127,11 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
                     Polls
                 </button>
             </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="filesLabel" data-bs-toggle="tab" data-bs-target="#filesTab" type="button" role="tab" aria-controls="filesTab" aria-selected="false">
+                    Files
+                </button>
+            </li>
         </ul>
     </nav>
 
@@ -206,6 +211,26 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
                 <p class="text-danger" id="pollError"></p>
                 @foreach($event->polls()->get() as $poll)
                     @include('partials.poll', ['poll' => $poll])
+                @endforeach
+            </section>
+        </div>
+        <div class="tab-pane fade p-3" id="filesTab" role="tabpanel" aria-labelledby="filesLabel">
+            @if (App\Policies\FilePolicy::create(Auth::user(), $event))
+            <form enctype="multipart/form-data" method="POST" action="{{ route('events.event.files.new', ['id' => $event->id]) }}" class="mb-3" id="uploadFileForm">
+                @csrf
+                <div class="input-group">
+                    <input type="file" class="form-control" name="file" required>
+                    <input type="submit" class="btn btn-primary" value="Upload file">
+                </div>
+            </form>
+            @error ('file')
+            <p class="text-danger mx-1">{{ $message }}</p>
+            @enderror
+            @endif
+            
+            <section id="files" class="d-flex flex-wrap gap-2">
+                @foreach($event->files()->get() as $file)
+                    @include('partials.file', ['file' => $file])
                 @endforeach
             </section>
         </div>

@@ -49,6 +49,10 @@
                 <span class="text-center">New to Eventure? <a class="text-primary" href={{ route('sign-up') }}> Sign up</a> now!</span>
             </div>
             @endif
+
+            @if (session('message'))
+            <p class="mt-3 mb-0 text-danger text-center">{{ session('message') }}</p>
+            @endif
         </div>
     </div>
 </div>

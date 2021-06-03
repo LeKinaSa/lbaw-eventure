@@ -49,7 +49,7 @@ class ForgotPasswordController extends Controller {
                 : back()->withErrors(['email' => __($status)]);
     }
 
-    public showEmailSent() {
+    public function showEmailSent() {
         return view('auth.email_sent');
     }
 }
