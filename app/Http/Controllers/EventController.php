@@ -591,22 +591,38 @@ class EventController extends Controller {
         return response(route('events.event', ['id' => $event->id]));
     }
 
+    public static function leaderboardValidator(Request $request) {
+        return Validator::make($request->all(), [
+            'winPoints' => 'numeric|min:0|max:100',
+            'drawPoints' => 'numeric|min:0|max:100',
+            'lossPoints' => 'numeric|min:0|max:100',
+            'generateLeaderboard' => [Rule::in('true', 'false')],
+        ]);
+    }
+
     public function updateLeaderboardSettings(Request $request, $id) {
         $event = Event::find($id);
         if (is_null($event)) {
             return response('Event with the specified ID does not exist.', 404);
         }
 
-        // TODO: input validation
+        if (!EventPolicy::update(Auth::user(), $event)) {
+            return response('No permission to perform this request.', 403);
+        }
 
-        $this->authorize('update', $event);
+        $validator = EventController::leaderboardValidator($request);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
+        }
+
+        $generateLeaderboard = $request->input('generateLeaderboard') === 'true';
 
         try {
             $event->update([
                 'win_points' => $request->input('winPoints'),
                 'draw_points' => $request->input('drawPoints'),
                 'loss_points' => $request->input('lossPoints'),
-                'leaderboard' => $request->input('generateLeaderboard'),
+                'leaderboard' => $generateLeaderboard,
             ]);
             $event->save();
         }
