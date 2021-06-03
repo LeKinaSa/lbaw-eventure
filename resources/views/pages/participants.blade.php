@@ -9,28 +9,24 @@
         </ol>
     </nav>
 
-    <h1 class="text-center">Participations</h1>
+    <h1 class="text-center">Participants</h1>
     
-    <div class="row justify-content-center">
-        <section id="participants" class="col-12 col-md-10 col-lg-8 col-xl-7 p-3">
-            <h4>Participants</h4>
-            <div class="d-flex flex-wrap mt-2 gap-3" id="join-requests">
-                @foreach ($event->participants()->get() as $user)
-                    @include('partials.participant', ['user' => $user])
-                @endforeach
-            </div>
-        </section>
-    </div>
+    <section id="participants" class="p-3">
+        <h4>Accepted</h4>
+        <div class="d-flex flex-wrap mt-2 gap-3" id="join-requests">
+            @foreach ($event->participants()->get() as $user)
+                @include('partials.participant', ['user' => $user])
+            @endforeach
+        </div>
+    </section>
 
-    <div class="row justify-content-center">
-        <section id="participants" class="col-12 col-md-10 col-lg-8 col-xl-7 p-3">
-            <h4>Rejected</h4>
-            <div class="d-flex flex-wrap mt-2 gap-3" id="join-requests">
-                @foreach ($event->rejectedParticipants()->get() as $user)
-                    @include('partials.participant', ['user' => $user])
-                @endforeach
-            </div>
-        </section>
-    </div>
+    <section id="participants" class="p-3">
+        <h4>Rejected</h4>
+        <div class="d-flex flex-wrap mt-2 gap-3" id="join-requests">
+            @foreach ($event->rejectedParticipants()->get() as $user)
+                @include('partials.participant', ['user' => $user])
+            @endforeach
+        </div>
+    </section>
 </div>
 @endsection

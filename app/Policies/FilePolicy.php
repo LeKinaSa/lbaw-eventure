@@ -6,7 +6,7 @@ use App\Models\File;
 use App\Models\User;
 use App\Models\Event;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class FilePolicy {
     use HandlesAuthorization;

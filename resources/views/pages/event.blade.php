@@ -94,7 +94,7 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
                     <div class="mb-2">
                         <h5>Participants</h5>
                         <div class="border border-2 rounded px-3 py-2">
-                            {{ $event->participants()->count() . (is_null($event->max_attendance) ? "" : " / " . $event->max_attendance) }}
+                            {{ $event->n_participants . (is_null($event->max_attendance) ? "" : " / " . $event->max_attendance) }}
                         </div>
                     </div>
                 </div>

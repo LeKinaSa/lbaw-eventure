@@ -254,6 +254,12 @@ class EventController extends Controller {
         return view('pages.participants', ['event' => $event]);
     }
 
+    public function updateParticipationValidator(Request $request) {
+        return Validator::make($request->all(), [
+            'status' => ['required', 'string', Rule::in(['Accepted', 'Declined'])],
+        ]);
+    }
+
     /**
      * Send an invitation to an user.
      *
@@ -329,9 +335,10 @@ class EventController extends Controller {
             return response('User is not invited to this event.', 404);
         }
 
-        // Check status input
-        if (($request->input('status') !== 'Accepted') && ($request->input('status') !== 'Declined')) {
-            return response('Invalid request: status is not \'Accepted\' or \'Declined\'.', 400);
+        // Validate request (check status input)
+        $validator = $this->updateParticipationValidator($request);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
         }
 
         // Authorization
@@ -341,12 +348,15 @@ class EventController extends Controller {
         }
 
         // Accept / Decline the invitation
+        $status = $request->input('status');
         DB::beginTransaction();
         try {
-            DB::table('participation')->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'Invitation']])
-                                      ->update(['status' => $request->input('status')]);
-            $participants = DB::table('participation')->where([['id_event', $event->id], ['status', 'Accepted']])->count();
-            Event::find($event->id)->update(['n_participants' => $participants]);
+            $participants = DB::table('participation')
+                                ->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'Invitation']])
+                                ->update(['status' => $status]);
+            if ($status === 'Accepted') {
+                $event->update(['n_participants' => $event->n_participants + $participants]);
+            }
         }
         catch (QueryException $ex) {
             DB::rollback();
@@ -354,16 +364,16 @@ class EventController extends Controller {
         }
         DB::commit();
 
-        return response('');
+        return view('partials.event_request_to_join', ['event' => $event]);
     }
 
     /**
      * Cancel the invitation of an user.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @param string $idInvitation
-     * @return \Illuminate\Http\Response
+     * @param   \Illuminate\Http\Request  $request
+     * @param   int   $id
+     * @param   int   $idUser
+     * @return  \Illuminate\Http\Response
      */
     public function deleteInvitation(Request $request, $id, $idUser) {
         $event = Event::find($id);
@@ -397,9 +407,9 @@ class EventController extends Controller {
     /**
      * Cancel all the invitations for this event.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param   \Illuminate\Http\Request $request
+     * @param   int $id
+     * @return  \Illuminate\Http\Response
      */
     public function deleteAllInvitations(Request $request, $id) {
         $event = Event::find($id);
@@ -470,7 +480,7 @@ class EventController extends Controller {
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @param string idUser
+     * @param int idUser
      * @return \Illuminate\Http\Response
      */
     public function updateJoinRequest(Request $request, $id, $idUser) {
@@ -484,34 +494,46 @@ class EventController extends Controller {
             return response('User with the specified ID does not exist.', 404);
         }
 
-        // Verify if the user is already in this event
+        // Verify if the user has requested to join the event
         $participation = DB::table('participation')->where([['id_event', $id], ['id_user', $user->id], ['status', 'JoinRequest']])->first();
         if (is_null($participation)) {
             return response('User did not request to join this event.', 404);
         }
 
-        // Check status input
-        if (($request->input('status') !== 'Accepted') && ($request->input('status') !== 'Declined')) {
-            return response('Invalid request: status is not \'Accepted\' or \'Declined\'.', 400);
+        // Validate request (check status input)
+        $validator = $this->updateParticipationValidator($request);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
         }
 
         // Authorization
-        $user = Auth::user();
-        if (!EventPolicy::updateParticipation($user, $event)) {
+        $authenticatedUser = Auth::user();
+        if (!EventPolicy::updateParticipation($authenticatedUser, $event)) {
             return response('No permission to perform this request.', 403);
         }
 
-        // Accept / Decline the join request
+        // Accept / decline the join request
+        $status = $request->input('status');
         DB::beginTransaction();
         try {
-            DB::table('participation')->where([['id_event', $id], ['id_user', $user->id], ['status', 'JoinRequest']])
-                                      ->update(['status' => $request->input('status')]);
-            $participants = DB::table('participation')->where([['id_event', $id], ['status', 'Accepted']])->count();
-            Event::find($id)->update(['n_participants' => $participants]);
+            if (!is_null($event->max_attendance) && $event->n_participants === $event->max_attendance) {
+                DB::rollBack();
+                return response('The attendance limit has been reached.', 400);
+            }
+
+            $affected = DB::table('participation')
+                    ->where('id_event', $id)
+                    ->where('id_user', $user->id)
+                    ->where('status', 'JoinRequest')
+                    ->update(['status' => $status]);
+            
+            if ($status === 'Accepted') {
+                $event->update(['n_participants' => $event->n_participants + $affected]);
+            }
         }
         catch (QueryException $ex) {
-            DB::rollback();
-            return response('The attendance limit has been reached.', 400);
+            DB::rollBack();
+            return response('A database error occurred.', 500);
         }
         DB::commit();
 
@@ -531,9 +553,10 @@ class EventController extends Controller {
             return response('Event with the specified ID does not exist.', 404);
         }
 
-        // Check status input
-        if ($request->input('status') !== 'Accepted' && $request->input('status') !== 'Declined') {
-            return response('Invalid request: status is not \'Accepted\' or \'Declined\'.', 400);
+        // Validate request (check status input)
+        $validator = $this->updateParticipationValidator($request);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
         }
 
         // Authorization
@@ -543,12 +566,15 @@ class EventController extends Controller {
         }
 
         // Accept / Decline all the join requests
+        $status = $request->input('status');
         DB::beginTransaction();
         try {
-            DB::table('participation')->where([['id_event', $id], ['status', 'JoinRequest']])
-                                      ->update(['status' => $request->input('status')]);
-            $participants = DB::table('participation')->where([['id_event', $id], ['status', 'Accepted']])->count();
-            Event::find($id)->update(['n_participants' => $participants]);
+            $participants = DB::table('participation')
+                                ->where([['id_event', $id], ['status', 'JoinRequest']])
+                                ->update(['status' => $status]);
+            if ($status === 'Accepted') {
+                $event->update(['n_participants' => $event->n_participants + $participants]);
+            }
         }
         catch (QueryException $ex) {
             DB::rollback();
@@ -802,9 +828,6 @@ class EventController extends Controller {
         return $events;
     }
 
-    /**
-     * @return \
-     */
     private static function searchValidator(Request $request) {
         return Validator::make($request->all(), [
             'query' => 'required|string|max:500',
