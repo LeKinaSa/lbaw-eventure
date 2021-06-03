@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\File;
-use App\Policies\PollPolicy;
+use App\Policies\FilePolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -29,7 +29,7 @@ class FileController extends Controller {
             return response('Event with the specified ID does not exist.', 404);
         }
 
-        if (!PollPolicy::create(Auth::user(), $event)) {
+        if (!FilePolicy::create(Auth::user(), $event)) {
             return response('No permission to perform this request.', 403);
         }
 
@@ -56,9 +56,11 @@ class FileController extends Controller {
     }
 
     public function download(Request $request, $id, $fileName) {
-        // TODO: Authorization
         $event = Event::findOrFail($id);
-        $file = File::where('name', $fileName)->firstOrFail();
+        $file = File::where([['id_event', $id], ['name', $fileName]])->firstOrFail();
+
+        $user = Auth::user() ?? Auth::guard('admin')->user();
+        $this->authorizeForUser($user, 'view', [$file, $event]);
 
         $fileData = stream_get_contents($file->data);
         return response($fileData)->withHeaders(['Content-Type' => 'application/octet-stream']);

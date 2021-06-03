@@ -6,6 +6,7 @@ use App\Models\File;
 use App\Models\User;
 use App\Models\Event;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class FilePolicy {
     use HandlesAuthorization;
@@ -23,13 +24,12 @@ class FilePolicy {
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\File  $file
+     * @param  \App\Models\Authenticatable  $user
+     * @param  \App\Models\File             $file
      * @return mixed
      */
-    public function view(User $user, File $file)
-    {
-        //
+    public static function view(?Authenticatable $user, File $file, $event) {
+        return EventPolicy::view($user, $event);
     }
 
     /**
