@@ -419,7 +419,7 @@ INSERT INTO "category" ("name") VALUES ('Role-Playing Games');
 
 -- R06
 INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,n_participants,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (1,'2021 FIFA Club Tournament'       ,'Private','Fifa Tournament with big prizes',NULL,'2021-06-10 20:00','2021-06-13 20:00','Virtual',NULL,NULL,2,'false',2,1,0.5,0,'false');
-INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,n_participants,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (3,'2021 VCT Challengers'            ,'Public' ,'Valorant Challengers Competition',NULL,'2021-06-15 18:00','2021-06-18 22:00','Mixed','Smithings Street, Liverpool',30,1,'false',2,2,1,0,'false');
+INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,n_participants,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (3,'2021 VCT Challengers'            ,'Public' ,'Valorant Challengers Competition',NULL,'2021-06-15 18:00','2021-06-18 22:00','Mixed','Smithings Street, Liverpool',30,1,'false',2,3,1,0,'true');
 INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,n_participants,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (4,'Amateur Blitz Chess Tournament'  ,'Public' ,'Test your blitz skills in this amateur chess competition! Players with up to 1500 rating can participate.',NULL,'2021-05-30 10:00','2021-05-30 18:00','InPerson','79 Maroon Street, Toronto',20,1,'false',1,1,0.5,0,'true');
 
 -- R07
@@ -429,6 +429,20 @@ INSERT INTO "poll" (id_event,question) VALUES (3,'What should the time control b
 INSERT INTO "poll_option" (id_poll,"option") VALUES (1,'5 + 0');
 INSERT INTO "poll_option" (id_poll,"option") VALUES (1,'5 + 3');
 INSERT INTO "poll_option" (id_poll,"option") VALUES (1,'5 + 5');
+
+-- R11
+INSERT INTO "competitor" (id_event,"name") VALUES (1,'Mosaad Aldossary'     );
+INSERT INTO "competitor" (id_event,"name") VALUES (1,'Stefano Pinna'        );
+INSERT INTO "competitor" (id_event,"name") VALUES (1,'Kai Wollin'           );
+INSERT INTO "competitor" (id_event,"name") VALUES (2,'Sentinels'            );
+INSERT INTO "competitor" (id_event,"name") VALUES (2,'Imortals'             );
+INSERT INTO "competitor" (id_event,"name") VALUES (2,'Luminosity Gaming'    );
+
+-- R12
+INSERT INTO "match" (id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (1,'2021-06-12 15:00','Very close match'                               ,'Winner2', 1, 2);
+INSERT INTO "match" (id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (1,'2021-06-12 18:00',NULL                                             ,'TBD'    , 2, 3);
+INSERT INTO "match" (id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (2,'2021-06-16 19:00','The match was going back and forth all the time','Tie'    , 4, 5);
+INSERT INTO "match" (id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (2,'2021-06-17 12:00','Very good performance by the Sentinels, staying calm under extreme pressure.','Winner1', 4, 6);
 
 -- R14
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (2, 1,'Accepted');

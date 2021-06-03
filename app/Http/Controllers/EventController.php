@@ -617,6 +617,158 @@ class EventController extends Controller {
         return response(route('events.event', ['id' => $event->id]));
     }
 
+    public static function leaderboardValidator(Request $request) {
+        return Validator::make($request->all(), [
+            'winPoints' => 'numeric|min:0|max:100',
+            'drawPoints' => 'numeric|min:0|max:100',
+            'lossPoints' => 'numeric|min:0|max:100',
+            'generateLeaderboard' => [Rule::in('true', 'false')],
+        ]);
+    }
+
+    public function updateLeaderboardSettings(Request $request, $id) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+
+        if (!EventPolicy::update(Auth::user(), $event)) {
+            return response('No permission to perform this request.', 403);
+        }
+
+        $validator = EventController::leaderboardValidator($request);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
+        }
+
+        $generateLeaderboard = $request->input('generateLeaderboard') === 'true';
+
+        try {
+            $event->update([
+                'win_points' => $request->input('winPoints'),
+                'draw_points' => $request->input('drawPoints'),
+                'loss_points' => $request->input('lossPoints'),
+                'leaderboard' => $generateLeaderboard,
+            ]);
+            $event->save();
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        $matches = $event->matches()
+                ->join('competitor AS c1', 'c1.id', '=', 'match.id_competitor1')
+                ->join('competitor AS c2', 'c2.id', '=', 'match.id_competitor2')
+                ->select('match.*', 'c1.name AS name_competitor1', 'c2.name AS name_competitor2')->get();
+
+        $competitors = $event->competitors()->get();
+
+        $leaderboard = null;
+        if ($event->leaderboard) {
+            $leaderboard = $this->buildLeaderboard($event, $matches, $competitors);
+        }
+
+        return view('partials.leaderboard', ['leaderboard' => $leaderboard]);
+    }
+
+    public function buildLeaderboard($event, $matches, $competitors) {
+        $leaderboard = array();
+        foreach ($competitors as $competitor) {
+            $leaderboard[$competitor->id] = ['name' => $competitor->name, 'games' => 0, 'wins' => 0, 'draws' => 0, 'losses' => 0, 'points' => 0.0];
+        }
+        unset($competitor);
+
+        foreach ($matches as $match) {
+            switch ($match->result) {
+                case "Winner1":
+                    $leaderboard[$match->id_competitor1]['games'] += 1;
+                    $leaderboard[$match->id_competitor1]['wins'] += 1;
+                    $leaderboard[$match->id_competitor1]['points'] += $event->win_points;
+
+                    $leaderboard[$match->id_competitor2]['games'] += 1;
+                    $leaderboard[$match->id_competitor2]['losses'] += 1;
+                    $leaderboard[$match->id_competitor2]['points'] += $event->loss_points;
+                    break;
+                case "Winner2":
+                    $leaderboard[$match->id_competitor1]['games'] += 1;
+                    $leaderboard[$match->id_competitor1]['losses'] += 1;
+                    $leaderboard[$match->id_competitor1]['points'] += $event->loss_points;
+                    
+                    $leaderboard[$match->id_competitor2]['games'] += 1; 
+                    $leaderboard[$match->id_competitor2]['wins'] += 1; 
+                    $leaderboard[$match->id_competitor2]['points'] += $event->win_points;
+                    break;
+                case "Tie":
+                    $leaderboard[$match->id_competitor1]['games'] += 1;
+                    $leaderboard[$match->id_competitor1]['draws'] += 1;
+                    $leaderboard[$match->id_competitor1]['points'] += $event->draw_points;
+
+                    $leaderboard[$match->id_competitor2]['games'] += 1;
+                    $leaderboard[$match->id_competitor2]['draws'] += 1;
+                    $leaderboard[$match->id_competitor2]['points'] += $event->draw_points;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        uasort($leaderboard, function($a, $b) {
+            return $b['points'] - $a['points'];
+        });
+
+        $position = 1;
+
+        foreach ($leaderboard as $id => $competitor) {
+            $leaderboard[$id]['position'] = $position;
+            ++$position;
+        }
+
+        return $leaderboard;
+    }
+
+    public function showResults(Request $request, $id) {
+        $event = Event::find($id);
+        $this->authorize('view', $event);
+
+        $matches = $event->matches()
+                ->join('competitor AS c1', 'c1.id', '=', 'match.id_competitor1')
+                ->join('competitor AS c2', 'c2.id', '=', 'match.id_competitor2')
+                ->select('match.*', 'c1.name AS name_competitor1', 'c2.name AS name_competitor2')->get();
+
+        $competitors = $event->competitors()->get();
+
+        $leaderboard = null;
+        if ($event->leaderboard) {
+            $leaderboard = $this->buildLeaderboard($event, $matches, $competitors);
+        }
+
+        return view('pages.results', ['event' => $event, 'matches' => $matches, 'competitors' => $competitors, 'leaderboard' => $leaderboard]);
+    }
+
+    public function createPlayer(Request $request, $id){
+        $event = Event::find($id);
+        $this->validateRequest($request);
+        if (is_null($event)) {
+            return response('The specified event does not exist.', 400);
+        }
+
+        $this->authorize('create', [Competitor::class, $event]);
+
+        try {
+            $competitor = Competitor::create([
+                'id_event' => $id,
+                'name' => $request->input('text'),
+            ]);
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        
+        $competitor->save();
+        return view('partials.player', ['competitor' => $competitor]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

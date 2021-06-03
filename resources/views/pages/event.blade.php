@@ -25,9 +25,10 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
             <img src="{{ is_null($event->picture) ? asset('img/event_default.png') : 'data:image/jpeg;base64, ' . $event->picture }}" class="img-fluid rounded" alt="Event image">
         </div>
         <div class="col-md-7 p-3">
+
             <div class="d-flex justify-content-between">
                 <div class="d-flex gap-2 align-items-center">
-                    <a href="#" role="button" class="btn btn-primary">Results <i class="fa fa-trophy"></i></a>
+                    <a href="{{ route('events.event.matches', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Results <i class="fa fa-trophy"></i></a>
                     @if (Auth::id() === $event->id_organizer)
                     <a href="{{ route('events.event.invitations', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Invitations <i class="fa fa-envelope"></i></a>
                     <a href="{{ route('events.event.participants', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Participants <i class="fa fa-users"></i></a>

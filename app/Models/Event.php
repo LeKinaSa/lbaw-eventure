@@ -81,6 +81,14 @@ class Event extends Model {
         return Event::FORMATTED_TYPES[$this->type];
     }
 
+    public function matches() {
+        return $this->hasMany(Match::class, 'id_event');
+    }
+
+    public function competitors() {
+        return $this->hasMany(Competitor::class, 'id_event');
+    }
+    
     public function limitedAttendance() {
         return $this->max_attendance !== null;
     }

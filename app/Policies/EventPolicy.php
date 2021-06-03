@@ -72,7 +72,7 @@ class EventPolicy {
      * @param  \App\Models\Event  $event
      * @return mixed
      */
-    public function update(User $user, Event $event) {
+    public static function update(User $user, Event $event) {
         // Only organizers can update the details of their events
         return $user->id === $event->id_organizer;
     }
