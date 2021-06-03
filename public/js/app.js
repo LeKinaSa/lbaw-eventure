@@ -128,10 +128,13 @@ function createPollHandler() {
 
     document.getElementById('newPollOption').value = "";
 
-    pollsSection.innerHTML += this.responseText;
+    pollsSection.insertAdjacentHTML('afterbegin', this.responseText);
     
     let closeModalButton = document.getElementById('createPollModalClose');
     closeModalButton.click();
+
+    let deletePollForm = document.querySelector('.form-delete-poll');
+    deletePollForm.addEventListener('submit', sendDeletePollRequest);
 }
 
 function deletePollOption() {
@@ -226,6 +229,32 @@ for (let input of pollAnswerInputs) {
 let removePollAnswerForms = document.querySelectorAll('.form-remove-poll-answer');
 for (let form of removePollAnswerForms) {
     form.addEventListener('submit', sendDeletePollAnswerRequest);
+}
+
+let deletePollForms = document.querySelectorAll('.form-delete-poll');
+for (let form of deletePollForms) {
+    form.addEventListener('submit', sendDeletePollRequest);
+}
+
+function sendDeletePollRequest(event) {
+    event.preventDefault();
+    let csrfToken = this.querySelector('input[name=_token]').value;
+    let method = this.querySelector('input[name=_method]').value;
+
+    let poll = this.closest('article');
+    sendAjaxRequest(method, this.action, { _token: csrfToken }, deletePollHandler, {poll: poll});
+}
+
+function deletePollHandler(data) {
+    if (this.status !== 200) {
+        document.getElementById('deletePollError').innerHTML = this.responseText;    
+        return;
+    }
+
+    document.getElementById('deletePollError').innerHTML = "";
+    if (data.poll !== null) {
+        data.poll.remove();
+    }
 }
 
 // ----- Comments API -----

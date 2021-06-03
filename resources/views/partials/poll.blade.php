@@ -13,7 +13,7 @@ $answer = optional(optional(optional(Auth::user())->pollAnswer($poll))->first())
     <header class="mb-2 mx-1 d-flex align-items-center justify-content-between">
         <h5>{{ $poll->question }}</h5>
         @if (App\Policies\PollPolicy::delete(Auth::user() ?? Auth::guard('admin')->user(), $poll))
-        <form method="POST" action="{{ route('api.events.event.polls.poll.delete', ['id' => $event->id, 'idPoll' => $poll->id]) }}">
+        <form method="POST" action="{{ route('api.events.event.polls.poll.delete', ['id' => $event->id, 'idPoll' => $poll->id]) }}" class="form-delete-poll">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-outline-danger">Delete this poll</button>
