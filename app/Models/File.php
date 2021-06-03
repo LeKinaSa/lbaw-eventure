@@ -5,15 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BannedUser extends Model {
+class File extends Model {
     use HasFactory;
 
     // Don't add create and update timestamps in database.
     public $timestamps = false;
-    protected $table = 'banned_user';
-    protected $primaryKey = 'id_user';
+    protected $table = 'file';
 
     protected $fillable = [
-        'id_user', 'since', 'reason',
+        'id_event', 'name', 'data',
     ];
+    
+    public function event() {
+        return $this->belongsTo(Event::class, 'id_event');
+    }
 }
