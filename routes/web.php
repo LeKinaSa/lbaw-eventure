@@ -37,9 +37,10 @@ Route::post('/events/{id}/edit', 'EventController@update');
 Route::get('/events/{id}/participants', 'EventController@showParticipants')->name('events.event.participants');
 Route::post('/events/{id}/cancel', 'EventController@cancel')->name('events.event.cancel');
 
-// Matches
-Route::get('/events/{id}/matches', 'EventController@showResults')->name('events.event.results');
+// Matches and Competitors
 Route::patch('/api/events/{id}/leaderboard-settings', 'EventController@updateLeaderboardSettings')->name('api.events.event.leaderboard-settings.update');
+Route::get('/events/{id}/matches', 'EventController@showResults')->name('events.event.matches');
+Route::post('/api/events/{id}/matches', 'MatchController@create')->name('api.events.event.matches.new');
 Route::get('/events/{id}/matches/competitors', 'CompetitorController@index')->name('events.event.competitors');
 Route::post('/api/events/{id}/competitors', 'CompetitorController@store')->name('api.events.event.competitors.new');
 

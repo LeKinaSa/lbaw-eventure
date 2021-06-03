@@ -5,7 +5,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a class="text-primary" href="{{ url('/') }}">Home</a></li>
             <li class="breadcrumb-item"><a class="text-primary" href="{{ route('events.event', ['id' => $event->id]) }}">{{ $event->title }}</a></li>
-            <li class="breadcrumb-item"><a class="text-primary" href="{{ route('events.event.results', ['id' => $event->id]) }}">Results</a></li>
+            <li class="breadcrumb-item"><a class="text-primary" href="{{ route('events.event.matches', ['id' => $event->id]) }}">Results</a></li>
             <li class="breadcrumb-item active" aria-current="page">Competitors</li>
         </ol>
     </nav>

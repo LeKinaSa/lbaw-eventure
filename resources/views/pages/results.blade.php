@@ -43,10 +43,10 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form method="POST" action="" id="createMatchForm">
+                            <form method="POST" action="{{ route('api.events.event.matches.new', ['id' => $event->id]) }}" id="createMatchForm">
                                 <div class="row mb-3">
                                     <div class="col">
-                                        <label for="first" class="h5 form-label">First *</label>
+                                        <label for="first" class="h5 form-label">First Competitor <span class="text-danger">*</span></label>
                                         <select class="form-select" name="first" required>
                                             @foreach ($competitors as $competitor)
                                             <option value="{{ $competitor->id }}">{{ $competitor->name }}</option>
@@ -54,7 +54,7 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <label for="second" class="h5 form-label">Second *</label>
+                                        <label for="second" class="h5 form-label">Second <span class="text-danger">*</span></label>
                                         <select class="form-select" name="second" required>
                                             @foreach ($competitors as $competitor)
                                             <option value="{{ $competitor->id }}">{{ $competitor->name }}</option>
@@ -64,40 +64,40 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <h5>Result *</h5>
+                                    <h5>Result <span class="text-danger">*</span></h5>
                                     <div class="d-flex justify-content-evenly">
                                         <div class="form-check">
-                                            <label class="form-check-label" for="futureMatch">Future match</label>
-                                            <input class="form-check-input" type="radio" name="result" id="futureMatch" checked required>
+                                            <label class="form-check-label" for="resultTBD">To Be Determined</label>
+                                            <input class="form-check-input" type="radio" name="result" value="TBD" id="resultTBD" checked required>
                                         </div>
                                         <div class="form-check">
-                                            <label class="form-check-label" for="resultWinFirst">1st Win</label>
-                                            <input class="form-check-input" type="radio" name="result" id="resultWinFirst">
+                                            <label class="form-check-label" for="resultWinner1">1st Win</label>
+                                            <input class="form-check-input" type="radio" name="result" value="Winner1" id="resultWinner1">
                                         </div>
                                         <div class="form-check">
-                                            <label class="form-check-label" for="resultDraw">Draw</label>
-                                            <input class="form-check-input" type="radio" name="result" id="resultDraw">
+                                            <label class="form-check-label" for="resultTie">Draw</label>
+                                            <input class="form-check-input" type="radio" name="result" value="Tie" id="resultTie">
                                         </div>
                                         <div class="form-check">
-                                            <label class="form-check-label" for="resultWinSecond">2nd Win</label>
-                                            <input class="form-check-input" type="radio" name="result" id="resultWinSecond">
+                                            <label class="form-check-label" for="resultWinner2">2nd Win</label>
+                                            <input class="form-check-input" type="radio" name="result" value="Winner2" id="resultWinner2">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="matchDate" class="h5 form-label">Date</label>
-                                    <input type="date" class="form-control" id="matchDate" name="matchDate">
+                                    <input type="date" class="form-control" id="matchDate" name="date">
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="matchTime" class="h5 form-label">Time</label>
-                                    <input type="time" class="form-control" id="matchTime" name="matchTime">
+                                    <input type="time" class="form-control" id="matchTime" name="time">
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="information" class="h5 form-label">Additional information</label>
-                                    <textarea class="form-control" id="information" name="information"></textarea>
+                                    <label for="matchDescription" class="h5 form-label">Additional information</label>
+                                    <textarea class="form-control" id="matchDescription" name="description"></textarea>
                                 </div>
 
                                 <div class="modal-footer">
