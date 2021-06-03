@@ -1,4 +1,9 @@
 
+let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+});
+
 function onWindowResize(event) {
     let dropdownList = document.getElementById('dropdownUserItems');
 
@@ -609,7 +614,7 @@ let searchFiltersSection = document.getElementById('searchFilters');
 let searchEventsSpinner = document.getElementById('searchResultsSpinner');
 let searchEventsError = document.getElementById('searchEventsError');
 
-for (let input of document.querySelectorAll('#searchFilters input, select')) {
+for (let input of document.querySelectorAll('#searchFilters input, #searchFilters select')) {
     input.addEventListener('change', sendSearchEventsRequest);
 }
 
@@ -781,6 +786,27 @@ function updateLeaderboardSettingsHandler() {
     }
 
     document.getElementById('leaderboard').innerHTML = this.responseText;
+}
+
+let createMatchForm = document.getElementById('createMatchForm');
+if (createMatchForm !== null) {
+    let firstSelect = createMatchForm.querySelector('select[name=first]');
+    firstSelect.addEventListener('change', function() {
+        disableSameCompetitor(firstSelect.value);
+    });
+    disableSameCompetitor(firstSelect.value);
+}
+
+function disableSameCompetitor(id) {
+    let secondSelect = createMatchForm.querySelector('select[name=second]');
+    let sameOption = secondSelect.querySelector('option[value=\'' + id + '\']');
+    
+    for (let option of secondSelect.querySelectorAll('option')) {
+        option.disabled = false;
+    }
+
+    sameOption.disabled = true;
+    sameOption.selected = false;
 }
 
 // ----- Competitors API -----

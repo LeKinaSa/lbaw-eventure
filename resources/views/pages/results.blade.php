@@ -18,14 +18,23 @@
 
             <div class="d-flex gap-2">
                 <a role="button" class="btn btn-primary" href="{{ route('events.event.competitors', ['id' => $event->id]) }}">Competitors <i class='fa fa-list-ul'></i></a>
+                @if (count($competitors) < 2)
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="To create a match, your event needs to have at least 2 competitors">
+                    <button class="btn btn-success" type="button" disabled>
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </span>
+                @else
                 <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#matchModal" aria-label="Add match">
                     <i class="fa fa-plus"></i>
                 </button>
+                @endif
                 <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSettings" aria-expanded="false" aria-controls="collapseSettings" aria-label="Settings">
                     <i class="fa fa-wrench"></i>
                 </button>
             </div>
 
+            @if (count($competitors) >= 2)
             <div class="modal fade" id="matchModal" tabindex="-1" aria-labelledby="matchModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -34,24 +43,22 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form>
+                            <form method="POST" action="" id="createMatchForm">
                                 <div class="row mb-3">
                                     <div class="col">
                                         <label for="first" class="h5 form-label">First *</label>
                                         <select class="form-select" name="first" required>
-                                            <option selected>Dmitri Dolyakov</option>
-                                            <option>Martin Fowler</option>
-                                            <option>Jane Caldwin</option>
-                                            <option>Santiago Neves</option>
+                                            @foreach ($competitors as $competitor)
+                                            <option value="{{ $competitor->id }}">{{ $competitor->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="col">
                                         <label for="second" class="h5 form-label">Second *</label>
                                         <select class="form-select" name="second" required>
-                                            <option>Dmitri Dolyakov</option>
-                                            <option selected>Martin Fowler</option>
-                                            <option>Jane Caldwin</option>
-                                            <option>Santiago Neves</option>
+                                            @foreach ($competitors as $competitor)
+                                            <option value="{{ $competitor->id }}">{{ $competitor->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -101,6 +108,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </header>
 
         <div class="collapse mb-2 bg-light" id="collapseSettings">

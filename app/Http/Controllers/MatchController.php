@@ -13,6 +13,7 @@ class MatchController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, $id) {
+        
         $event = Event::findOrFail($id);
         $this->authorize('create', [Match::class, $event]);
 
