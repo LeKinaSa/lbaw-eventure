@@ -64,6 +64,10 @@ Route::delete('/api/events/{id}/polls/{idPoll}/answer', 'PollController@deleteAn
 Route::post('/api/events/{id}/comments', 'CommentController@store')->name('api.events.event.comments.new');
 Route::delete('/api/events/{idEvent}/comments/{id}', 'CommentController@destroy')->name('api.events.event.comments.comment.delete');
 
+// Files API
+Route::post('/api/events/{id}/files', 'FileController@store')->name('api.events.event.files.new');
+Route::get('/events/{id}/files/{fileName}', 'FileController@download')->name('events.event.files.file');
+
 // Authentication
 Route::get('/sign-in', 'Auth\LoginController@showLoginForm')->name('sign-in');
 Route::post('/sign-in', 'Auth\LoginController@login');
