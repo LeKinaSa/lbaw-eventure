@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Utils;
+use App\Models\BannedUser;
+use App\Models\Suspension;
 use App\Models\User;
+use App\Utils;
 use App\Policies\EventPolicy;
 
 use Illuminate\Http\Request;
@@ -49,24 +51,28 @@ class UserController extends Controller {
      */
     public function show(Request $request, $username) {
         $user = User::where('username', $username)->firstOrFail();
-        $this->authorize('view', $user);
+        $authenticatedUser = Auth::user() ?? Auth::guard('admin')->user();
+        $this->authorizeForUser($authenticatedUser, 'view', $user);
 
-        // TODO: Improve this
         $eventsOrganizing = $user->eventsOrganizing()->limit(3)->get();
         foreach ($eventsOrganizing as $key => $event) {
-            if (!EventPolicy::view(Auth::user(), $event)) {
+            if (!EventPolicy::view($authenticatedUser, $event)) {
                 unset($eventsOrganizing[$key]);
             }
         }
 
         $eventsParticipatingIn = $user->eventsParticipatingIn()->limit(3)->get();
         foreach ($eventsParticipatingIn as $key => $event) {
-            if (!EventPolicy::view(Auth::user(), $event)) {
+            if (!EventPolicy::view($authenticatedUser, $event)) {
                 unset($eventsParticipatingIn[$key]);
             }
         }
 
-        return view('pages.user', ['user' => $user, 'eventsOrganizing' => $eventsOrganizing, 'eventsParticipatingIn' => $eventsParticipatingIn]);
+        $suspension = Suspension::where('id_user', $user->id)->where('until', '>', date('Y-m-d'))->first();
+        $ban = BannedUser::where('id_user', $user->id)->first();
+
+        return view('pages.user', ['user' => $user, 'eventsOrganizing' => $eventsOrganizing, 'eventsParticipatingIn' => $eventsParticipatingIn,
+                'suspension' => $suspension, 'ban' => $ban]);
     }
 
     /**

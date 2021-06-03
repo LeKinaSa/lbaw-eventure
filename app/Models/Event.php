@@ -49,6 +49,10 @@ class Event extends Model {
         return $this->hasMany(Poll::class, 'id_event');
     }
 
+    public function files() {
+        return $this->hasMany(File::class, 'id_event');
+    }
+
     /**
      * Returns all the users that have an entry in the participation table for this event, regardless of whether
      * they are actually participants in the event (they can be simply invited or attempting to join).

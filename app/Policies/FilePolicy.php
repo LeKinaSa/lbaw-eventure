@@ -2,12 +2,13 @@
 
 namespace App\Policies;
 
+use App\Models\File;
 use App\Models\User;
 use App\Models\Event;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class UserPolicy {
+class FilePolicy {
     use HandlesAuthorization;
 
     /**
@@ -24,11 +25,11 @@ class UserPolicy {
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\Authenticatable  $user
-     * @param  \App\Models\User             $model
+     * @param  \App\Models\File             $file
      * @return mixed
      */
-    public function view(?Authenticatable $user, User $model) {
-        return true;
+    public static function view(?Authenticatable $user, File $file, $event) {
+        return EventPolicy::view($user, $event);
     }
 
     /**
@@ -37,40 +38,44 @@ class UserPolicy {
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(User $user) {
-        //
+    public static function create(?User $user, Event $event) {
+        // Only the organizer can upload files for an event
+        return optional($user)->id === $event->id_organizer;
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\File  $file
      * @return mixed
      */
-    public function update(User $user, User $model) {
-        return $user->id === $model->id;
+    public function update(User $user, File $file)
+    {
+        //
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\File  $file
      * @return mixed
      */
-    public function delete(User $user, User $model) {
-        return $user->id === $model->id;
+    public function delete(User $user, File $file)
+    {
+        //
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\File  $file
      * @return mixed
      */
-    public function restore(User $user, User $model) {
+    public function restore(User $user, File $file)
+    {
         //
     }
 
@@ -78,10 +83,11 @@ class UserPolicy {
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\File  $file
      * @return mixed
      */
-    public function forceDelete(User $user, User $model) {
+    public function forceDelete(User $user, File $file)
+    {
         //
     }
 }
