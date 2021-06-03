@@ -102,22 +102,6 @@
                 </div>
             </div>
         </header>
-        
-        <div class="collapse mb-2 bg-light" id="collapsePlayers">
-            <div class="p-3">
-                <h5>Players / Teams</h5>
-                <ul class="list-unstyled d-flex flex-column gap-1">
-                    @each('partials.player', $competitors, 'competitor')
-                </ul>
-                <form method="POST" class="py-3" action="{{ route('events.event.competitors.new', ['id' => $event->id]) }}" id="addPlayersForm">
-                    @csrf
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Name" aria-label="Name">
-                        <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i></button>
-                    </div>
-                </form>
-            </div>
-        </div>
 
         <div class="collapse mb-2 bg-light" id="collapseSettings">
             <form class="p-3" method="POST" action="{{ route('api.events.event.leaderboard-settings.update', ['id' => $event->id]) }}" id="leaderboardSettingsForm">

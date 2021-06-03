@@ -10,18 +10,23 @@
         </ol>
     </nav>
 
-    <h1 class="text-center mb-3">Competitors</h1>
+    <h1 class="text-center mb-4">Competitors</h1>
 
     <ul class="list-unstyled d-flex flex-column gap-1" id="competitors">
-        @each('partials.player', $competitors, 'competitor')
+        @foreach($competitors as $competitor)
+            @include('partials.competitor', ['competitor' => $competitor])
+        @endforeach
     </ul>
-    <form method="POST" class="py-3" action="{{ route('events.event.competitors.new', ['id' => $event->id]) }}" id="addPlayersForm">
+
+    @can('update', $event)
+    <form method="POST" class="py-3" action="{{ route('api.events.event.competitors.new', ['id' => $event->id]) }}" id="addCompetitorForm">
         @csrf
         <h5>Add competitor</h5>
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="Name" aria-label="Name">
+            <input type="text" class="form-control" placeholder="Name" aria-label="Name" name="name">
             <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i></button>
         </div>
     </form>
+    @endcan
 </div>
 @endsection
