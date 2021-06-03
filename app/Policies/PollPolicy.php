@@ -5,7 +5,9 @@ namespace App\Policies;
 use App\Models\Poll;
 use App\Models\User;
 use App\Models\Event;
+use App\Models\Administrator;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
 
 class PollPolicy
 {
@@ -61,8 +63,18 @@ class PollPolicy
      * @param  \App\Models\Poll  $poll
      * @return mixed
      */
-    public function delete(User $user, Poll $poll) {
-        //
+    public function delete(?Authenticatable $user, Poll $poll) {
+        // TODO: check the next if statement
+        if (is_null($user)) {
+            $user = Auth::user() ?? Auth::guard('admin')->user();
+        }
+        
+        if (!is_null($user) && $user instanceof Administrator) {
+            // Admnistrators can delete any poll
+            return true;
+        }
+        $event = Event::find($poll->id_event);
+        return ($event !== null) && (optional($user)->id === $event->id_organizer);
     }
 
     /**

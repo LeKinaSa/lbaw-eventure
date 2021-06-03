@@ -99,7 +99,11 @@ class CommentController extends Controller {
         if (is_null($comment)) {
             return response('Request has an invalid comment id.', 400);
         }
-        $this->authorize('delete', $comment);
+
+        //Authorization
+        $user = Auth::user() ?? Auth::guard('admin')->user();
+        $this->authorizeForUser($user, 'delete', $comment);
+
 
         $event = Event::find($idEvent);
         if (is_null($event)) {

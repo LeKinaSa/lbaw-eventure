@@ -5,7 +5,9 @@ namespace App\Policies;
 use App\Models\Comment;
 use App\Models\User;
 use App\Models\Event;
+use App\Models\Administrator;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
 
 class CommentPolicy {
     use HandlesAuthorization;
@@ -62,7 +64,12 @@ class CommentPolicy {
      * @param  \App\Models\Comment  $comment
      * @return mixed
      */
-    public function delete(?User $user, Comment $comment) {
+    public function delete(?Authenticatable $user, Comment $comment) {
+        // TODO: check the next if statement
+        if (is_null($user)) {
+            $user = Auth::user() ?? Auth::guard('admin')->user();
+        }
+
         if (!is_null($user) && $user instanceof Administrator) {
             // Admnistrators can delete any comment
             return true;

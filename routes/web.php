@@ -59,6 +59,7 @@ Route::get('/api/events', 'EventController@getSearchResults')->name('api.events.
 Route::post('/api/events/{id}/polls', 'PollController@store')->name('api.events.event.polls.new');
 Route::put('/api/events/{id}/polls/{idPoll}/answer', 'PollController@putAnswer')->name('api.events.event.polls.poll.answer.put');
 Route::delete('/api/events/{id}/polls/{idPoll}/answer', 'PollController@deleteAnswer')->name('api.events.event.polls.poll.answer.delete');
+Route::delete('/api/events/{id}/polls/{idPoll}', 'PollController@delete')->name('api.events.event.polls.poll.delete');
 
 // Comments API
 Route::post('/api/events/{id}/comments', 'CommentController@store')->name('api.events.event.comments.new');

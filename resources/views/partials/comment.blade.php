@@ -17,6 +17,7 @@
             @can ('update', $comment)
             <button type="button" class="btn btn-secondary button-comment-edit" aria-label="Edit"><i class="fa fa-pencil"></i></button>
             @endcan
+            <!-- TODO: rework next line -->
             @can ('delete', $comment)
             <form method="POST" action="{{ route('api.events.event.comments.comment.delete', ['idEvent' => $event->id, 'id' => $comment->id]) }}">
             @csrf
