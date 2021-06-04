@@ -36,10 +36,6 @@
                 <div class="mb-3">
                     <div class="d-flex justify-content-between">
                         <label for="email" class="h5 form-label">Email *</label>
-                        {{-- <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="displayEmail" name="displayEmail" checked>
-                            <label for="displayEmail" class="form-check-label">Display in profile</label>
-                        </div> --}}
                     </div>
                     <input type="email" id="email" name="email" class="form-control" value="{{ $user->email }}" required>
                     @error ('email')

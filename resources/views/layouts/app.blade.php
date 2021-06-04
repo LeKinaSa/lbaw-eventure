@@ -105,7 +105,6 @@ $admin = Auth::guard('admin')->user();
               <li><a class="text-primary" href="{{ url('/faq') }}">FAQ</a></li>
             </ul>
           </div>
-          <!-- TODO: Only show this section if authenticated as admin -->
           @if (!is_null($admin))
           <div class="col-md">
             <h5 class="text-uppercase">Administration</h5>
