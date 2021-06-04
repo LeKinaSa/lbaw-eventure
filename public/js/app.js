@@ -766,7 +766,7 @@ function banUserHandler() {
         return;
     }
 
-    document.getElementById('banUserErrror').innerHTML = '';
+    document.getElementById('banUserError').innerHTML = '';
     document.querySelector('#banUserModal .btn-close').click();
 
     document.getElementById('suspensionBanStatus').outerHTML = this.responseText;
