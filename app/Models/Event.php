@@ -82,7 +82,7 @@ class Event extends Model {
     }
 
     public function matches() {
-        return $this->hasMany(Match::class, 'id_event');
+        return $this->hasMany(EventMatch::class, 'id_event');
     }
 
     public function competitors() {

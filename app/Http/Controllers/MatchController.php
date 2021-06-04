@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use DateTime;
 use App\Models\Event;
 use App\Models\Competitor;
-use App\Models\Match;
+use App\Models\EventMatch;
 use App\Policies\EventPolicy;
 
 use Illuminate\Database\QueryException;
@@ -65,7 +65,7 @@ class MatchController extends Controller {
         $time = $request->input('time');
 
         if (!is_null($time)) {
-            $fullDate = $date . $time;
+            $fullDate = $date . ' ' . $time;
         }
         else if (!is_null($date)) {
             $fullDate = $date;
@@ -80,7 +80,7 @@ class MatchController extends Controller {
         }
 
         try {
-            $match = Match::create([
+            $match = EventMatch::create([
                 'id_event' => $id,
                 'date' => $fullDate,
                 'description' => $request->input('description'),
@@ -109,16 +109,16 @@ class MatchController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Match  $match
+     * @param  \App\Models\EventMatch  $match
      * @return \Illuminate\Http\Response
      */
-    public function edit(App\Models\Match $match)
-    {
+    public function edit(EventMatch $match) {
         //
     }
 
@@ -126,20 +126,20 @@ class MatchController extends Controller {
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Match  $match
+     * @param  \App\Models\EventMatch  $match
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, App\Models\Match $match) {
+    public function update(Request $request, EventMatch $match) {
         //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Match  $match
+     * @param  \App\Models\EventMatch  $match
      * @return \Illuminate\Http\Response
      */
-    public function destroy(App\Models\Match $match) {
+    public function destroy(EventMatch $match) {
         //
     }
 }
