@@ -299,7 +299,7 @@ function postCommentHandler(data) {
     if (data.idParent == null) {
         // New root comment
         let commentsDiv = document.querySelector('section#comments > div');
-        commentsDiv.innerHTML = this.responseText + commentsDiv.innerHTML;
+        commentsDiv.insertAdjacentHTML('afterbegin', this.responseText);
 
         // Clear the comment form
         rootCommentForm.querySelector('textarea[name=text]').value = "";
