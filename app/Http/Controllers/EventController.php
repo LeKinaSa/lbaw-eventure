@@ -194,6 +194,13 @@ class EventController extends Controller {
             ]);
         }
 
+        $maxAttendance => $request->has('switchLimitedAttendance') ? $request->input('maxAttendance') : NULL;
+        if (($maxAttendance !== null) && ($maxAttendance < $event->n_participants)) {
+            return back()->withErrors([
+                'maxAttendance' => 'Attendance limit cannot be smaller than the number of participants.'
+            ]);
+        }
+
         $pictureBase64 = NULL;
         $picture = $request->file('picture');
 
@@ -213,7 +220,7 @@ class EventController extends Controller {
                 'description' => $request->input('description'),
                 'type' => $request->input('type'),
                 'location' => $request->input('location'),
-                'max_attendance' => $request->has('switchLimitedAttendance') ? $request->input('maxAttendance') : NULL,
+                'max_attendance' => $maxAttendance,
                 'id_category' => $request->input('category'),
                 'start_date' => $startTimestamp,
                 'end_date' => $finishTimestamp,
