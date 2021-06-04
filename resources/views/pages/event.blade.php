@@ -128,19 +128,6 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
                     </div>
                 </div>
             </div>
-
-            {{-- Tags are disabled for now
-            <div class="row">
-                <h5>Tags</h5>
-                <div class="d-flex flex-wrap gap-2">
-                    <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">chess</span>
-                    <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">friendly</span>
-                    <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">for beginners</span>
-                    <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">blitz chess</span>
-                    <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">learning</span>
-                </div>
-            </div>
-            --}}
         </div>
     </div>
 

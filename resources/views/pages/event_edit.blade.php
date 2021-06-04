@@ -131,29 +131,6 @@ if ($editing) {
                 @enderror
             </div>
 
-            {{-- TODO: (tags are hidden for now, as they are part of a different user story)
-            
-            <div class="mb-3">
-                <h5>Tags</h5>
-                <input type="text" class="form-control mb-2" id="tagsInput">
-                <div id="tags">
-                    <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">
-                        magic the gathering
-                        <button type="button" class="btn-close btn-close-white"></button>
-                    </span>
-                    
-                    <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">
-                        trading card game
-                        <button type="button" class="btn-close btn-close-white"></button>
-                    </span>
-                </div>
-                @error ('tags')
-                <span class="text-danger">{{ $message }}</span>
-                @enderror
-            </div>
-
-            --}}
-
             <div class="mb-3">
                 <div class="form-check form-switch">
                     <label for="switchLimitedAttendance" class="h5 form-check-label">Limited attendance</label>

@@ -29,12 +29,6 @@
     <div class="mt-2 mb-3 mx-3">
         <p class="mb-2 show-whitespace comment-text">{{ is_null($comment->text) ? "[deleted]" : $comment->text }}</p>
 
-        {{-- TODO: comment editing (hidden for now)
-        @can ('update', $comment)
-        @include('partials.comment_form_edit')
-        @endcan
-        --}}
-
         @if (App\Policies\CommentPolicy::create(Auth::user(), $event) && !is_null($comment->id_author))
         @include('partials.comment_form', ['idParent' => $comment->id])
         @endif

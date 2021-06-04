@@ -15,7 +15,6 @@
             @if (!is_null($event->location))
             <li class="card-text"><i class="fs-5 col-2 fa fa-map-marker" aria-label="Location"></i>{{ $event->location }}</li>
             @endif
-            {{-- <li class="card-text"><i class="col-2 fa fa-user" aria-label="Number of participants"></i> participants</li> --}}
         </ul>
     </div>
 </article>
