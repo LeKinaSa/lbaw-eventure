@@ -154,7 +154,7 @@ class EventPolicy {
      * @param  \App\Models\Event  $event
      * @return mixed
      */
-    public static function delete(Authenticatable $user, Event $event) {
+    public static function delete(?Authenticatable $user, Event $event) {
         // Organizers (and administrators) can delete events
         if ($user instanceof Administrator) {
             return true;
