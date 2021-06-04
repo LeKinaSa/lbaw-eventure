@@ -61,7 +61,7 @@ class CommentPolicy {
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  Authenticatable  $user
+     * @param  Illuminate\Foundation\Auth\User  $user
      * @param  \App\Models\Comment  $comment
      * @return mixed
      */
