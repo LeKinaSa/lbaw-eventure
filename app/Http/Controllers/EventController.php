@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Utils;
 use App\Models\Category;
+use App\Models\User;
 use App\Models\Event;
+use App\Policies\EventPolicy;
+use DB;
 use DateTime;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
-class EventController extends Controller
-{
+class EventController extends Controller {
     /**
      * Display a listing of the resource.
      *
@@ -29,7 +33,7 @@ class EventController extends Controller
     public function create() {
         $this->authorize('create', Event::class);
         $categories = Category::get();
-        
+
         return view('pages.event_edit', ['categories' => $categories]);
     }
 
@@ -50,6 +54,7 @@ class EventController extends Controller
             'finishDate' => ['nullable', 'date_format:Y-m-d', Rule::requiredIf($request->has('finishTime') && $request->finishTime !== NULL)],
             'startTime' => 'nullable|date_format:H:i',
             'finishTime' => 'nullable|date_format:H:i',
+            'picture' => 'nullable|file|image|max:1000',
         ]);
     }
 
@@ -59,7 +64,7 @@ class EventController extends Controller
         $startTimestamp = NULL;
         $finishTimestamp = NULL;
 
-        if ($request->input('startDate') !== NULL) {    
+        if ($request->input('startDate') !== NULL) {
             $startDate = new DateTime($request->input('startDate') . ' ' . $request->input('startTime'));
             $startTimestamp = $startDate->format('Y-m-d H:i');
         }
@@ -90,6 +95,17 @@ class EventController extends Controller
             ]);
         }
 
+        $pictureBase64 = NULL;
+        $picture = $request->file('picture');
+
+        if ($request->hasFile('picture') && $picture->isValid()) {
+            $pictureBase64 = Utils::convertImageToBase64($picture);
+            
+            if (is_null($pictureBase64)) {
+                return back()->withErrors(['picture' => 'Uploaded picture has unsupported extension.']);
+            }
+        }
+
         try {
             $event = Event::create([
                 'title' => $request->input('title'),
@@ -102,12 +118,13 @@ class EventController extends Controller
                 'id_category' => $request->input('category'),
                 'start_date' => $startTimestamp,
                 'end_date' => $finishTimestamp,
+                'picture' => $pictureBase64,
             ]);
         }
         catch (QueryException $ex) {
             return redirect(route('events.new'));
         }
-        
+
         // TODO: Event Tags
 
         $event->save();
@@ -122,8 +139,25 @@ class EventController extends Controller
      */
     public function show($id) {
         $event = Event::findOrFail($id);
-        $this->authorize('view', $event);
-        return view('pages.event', ['event' => $event]);
+        $user = Auth::user() ?? Auth::guard('admin')->user();
+        $this->authorizeForUser($user, 'view', $event);
+
+        $comments = $event->comments()->leftJoin('user', 'comment.id_author', '=', 'user.id')
+                ->select('comment.*', 'user.name', 'user.username');
+        $commentsByParent = array();
+
+        foreach ($comments->get() as $comment) {
+            $idParent = is_null($comment->id_parent) ? 0 : $comment->id_parent;
+
+            if (array_key_exists($idParent, $commentsByParent)) {
+                array_push($commentsByParent[$idParent], $comment);
+            }
+            else {
+                $commentsByParent[$idParent] = array($comment);
+            }
+        }
+
+        return view('pages.event', ['event' => $event, 'commentsByParent' => $commentsByParent]);
     }
 
     /**
@@ -160,6 +194,24 @@ class EventController extends Controller
             ]);
         }
 
+        $maxAttendance = $request->has('switchLimitedAttendance') ? $request->input('maxAttendance') : NULL;
+        if (($maxAttendance !== null) && ($maxAttendance < $event->n_participants)) {
+            return back()->withErrors([
+                'maxAttendance' => 'Attendance limit cannot be smaller than the number of participants.'
+            ]);
+        }
+
+        $pictureBase64 = NULL;
+        $picture = $request->file('picture');
+
+        if ($request->hasFile('picture') && $picture->isValid()) {
+            $pictureBase64 = Utils::convertImageToBase64($picture);
+            
+            if (is_null($pictureBase64)) {
+                return back()->withErrors(['picture' => 'Uploaded picture has unsupported extension.']);
+            }
+        }
+
         try {
             $event->update([
                 'title' => $request->input('title'),
@@ -168,27 +220,684 @@ class EventController extends Controller
                 'description' => $request->input('description'),
                 'type' => $request->input('type'),
                 'location' => $request->input('location'),
-                'max_attendance' => $request->has('switchLimitedAttendance') ? $request->input('maxAttendance') : NULL,
+                'max_attendance' => $maxAttendance,
                 'id_category' => $request->input('category'),
                 'start_date' => $startTimestamp,
                 'end_date' => $finishTimestamp,
+                'picture' => $pictureBase64,
             ]);
         }
         catch (QueryException $ex) {
             return redirect(route('events.event.edit', ['id' => $event->id]));
         }
-        
+
         $event->save();
         return redirect(route('events.event', ['id' => $event->id]));
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Show the invitations page.
      *
-     * @param  \App\Models\Event  $event
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Event $event) {
-        //
+    public function showInvitations(Request $request, $id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('update', $event);
+        return view('pages.invitations', ['event' => $event]);
+    }
+
+    /**
+     * Show the participants page.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showParticipants(Request $request, $id) {
+        $event = Event::findOrFail($id);
+        $this->authorize('update', $event);
+        return view('pages.participants', ['event' => $event]);
+    }
+
+    public function updateParticipationValidator(Request $request) {
+        return Validator::make($request->all(), [
+            'status' => ['required', 'string', Rule::in(['Accepted', 'Declined'])],
+        ]);
+    }
+
+    /**
+     * Send an invitation to an user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function createInvitation(Request $request, $id) {
+        $event = Event::find($id);
+
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+
+        // Authorization
+        $user = Auth::user();
+        if (!EventPolicy::updateParticipation($user, $event)) {
+            return response('No permission to perform this request.', 403);
+        }
+
+        if ($event->cancelled) {
+            return response('The event has been cancelled.', 400);
+        }
+
+        if ($event->max_attendance === $event->n_participants) {
+            return response('The attendance limit for this event has been reached.', 400);
+        }
+
+        // The input may be username or email
+        $usernameOrEmail = $request->input('invite');
+
+        // Obtain user
+        $user = User::where('username', $usernameOrEmail)->orWhere('email', $usernameOrEmail)->first();
+        if (is_null($user))  {
+            return response('The given username or email does not match any user.', 400);
+        }
+
+        // Check if the user is the organizer
+        if ($event->id_organizer === $user->id) {
+            return response('You cannot invite yourself for this event.', 400);
+        }
+
+        // Check if an invitation or join request already exists
+        $participation = DB::table('participation')->where([['id_user', $user->id], ['id_event', $event->id]])->first();
+        if (!is_null($participation)) {
+            return response('An invitation or join request for the specified user already exists.', 400);
+        }
+
+        // Invite user
+        try {
+            DB::table('participation')->insert(['id_user' => $user->id, 'id_event' => $id, 'status' => 'Invitation']);
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        return view('partials.invitation', ['user' => $user, 'event' => $event]);
+    }
+
+    /**
+     * Manage an event invitation.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  String   $id
+     * @param  int      $idEvent
+     * @return \Illuminate\Http\Response
+     */
+    public function updateInvitation(Request $request, $username, $idEvent) {
+        $event = Event::find($idEvent);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+
+        $user = User::where('username', $username)->first();
+        if (is_null($user)) {
+            return response('User with the specified ID does not exist.', 404);
+        }
+
+        // Verify if the user is already in this event
+        $participation = DB::table('participation')->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'Invitation']])->first();
+        if (is_null($participation)) {
+            return response('User is not invited to this event.', 404);
+        }
+
+        // Validate request (check status input)
+        $validator = $this->updateParticipationValidator($request);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
+        }
+
+        // Authorization
+        $authenticatedUser = Auth::user();
+        if (!EventPolicy::updateInvitation($authenticatedUser, $user)) {
+            return response('No permission to perform this request.', 403);
+        }
+
+        // Accept / Decline the invitation
+        $status = $request->input('status');
+        DB::beginTransaction();
+        try {
+            $participants = DB::table('participation')
+                                ->where([['id_event', $event->id], ['id_user', $user->id], ['status', 'Invitation']])
+                                ->update(['status' => $status]);
+            if ($status === 'Accepted') {
+                $event->update(['n_participants' => $event->n_participants + $participants]);
+            }
+        }
+        catch (QueryException $ex) {
+            DB::rollback();
+            return response('The attendance limit for this event has been reached.', 400);
+        }
+        DB::commit();
+
+        return view('partials.event_request_to_join', ['event' => $event]);
+    }
+
+    /**
+     * Cancel the invitation of an user.
+     *
+     * @param   \Illuminate\Http\Request  $request
+     * @param   int   $id
+     * @param   int   $idUser
+     * @return  \Illuminate\Http\Response
+     */
+    public function deleteInvitation(Request $request, $id, $idUser) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+
+        $user = User::find($idUser);
+        if (is_null($user)) {
+            return response('User with the specified ID does not exist.', 404);
+        }
+
+        // Authorization
+        $user = Auth::user();
+        if (!EventPolicy::updateParticipation($user, $event)) {
+            return response('No permission to perform this request.', 403);
+        }
+
+        try {
+            DB::table('participation')
+                    ->where([['id_event', $id], ['id_user', $idUser], ['status', 'Invitation']])
+                    ->delete();
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        return response('');
+    }
+
+    /**
+     * Cancel all the invitations for this event.
+     *
+     * @param   \Illuminate\Http\Request $request
+     * @param   int $id
+     * @return  \Illuminate\Http\Response
+     */
+    public function deleteAllInvitations(Request $request, $id) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+
+        // Authorization
+        $user = Auth::user();
+        if (!EventPolicy::updateParticipation($user, $event)) {
+            return response('No permission to perform this request.', 403);
+        }
+
+        try {
+            DB::table('participation')
+                    ->where([['id_event', $id], ['status', 'Invitation']])
+                    ->delete();
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        return response('');
+    }
+
+    /**
+     * Send a request to join the event.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function createJoinRequest(Request $request, $id) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+
+        // Check if user is allowed to make a join request (Authorization)
+        $user = Auth::user();
+        if (!EventPolicy::requestToJoin($user, $event)) {
+            return response('No permission to perform this request.', 403);
+        }
+
+        // Check if an invitation or join request already exists
+        $participation = DB::table('participation')->where([['id_user', $user->id], ['id_event', $event->id]])->first();
+        if (!is_null($participation)) {
+            return response('An invitation or join request for the specified user already exists.', 400);
+        }
+
+        // Insert a new join request
+        try {
+            DB::table('participation')->insert([
+                'id_user' => $user->id,
+                'id_event' => $id,
+                'status' => 'JoinRequest'
+            ]);
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        return view('partials.event_request_to_join', ['event' => $event]);
+    }
+
+    /**
+     * Manage a request to join the event.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @param int idUser
+     * @return \Illuminate\Http\Response
+     */
+    public function updateJoinRequest(Request $request, $id, $idUser) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+
+        $user = User::find($idUser);
+        if (is_null($user)) {
+            return response('User with the specified ID does not exist.', 404);
+        }
+
+        // Verify if the user has requested to join the event
+        $participation = DB::table('participation')->where([['id_event', $id], ['id_user', $user->id], ['status', 'JoinRequest']])->first();
+        if (is_null($participation)) {
+            return response('User did not request to join this event.', 404);
+        }
+
+        // Validate request (check status input)
+        $validator = $this->updateParticipationValidator($request);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
+        }
+
+        // Authorization
+        $authenticatedUser = Auth::user();
+        if (!EventPolicy::updateParticipation($authenticatedUser, $event)) {
+            return response('No permission to perform this request.', 403);
+        }
+
+        // Accept / decline the join request
+        $status = $request->input('status');
+        DB::beginTransaction();
+        try {
+            if (!is_null($event->max_attendance) && $event->n_participants === $event->max_attendance) {
+                DB::rollBack();
+                return response('The attendance limit has been reached.', 400);
+            }
+
+            $affected = DB::table('participation')
+                    ->where('id_event', $id)
+                    ->where('id_user', $user->id)
+                    ->where('status', 'JoinRequest')
+                    ->update(['status' => $status]);
+            
+            if ($status === 'Accepted') {
+                $event->update(['n_participants' => $event->n_participants + $affected]);
+            }
+        }
+        catch (QueryException $ex) {
+            DB::rollBack();
+            return response('A database error occurred.', 500);
+        }
+        DB::commit();
+
+        return response('');
+    }
+
+    /**
+     * Manage all the requests to join the event.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAllJoinRequests(Request $request, $id) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+
+        // Validate request (check status input)
+        $validator = $this->updateParticipationValidator($request);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
+        }
+
+        // Authorization
+        $user = Auth::user();
+        if (!EventPolicy::updateParticipation($user, $event)) {
+            return response('No permission to perform this request.', 403);
+        }
+
+        // Accept / Decline all the join requests
+        $status = $request->input('status');
+        DB::beginTransaction();
+        try {
+            $participants = DB::table('participation')
+                                ->where([['id_event', $id], ['status', 'JoinRequest']])
+                                ->update(['status' => $status]);
+            if ($status === 'Accepted') {
+                $event->update(['n_participants' => $event->n_participants + $participants]);
+            }
+        }
+        catch (QueryException $ex) {
+            DB::rollback();
+            return response('The event doesn\'t have enough space for all the join requests to participate.', 400);
+        }
+        DB::commit();
+
+        return response('');
+    }
+
+    /**
+     * Cancel the specified event.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function cancel(Request $request, $id) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+        if ($event->cancelled) {
+            return response('');
+        }
+
+        // Authorization
+        $user = Auth::user();
+        if (!EventPolicy::cancel($user, $event)) {
+            return response('No permission to perform this request.', 403);
+        }
+
+        try {
+            $event->update(['cancelled' => 'true']);
+            DB::table('participation')->where([['id_event', $event->id], ['status', 'JoinRequest']])->update(['status' => 'Declined']);
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+        return response(route('events.event', ['id' => $event->id]));
+    }
+
+    public static function leaderboardValidator(Request $request) {
+        return Validator::make($request->all(), [
+            'winPoints' => 'numeric|min:0|max:100',
+            'drawPoints' => 'numeric|min:0|max:100',
+            'lossPoints' => 'numeric|min:0|max:100',
+            'generateLeaderboard' => [Rule::in('true', 'false')],
+        ]);
+    }
+
+    public function updateLeaderboardSettings(Request $request, $id) {
+        $event = Event::find($id);
+        if (is_null($event)) {
+            return response('Event with the specified ID does not exist.', 404);
+        }
+
+        if (!EventPolicy::update(Auth::user(), $event)) {
+            return response('No permission to perform this request.', 403);
+        }
+
+        $validator = EventController::leaderboardValidator($request);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
+        }
+
+        $generateLeaderboard = $request->input('generateLeaderboard') === 'true';
+
+        try {
+            $event->update([
+                'win_points' => $request->input('winPoints'),
+                'draw_points' => $request->input('drawPoints'),
+                'loss_points' => $request->input('lossPoints'),
+                'leaderboard' => $generateLeaderboard,
+            ]);
+            $event->save();
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        $matches = $event->matches()
+                ->join('competitor AS c1', 'c1.id', '=', 'match.id_competitor1')
+                ->join('competitor AS c2', 'c2.id', '=', 'match.id_competitor2')
+                ->select('match.*', 'c1.name AS name_competitor1', 'c2.name AS name_competitor2')->get();
+
+        $competitors = $event->competitors()->get();
+
+        $leaderboard = null;
+        if ($event->leaderboard) {
+            $leaderboard = $this->buildLeaderboard($event, $matches, $competitors);
+        }
+
+        return view('partials.leaderboard', ['leaderboard' => $leaderboard]);
+    }
+
+    public static function buildLeaderboard($event, $matches, $competitors) {
+        $leaderboard = array();
+        foreach ($competitors as $competitor) {
+            $leaderboard[$competitor->id] = ['name' => $competitor->name, 'games' => 0, 'wins' => 0, 'draws' => 0, 'losses' => 0, 'points' => 0.0];
+        }
+        unset($competitor);
+
+        foreach ($matches as $match) {
+            switch ($match->result) {
+                case "Winner1":
+                    $leaderboard[$match->id_competitor1]['games'] += 1;
+                    $leaderboard[$match->id_competitor1]['wins'] += 1;
+                    $leaderboard[$match->id_competitor1]['points'] += $event->win_points;
+
+                    $leaderboard[$match->id_competitor2]['games'] += 1;
+                    $leaderboard[$match->id_competitor2]['losses'] += 1;
+                    $leaderboard[$match->id_competitor2]['points'] += $event->loss_points;
+                    break;
+                case "Winner2":
+                    $leaderboard[$match->id_competitor1]['games'] += 1;
+                    $leaderboard[$match->id_competitor1]['losses'] += 1;
+                    $leaderboard[$match->id_competitor1]['points'] += $event->loss_points;
+                    
+                    $leaderboard[$match->id_competitor2]['games'] += 1; 
+                    $leaderboard[$match->id_competitor2]['wins'] += 1; 
+                    $leaderboard[$match->id_competitor2]['points'] += $event->win_points;
+                    break;
+                case "Tie":
+                    $leaderboard[$match->id_competitor1]['games'] += 1;
+                    $leaderboard[$match->id_competitor1]['draws'] += 1;
+                    $leaderboard[$match->id_competitor1]['points'] += $event->draw_points;
+
+                    $leaderboard[$match->id_competitor2]['games'] += 1;
+                    $leaderboard[$match->id_competitor2]['draws'] += 1;
+                    $leaderboard[$match->id_competitor2]['points'] += $event->draw_points;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        uasort($leaderboard, function($a, $b) {
+            return $b['points'] - $a['points'];
+        });
+
+        $position = 1;
+
+        foreach ($leaderboard as $id => $competitor) {
+            $leaderboard[$id]['position'] = $position;
+            ++$position;
+        }
+
+        return $leaderboard;
+    }
+
+    public function showResults(Request $request, $id) {
+        $event = Event::find($id);
+        $this->authorize('view', $event);
+
+        $matches = $event->matches()
+                ->join('competitor AS c1', 'c1.id', '=', 'match.id_competitor1')
+                ->join('competitor AS c2', 'c2.id', '=', 'match.id_competitor2')
+                ->select('match.*', 'c1.name AS name_competitor1', 'c2.name AS name_competitor2')->get();
+
+        $competitors = $event->competitors()->get();
+
+        $leaderboard = null;
+        if ($event->leaderboard) {
+            $leaderboard = $this->buildLeaderboard($event, $matches, $competitors);
+        }
+
+        return view('pages.results', ['event' => $event, 'matches' => $matches, 'competitors' => $competitors, 'leaderboard' => $leaderboard]);
+    }
+
+    public function createPlayer(Request $request, $id){
+        $event = Event::find($id);
+        $this->validateRequest($request);
+        if (is_null($event)) {
+            return response('The specified event does not exist.', 400);
+        }
+
+        $this->authorize('create', [Competitor::class, $event]);
+
+        try {
+            $competitor = Competitor::create([
+                'id_event' => $id,
+                'name' => $request->input('text'),
+            ]);
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        
+        $competitor->save();
+        return view('partials.player', ['competitor' => $competitor]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id) {
+        $event = Event::findOrFail($id);
+        $user = Auth::user() ?? Auth::guard('admin')->user();
+        $this->authorizeForUser($user, 'delete', $event);
+
+        try {
+            $event->delete();
+        }
+        catch (QueryException $ex) {
+            return redirect(route('events.event', ['id' => $id]));
+        }
+
+        return redirect(url('/'));
+    }
+
+    /**
+     * Returns the events that match the specified search request.
+     * Queries are limited to a maximum of 50 events, to prevent generic searches.
+     * @param \Illuminate\Http\Request $request
+     */
+    public function getSearchEvents(Request $request) {
+        $query = $request->input('query');
+        $sql = Event::join('user', 'user.id', '=', 'event.id_organizer')
+                ->select('event.*', 'user.username', 'user.name')
+                ->selectRaw('ts_rank(keywords, to_tsquery(\'english\', ?)) AS "rank"', [$query])
+                ->whereRaw('keywords @@ to_tsquery(\'english\', ?)', [$query]);
+        
+        if ($request->input('startDate') !== null) {
+            $sql = $sql->where('start_date', '>=', $request->input('startDate'));
+        }
+
+        if ($request->input('endDate') !== null) {
+            $sql = $sql->where('end_date', '<=', $request->input('endDate'));
+        }
+
+        if ($request->input('category') !== null) {
+            $sql = $sql->where('id_category', '=', $request->input('category'));
+        }
+
+        if ($request->input('types') !== null) {
+            $types = explode(',', $request->input('types'));
+            $sql = $sql->where(function ($query) use($types) {
+                foreach ($types as $idx => $type) {
+                    if ($idx === 0) {
+                        $query->where('type', '=', $type);
+                    }
+                    else {
+                        $query->orWhere('type', '=', $type);
+                    }
+                }
+            });
+        }
+
+        $sql = $sql->orderBy('rank', 'desc')
+                ->limit(50);
+        
+        $events = $sql->get()->filter(function($v) {
+            $user = Auth::user() ?? Auth::guard('admin')->user();
+            return EventPolicy::view($user, $v);
+        });
+        
+        return $events;
+    }
+
+    private static function searchValidator(Request $request) {
+        return Validator::make($request->all(), [
+            'query' => 'required|string|max:500',
+            'startDate' => 'nullable|date',
+            'endDate' => 'nullable|date',
+            'category' => 'nullable|integer|exists:category,id',
+            'types' => 'nullable|string',
+        ]);
+    }
+
+    /**
+     * Show the results page for event search.
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function showSearchResults(Request $request) {
+        EventController::searchValidator($request)->validate();
+
+        try {
+            $events = $this->getSearchEvents($request);
+        }
+        catch (QueryException $e) {
+            return response('A database error occurred.', 500);
+        }
+
+        $categories = Category::get();
+
+        return view('pages.search_results', ['events' => $events, 'categories' => $categories]);
+    }
+    
+    public function getSearchResults(Request $request) {
+        $validator = EventController::searchValidator($request);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
+        }
+
+        try {
+            $events = $this->getSearchEvents($request);
+        }
+        catch (QueryException $e) {
+            return response('A database error occurred.', 500);
+        }
+
+        return view('partials.search_results', ['events' => $events]);
     }
 }

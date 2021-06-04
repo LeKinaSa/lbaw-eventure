@@ -1,4 +1,3 @@
-
 DROP INDEX IF EXISTS event_id_organizer_idx;
 DROP INDEX IF EXISTS poll_id_event_idx;
 DROP INDEX IF EXISTS file_id_event_idx;
@@ -33,6 +32,7 @@ DROP FUNCTION IF EXISTS match_during_event();
 DROP FUNCTION IF EXISTS account_deletion();
 DROP FUNCTION IF EXISTS update_event_keywords();
 
+DROP TABLE IF EXISTS password_resets;
 DROP TABLE IF EXISTS event_tag;
 DROP TABLE IF EXISTS participation;
 DROP TABLE IF EXISTS comment;
@@ -118,19 +118,21 @@ CREATE TABLE "event" (
     visibility visibility NOT NULL DEFAULT 'Public',
     "description" TEXT NOT NULL,
     keywords tsvector,
-    picture BYTEA,
+    picture TEXT,
     "start_date" TIMESTAMP,
     end_date TIMESTAMP,
     "type" event_type NOT NULL DEFAULT 'InPerson',
     "location" TEXT,
     max_attendance INTEGER CONSTRAINT max_attendance_ck CHECK ((max_attendance >= 0) AND (max_attendance <= 10000)),
+    n_participants INTEGER NOT NULL DEFAULT 0 CONSTRAINT n_participants_ck CHECK (n_participants >=0),
     cancelled BOOLEAN NOT NULL DEFAULT false,
     id_category INTEGER REFERENCES category(id) NOT NULL,
-    win_points NUMERIC(3) NOT NULL DEFAULT 1 CONSTRAINT win_points_ck CHECK ((win_points >= 0) AND (win_points <= 100)),
-    draw_points NUMERIC(3) NOT NULL DEFAULT 0.5 CONSTRAINT draw_points_ck CHECK ((draw_points >= 0) AND (draw_points <= 100)),
-    loss_points NUMERIC(3) NOT NULL DEFAULT 0 CONSTRAINT loss_points_ck CHECK ((loss_points >= 0) AND (loss_points <= 100)),
+    win_points REAL NOT NULL DEFAULT 1 CONSTRAINT win_points_ck CHECK ((win_points >= 0) AND (win_points <= 100)),
+    draw_points REAL NOT NULL DEFAULT 0.5 CONSTRAINT draw_points_ck CHECK ((draw_points >= 0) AND (draw_points <= 100)),
+    loss_points REAL NOT NULL DEFAULT 0 CONSTRAINT loss_points_ck CHECK ((loss_points >= 0) AND (loss_points <= 100)),
     leaderboard BOOLEAN NOT NULL DEFAULT false,
-    CONSTRAINT event_date_ck CHECK ("start_date" < end_date)
+    CONSTRAINT event_date_ck CHECK ("start_date" < end_date),
+    CONSTRAINT participants_ck CHECK (n_participants <= max_attendance)
 );
 
 -- R07
@@ -206,6 +208,12 @@ CREATE TABLE event_tag (
     id_event INTEGER REFERENCES "event"(id) ON DELETE CASCADE,
     tag_name TEXT NOT NULL,
     PRIMARY KEY (id_event, tag_name)
+);
+
+CREATE TABLE password_resets (
+    email TEXT,
+    token TEXT,
+    created_at TIMESTAMP
 );
 
 

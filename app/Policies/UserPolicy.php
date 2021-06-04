@@ -3,7 +3,9 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Models\Event;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class UserPolicy {
     use HandlesAuthorization;
@@ -21,11 +23,11 @@ class UserPolicy {
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Authenticatable  $user
+     * @param  \App\Models\User             $model
      * @return mixed
      */
-    public function view(?User $user, User $model) {
+    public function view(?Authenticatable $user, User $model) {
         return true;
     }
 
@@ -46,7 +48,7 @@ class UserPolicy {
      * @param  \App\Models\User  $model
      * @return mixed
      */
-    public function update(User $user, User $model) {
+    public static function update(User $user, User $model) {
         return $user->id === $model->id;
     }
 

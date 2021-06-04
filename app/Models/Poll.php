@@ -28,7 +28,6 @@ class Poll extends Model {
         return $this->options()
                 ->leftJoin('poll_answer', 'poll_option.id', '=', 'poll_answer.id_poll_option')
                 ->selectRaw('poll_option.id, poll_option."option", count(poll_answer.id_user) AS answer_count')
-                ->groupBy('poll_option.id')
-                ->orderBy('answer_count', 'desc');
+                ->groupBy('poll_option.id');
     }
 }

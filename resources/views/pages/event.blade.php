@@ -4,6 +4,7 @@
 $startDate = is_null($event->start_date) ? NULL : (new DateTime($event->start_date))->format('j M, Y H:i');
 $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->format('j M, Y H:i');
 @endphp
+
 @section('content')
 <div class="container py-3">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -13,26 +14,72 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
         </ol>
     </nav>
 
-    <h1 class="text-center mb-3">{{ $event->title }} <i class="fa {{ $event->visibility === 'Public' ? "fa-globe" : "fa-lock" }}"></i></h1>
+    <h1 class="text-center mb-3">
+        <i class="text-danger {{ $event->cancelled ? "fa fa-ban" : "" }}" title="Event Cancelled" aria-label="Event Cancelled"></i>
+        {{ $event->title }}
+        <i class="fa {{ $event->visibility === 'Public' ? "fa-globe" : "fa-lock" }}" title="{{ $event->visibility }} Event" aria-label="{{ $event->visibility }}"></i>
+    </h1>
 
     <div class="row mb-3">
         <div class="col-md-5 d-flex align-items-center justify-content-center">
             <img src="{{ is_null($event->picture) ? asset('img/event_default.png') : 'data:image/jpeg;base64, ' . $event->picture }}" class="img-fluid rounded" alt="Event image">
         </div>
         <div class="col-md-7 p-3">
-            <div class="d-flex justify-content-between mb-2">
-                <div class="d-flex gap-2">
-                    <a href="#" role="button" class="btn btn-primary">Results</a>
+
+            <div class="d-flex justify-content-between">
+                <div class="d-flex gap-2 align-items-center">
+                    <a href="{{ route('events.event.matches', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Results <i class="fa fa-trophy"></i></a>
                     @if (Auth::id() === $event->id_organizer)
-                    <a href="#" role="button" class="btn btn-primary">Invitations</a>
+                    <a href="{{ route('events.event.invitations', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Invitations <i class="fa fa-envelope"></i></a>
+                    <a href="{{ route('events.event.participants', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Participants <i class="fa fa-users"></i></a>
                     @endif
                 </div>
-                @if (Auth::id() === $event->id_organizer)
-                <a class="btn btn-secondary" href="{{ route('events.event.edit', ['id' => $event->id]) }}"><i class="fa fa-pencil"></i></a>
-                @endif
+                <div class="d-flex align-items-center gap-2">
+                    @if (App\Policies\EventPolicy::delete(Auth::user() ?? Auth::guard('admin')->user(), $event))
+                    <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteEventModal">
+                    Delete event <i class="fa fa-remove"></i>
+                    </button>
+
+                    <div class="modal fade" id="deleteEventModal" tabindex="-1" aria-labelledby="deleteEventLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteEventLabel">Delete event</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><b>Warning:</b> deleting an event is an irreversible action. All comments, polls, uploaded files and matches 
+                                    will be permanently deleted.</p>
+                                    
+                                    <p>If you are sure that you wish to delete this event, click the button below.</p>
+                                    
+                                    <form method="POST" action="{{ route('events.event.delete', ['id' => $event->id]) }}">
+                                        @csrf
+                                        <div class="modal-footer">
+                                            <input type="submit" class="btn btn-danger" value="Delete">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    @if (Auth::id() === $event->id_organizer)
+                    <a class="btn btn-secondary" href="{{ route('events.event.edit', ['id' => $event->id]) }}"><i class="fa fa-pencil"></i></a>
+                    @endif
+                    <div id="requestToJoin" class="d-flex gap-2 align-items-center">
+                        @include('partials.event_request_to_join')
+                    </div>
+                </div>
             </div>
+
             <hr>
             
+            @if ($event->cancelled)
+            <p class="text-danger">
+                Event Cancelled
+            </p>
+            @endif
             <p>
                 {{ $event->description }}
             </p>
@@ -76,24 +123,11 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
                     <div class="mb-2">
                         <h5>Participants</h5>
                         <div class="border border-2 rounded px-3 py-2">
-                            {{ $event->participants()->count() . (is_null($event->max_attendance) ? "" : " / " . $event->max_attendance) }}
+                            {{ $event->n_participants . (is_null($event->max_attendance) ? "" : " / " . $event->max_attendance) }}
                         </div>
                     </div>
                 </div>
             </div>
-
-            {{-- Tags are disabled for now
-            <div class="row">
-                <h5>Tags</h5>
-                <div class="d-flex flex-wrap gap-2">
-                    <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">chess</span>
-                    <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">friendly</span>
-                    <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">for beginners</span>
-                    <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">blitz chess</span>
-                    <span class="text-white d-inline-flex bg-primary rounded px-2 py-1 gap-1">learning</span>
-                </div>
-            </div>
-            --}}
         </div>
     </div>
 
@@ -109,90 +143,36 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
                     Polls
                 </button>
             </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="filesLabel" data-bs-toggle="tab" data-bs-target="#filesTab" type="button" role="tab" aria-controls="filesTab" aria-selected="false">
+                    Files
+                </button>
+            </li>
         </ul>
     </nav>
 
-    <!-- TODO: comments and polls -->
     <div class="tab-content" id="tabContent">
         <div class="tab-pane fade show active p-3" id="commentsTab" role="tabpanel" aria-labelledby="commentsLabel">
-            <form class="mb-3">
-                <div class="mb-3">
-                    <label for="comment" class="h5 form-label">Write a comment</label>
-                    <textarea class="form-control" id="comment" name="comment" placeholder="You can use comments to ask questions or make suggestions..." required></textarea>
-                </div>
-                <input type="submit" class="btn btn-primary" value="Post">
-            </form>
+            @if (App\Policies\CommentPolicy::create(Auth::user(), $event))
+            <div class="mb-3">
+                <p class="mb-2 text-danger" id="commentsError"></p>
+                <h5>Write a comment</h5>
+                <form method="POST" action="{{ route('api.events.event.comments.new', ['id' => $event->id]) }}" class="form-comment-post">
+                    @csrf
+                    <textarea class="form-control mb-2" name="text" placeholder="You can use comments to ask questions or make suggestions..." maxlength="{{ App\Models\Comment::MAX_LENGTH }}" required></textarea>
+                    <input type="submit" class="btn btn-primary" value="Post">
+                </form>
+            </div>
+            @endif
 
             <section id="comments">
-                <h4>5 comments</h4>
-                <div>
-                    <div class="row pt-3">
-                        <div>
-                            <div class="d-flex align-items-start justify-content-between">
-                                <h5>Mary Langdon (<span class="text-primary">@marylangdon105</span>)</h5>
-                                <div class="d-flex gap-1">
-                                    <button type="button" class="btn btn-primary" aria-label="Reply"><i class="fa fa-reply"></i></button>
-                                </div>
-                            </div>
-                            What is your favorite opening?
-                        </div>
-
-                        <div class="ps-5">
-                            <div class="row pt-3">
-                                <div>
-                                    <div class="d-flex align-items-start justify-content-between">
-                                        <h5>Dmitri Dolyakov (<span class="text-primary">@dmitridlkv</span>)</h5>
-                                        <div class="d-flex gap-1">
-                                            <button type="button" class="btn btn-primary" aria-label="Reply"><i class="fa fa-reply"></i></button>
-                                        </div>
-                                    </div>
-                                    Italian Game with Evans Gambit :)
-                                </div>
-                            </div>
-
-                            <div class="row pt-3">
-                                <div>
-                                    <div class="d-flex align-items-start justify-content-between">
-                                        <h5>John Doe (<span class="text-primary">@johndoe123</span>)</h5>
-                                        <div class="d-flex gap-1">
-                                            <button type="button" class="btn btn-primary" aria-label="Reply"><i class="fa fa-reply"></i></button>
-                                            <button type="button" class="btn btn-secondary" aria-label="Edit"><i class="fa fa-pencil"></i></button>
-                                            <button type="button" class="btn btn-danger" aria-label="Remove"><i class="fa fa-remove"></i></button>
-                                        </div>
-                                    </div>
-                                    I love the King's Gambit :D
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row py-3">
-                        <div>
-                            <div class="d-flex align-items-start justify-content-between">
-                                <h5>Martin Fowler (<span class="text-primary">@fowlersrook</span>)</h5>
-                                <div class="d-flex gap-1">
-                                    <button type="button" class="btn btn-primary" aria-label="Reply"><i class="fa fa-reply"></i></button>
-                                </div>
-                            </div>
-                            Great event, the players were very friendly! Hope I can participate in more events like this soon.
-                        </div>
-
-                        <div class="ps-5">
-                            <div class="row pt-3">
-                                <div>
-                                    <div class="d-flex align-items-start justify-content-between">
-                                        <h5>John Doe (<span class="text-primary">@johndoe123</span>)</h5>
-                                        <div class="d-flex gap-1">
-                                            <button type="button" class="btn btn-primary" aria-label="Reply"><i class="fa fa-reply"></i></button>
-                                            <button type="button" class="btn btn-secondary" aria-label="Edit"><i class="fa fa-pencil"></i></button>
-                                            <button type="button" class="btn btn-danger" aria-label="Remove"><i class="fa fa-remove"></i></button>
-                                        </div>
-                                    </div>
-                                    Thank you! Hope to see you too!
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <h4><span id="commentCount">{{ $event->comments()->count() }}</span> comments</h4>
+                <div class="mt-3">
+                    @if (array_key_exists(0, $commentsByParent))
+                        @foreach ($commentsByParent[0] as $comment)
+                            @include('partials.comment_thread', ['comment' => $comment, 'commentsByParent' => $commentsByParent])
+                        @endforeach
+                    @endif
                 </div>
             </section>
         </div>
@@ -212,7 +192,7 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
                                 @csrf
 
                                 <div class="mb-3">
-                                    <label for="pollTitle" class="h5 form-label">Title <span class="text-danger">*</span></label>
+                                    <label for="createPollQuestion" class="h5 form-label">Title <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="createPollQuestion" name="question" required>
                                 </div>
 
@@ -244,7 +224,33 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
             @endif
 
             <section id="polls" class="row mt-3">
-                @each('partials.poll', $event->polls()->get(), 'poll')
+                <p class="text-danger" id="pollError"></p>
+                <p class="text-danger" id="deletePollError"></p>
+                @foreach($event->polls()->get() as $poll)
+                    @include('partials.poll', ['poll' => $poll])
+                @endforeach
+            </section>
+        </div>
+        <div class="tab-pane fade p-3" id="filesTab" role="tabpanel" aria-labelledby="filesLabel">
+            <p class="text-danger" id="deleteFileError"></p>
+            
+            @if (App\Policies\FilePolicy::create(Auth::user(), $event))
+            <form enctype="multipart/form-data" method="POST" action="{{ route('events.event.files.new', ['id' => $event->id]) }}" class="mb-3" id="uploadFileForm">
+                @csrf
+                <div class="input-group">
+                    <input type="file" class="form-control" name="file" required>
+                    <input type="submit" class="btn btn-primary" value="Upload file">
+                </div>
+            </form>
+            @error ('file')
+            <p class="text-danger mx-1">{{ $message }}</p>
+            @enderror
+            @endif
+            
+            <section id="files" class="d-flex flex-wrap gap-2">
+                @foreach($event->files()->get() as $file)
+                    @include('partials.file', ['file' => $file])
+                @endforeach
             </section>
         </div>
     </div>

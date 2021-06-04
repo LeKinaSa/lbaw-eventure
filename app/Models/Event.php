@@ -25,8 +25,8 @@ class Event extends Model {
      * @var array
      */
     protected $fillable = [
-        'title', 'id_organizer', 'visibility', 'description', 'start_date', 'end_date',
-        'type', 'location', 'max_attendance', 'cancelled', 'id_category', 
+        'title', 'id_organizer', 'visibility', 'description', 'picture', 'start_date', 'end_date',
+        'type', 'location', 'max_attendance', 'n_participants', 'cancelled', 'id_category',
         'win_points', 'draw_points', 'loss_points', 'leaderboard',
     ];
 
@@ -41,8 +41,16 @@ class Event extends Model {
         return $this->belongsTo(Category::class, 'id_category');
     }
 
+    public function comments() {
+        return $this->hasMany(Comment::class, 'id_event');
+    }
+
     public function polls() {
         return $this->hasMany(Poll::class, 'id_event');
+    }
+
+    public function files() {
+        return $this->hasMany(File::class, 'id_event');
     }
 
     /**
@@ -57,7 +65,31 @@ class Event extends Model {
         return $this->usersRelatedTo()->where('status', 'Accepted');
     }
 
+    public function invitations() {
+        return $this->usersRelatedTo()->where('status', 'Invitation');
+    }
+
+    public function joinRequests() {
+        return $this->usersRelatedTo()->where('status', 'JoinRequest');
+    }
+
+    public function rejectedParticipants() {
+        return $this->usersRelatedTo()->where('status', 'Declined');
+    }
+
     public function getTypeFormatted() {
         return Event::FORMATTED_TYPES[$this->type];
+    }
+
+    public function matches() {
+        return $this->hasMany(EventMatch::class, 'id_event');
+    }
+
+    public function competitors() {
+        return $this->hasMany(Competitor::class, 'id_event');
+    }
+    
+    public function limitedAttendance() {
+        return $this->max_attendance !== null;
     }
 }

@@ -27,7 +27,7 @@
 
                 <div class="mb-3">
                     <label for="username" class="h5 form-label">Username *</label>
-                    <input type="text" id="name" name="username" class="form-control" value="{{ $user->username }}" required>
+                    <input type="text" id="username" name="username" class="form-control" value="{{ $user->username }}" required>
                     @error ('username')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -36,10 +36,6 @@
                 <div class="mb-3">
                     <div class="d-flex justify-content-between">
                         <label for="email" class="h5 form-label">Email *</label>
-                        {{-- <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="displayEmail" name="displayEmail" checked>
-                            <label for="displayEmail" class="form-check-label">Display in profile</label>
-                        </div> --}}
                     </div>
                     <input type="email" id="email" name="email" class="form-control" value="{{ $user->email }}" required>
                     @error ('email')
@@ -135,7 +131,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form method="POST" action="{{ route('api.users.user.password.update', ['username' => $user->username]) }}" id="changePasswordForm">
+                            @method('PATCH')
                             <div class="mb-3">
                                 <label for="password" class="form-label">Current Password *</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
@@ -151,7 +148,11 @@
                                 <input type="password" class="form-control" id="newPasswordConfirm" name="newPasswordConfirm" required>
                             </div>
 
-                            <div class="modal-footer">
+                            <div class="modal-footer d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-danger mb-0" id="changePasswordError"></p>
+                                    <p class="text-success mb-0" id="changePasswordSuccess"></p>
+                                </div>
                                 <input type="submit" class="btn btn-primary" value="Change">
                             </div>
                         </form>

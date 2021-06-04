@@ -135,10 +135,119 @@ paths:
                   description: 'Account could not be created (username or email already in use). Redirect to sign up form.'
                   value: '/sign-up'
 
-  /users/{username}:
+  /forgot-password:
     get:
       operationId: R106
-      summary: 'R106: View User Profile'
+      summary: 'R106: Forgot Password Form'
+      description: 'Provides a form to request the change of password with a token sent by email. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      responses:
+        '200':
+          description: 'Ok. Show the first page on [UI03](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui04-recover-password)'
+    post:
+      operationId: R107
+      summary: 'R107: Send Email'
+      description: 'Sends an email with a reset password token. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+                - email
+      responses:
+        '302':
+          description: 'Redirect user after trying to send the email, depending on whether it was successful or not.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'The email was sent. Redirect to the email sent page.'
+                  value: '/reset-password'
+                302Error:
+                  description: 'Failed while trying to send the email (email wasn\'t registered to any user). Redirect to forgot password form.'
+                  value: '/forgot-password'
+
+  /reset-password:
+    get:
+      operationId: R108
+      summary: 'R108: Email Sent'
+      description: 'Provides feedback about the email status to user. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      responses:
+        '200':
+          description: 'Ok. Show feedback (email sent) to the user.'
+
+  /recover-password/{token}:
+    get:
+      operationId: R109
+      summary: 'R109: Recover Password Form'
+      description: 'Provides a recover password form, allowing users to change their password based on a token sent by email. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      parameters:
+        - in: path
+          name: token
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show the second page on [UI03](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui04-recover-password)'
+
+  /recover-password:
+    post:
+      operationId: R110
+      summary: 'R110: Recover Password Action'
+      description: 'Processes information sent through the recover password form. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                token:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - token
+                - password
+      responses:
+        '302':    
+          description: 'Redirect user after processing the recover password request, depending on whether the authentication (with email and token) was successful or not.'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'Successful authentication. The password was changed. Redirect to homepage.'
+                    value: '/'
+                  302Error:
+                    description: 'Failed authentication (email and token did not match). Redirect to recover password form.'
+                    value: '/recover-password/{token}'
+
+  /users/{username}:
+    get:
+      operationId: R111
+      summary: 'R111: View User Profile'
       description: 'Show an individual user profile. Access: USR, ADM'
       tags:
         - 'M01: Authentication and User Profile'
@@ -154,8 +263,8 @@ paths:
 
   /users/{username}/edit:
     get:
-      operationId: R107
-      summary: 'R107: Edit Profile Form'
+      operationId: R112
+      summary: 'R112: Edit Profile Form'
       description: 'Provides a form that allows users to edit their account details. Access: OWN'
       tags:
         - 'M01: Authentication and User Profile'
@@ -169,8 +278,8 @@ paths:
         '200':
           description: 'Ok. Show [UI06](https://git.fe.up.pt/lbaw/lbaw2021/lbaw2136/-/wikis/ER#ui06-edit-profile)'
     post:
-      operationId: R108
-      summary: 'R108: Edit Profile Action'
+      operationId: R113
+      summary: 'R113: Edit Profile Action'
       description: 'Processes information sent through the edit profile form. Access: OWN'
       tags:
         - 'M01: Authentication and User Profile'
@@ -227,8 +336,8 @@ paths:
 
   /users/{username}/delete:
     post:
-      operationId: R109
-      summary: 'R109: Delete Account'
+      operationId: R114
+      summary: 'R114: Delete Account'
       description: 'Deletes the account of the currently authenticated user and signs them out. Access: OWN'
       tags:
         - 'M01: Authentication and User Profile'
@@ -266,8 +375,8 @@ paths:
 
   /api/users/{username}/password:
     patch:
-      operationId: R110
-      summary: 'R110: Change Password'
+      operationId: R115
+      summary: 'R115: Change Password'
       description: 'Changes the password of the currently authenticated user. Access: OWN'
       tags:
         - 'M01: Authentication and User Profile'

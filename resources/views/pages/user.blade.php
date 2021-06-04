@@ -32,9 +32,85 @@
                 <li class="h5" aria-label="Website"><i class="col-1 fa fa-link"></i> <a class="text-primary" href="{{ $user->website }}">{{ $user->website }}</a></li>
                 @endif
             </ul>
-            @if (Auth::id() === $user->id)
-            <div class="d-grid">
+            <div class="d-grid gap-2">
+                @if (Auth::id() === $user->id)
                 <a href="{{ route('users.profile.edit', ['username' => $user->username]) }}" role="button" class="btn btn-light border">Edit profile</a>
+                @endif
+                @if (!is_null(Auth::guard('admin')->user()))
+                    @include('partials.suspension_ban_status')
+                    @if (is_null($ban) && is_null($suspension))
+                    <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#suspendUserModal" id="suspendUserButton">
+                    Suspend user <i class="fa fa-calendar"></i>
+                    </button>
+                    @endif
+                    @if (is_null($ban))
+                    <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#banUserModal" id="banUserButton">
+                    Ban user <i class="fa fa-ban"></i>
+                    </button>
+                    @endif
+                @endif
+            </div>
+
+            @if (!is_null(Auth::guard('admin')->user()) && is_null($ban) && is_null($suspension))
+            <div class="modal fade" id="suspendUserModal" tabindex="-1" aria-labelledby="suspendUserLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="suspendUserLabel">Suspend user</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="{{ route('api.users.user.suspensions', ['username' => $user->username]) }}" id="suspendUserForm">
+                                @csrf
+
+                                <div class="mb-3">
+                                    <label for="duration" class="form-label">Duration (days) <span class="text-danger fw-bold">*</span></label>
+                                    <input type="number" class="form-control" id="duration" name="duration" min="1" max="100" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="suspensionReason" class="form-label">Reason <span class="text-danger fw-bold">*</span></label>
+                                    <input type="text" class="form-control" id="suspensionReason" name="reason" maxlength="300" required>
+                                </div>
+
+                                <p class="px-1 text-danger" id="suspendUserError"></p>
+                                
+                                <div class="modal-footer">
+                                    <input type="submit" class="btn btn-warning" value="Suspend">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            @if (!is_null(Auth::guard('admin')->user()) && is_null($ban))
+            <div class="modal fade" id="banUserModal" tabindex="-1" aria-labelledby="banUserLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="banUserLabel">Ban user</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="{{ route('api.users.user.ban', ['username' => $user->username]) }}" id="banUserForm">
+                                @csrf
+
+                                <div class="mb-3">
+                                    <label for="banReason" class="form-label">Reason <span class="text-danger fw-bold">*</span></label>
+                                    <input type="text" class="form-control" id="banReason" name="reason" maxlength="300" required>
+                                </div>
+
+                                <p class="px-1 text-danger" id="banUserError"></p>
+                                
+                                <div class="modal-footer">
+                                    <input type="submit" class="btn btn-danger" value="Ban">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
             @endif
         </div>
@@ -43,7 +119,7 @@
             <section id="eventsOrganizer" class="row bg-light m-2 p-3">
                 <header class="d-flex align-items-center justify-content-between mb-2">
                     <h4>Events {{ Auth::id() === $user->id ? "you" : "they" }} are organizing</h4>
-                    <a href="personal_events.php" class="btn btn-primary text-uppercase">See all</a>
+                    <a href="{{ route('users.profile.events', ['username' => $user->username]) }}" role="button" class="btn btn-primary text-uppercase">See all</a>
                 </header>
                 <div class="d-flex justify-content-center justify-content-md-start flex-wrap gap-3">
                     @each('partials.event_small', $eventsOrganizing, 'event')
@@ -53,7 +129,7 @@
             <section id="eventsParticipant" class="row bg-light m-2 p-3">
                 <header class="d-flex align-items-center justify-content-between mb-2">
                     <h4>Events {{ Auth::id() === $user->id ? "you" : "they" }} are participating in</h4>
-                    <a href="personal_events.php" class="btn btn-primary text-uppercase">See all</a>
+                    <a href="{{ route('users.profile.events', ['username' => $user->username]) }}" role="button" class="btn btn-primary text-uppercase">See all</a>
                 </header>
                 <div class="d-flex justify-content-center justify-content-md-start flex-wrap gap-3">
                     @each('partials.event_small', $eventsParticipatingIn, 'event')

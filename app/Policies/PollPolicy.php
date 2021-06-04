@@ -5,7 +5,10 @@ namespace App\Policies;
 use App\Models\Poll;
 use App\Models\User;
 use App\Models\Event;
+use App\Models\Administrator;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
 
 class PollPolicy
 {
@@ -39,7 +42,7 @@ class PollPolicy
      * @return mixed
      */
     public static function create(?User $user, Event $event) {
-        // Only the organizer can create polls for an even
+        // Only the organizer can create polls for an event
         return optional($user)->id === $event->id_organizer;
     }
 
@@ -57,12 +60,17 @@ class PollPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
+     * @param  Illuminate\Foundation\Auth\User  $user
      * @param  \App\Models\Poll  $poll
      * @return mixed
      */
-    public function delete(User $user, Poll $poll) {
-        //
+    public static function delete(?Authenticatable $user, Poll $poll) {
+        if (!is_null($user) && $user instanceof Administrator) {
+            // Admnistrators can delete any poll
+            return true;
+        }
+        $event = Event::find($poll->id_event);
+        return ($event !== null) && (optional($user)->id === $event->id_organizer);
     }
 
     /**

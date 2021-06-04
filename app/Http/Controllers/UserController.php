@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BannedUser;
+use App\Models\Suspension;
 use App\Models\User;
+use App\Utils;
 use App\Policies\EventPolicy;
-
+use App\Policies\UserPolicy;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller {
@@ -48,24 +52,28 @@ class UserController extends Controller {
      */
     public function show(Request $request, $username) {
         $user = User::where('username', $username)->firstOrFail();
-        $this->authorize('view', $user);
+        $authenticatedUser = Auth::user() ?? Auth::guard('admin')->user();
+        $this->authorizeForUser($authenticatedUser, 'view', $user);
 
-        // TODO: Improve this
         $eventsOrganizing = $user->eventsOrganizing()->limit(3)->get();
         foreach ($eventsOrganizing as $key => $event) {
-            if (!EventPolicy::view(Auth::user(), $event)) {
+            if (!EventPolicy::view($authenticatedUser, $event)) {
                 unset($eventsOrganizing[$key]);
             }
         }
 
         $eventsParticipatingIn = $user->eventsParticipatingIn()->limit(3)->get();
         foreach ($eventsParticipatingIn as $key => $event) {
-            if (!EventPolicy::view(Auth::user(), $event)) {
+            if (!EventPolicy::view($authenticatedUser, $event)) {
                 unset($eventsParticipatingIn[$key]);
             }
         }
 
-        return view('pages.user', ['user' => $user, 'eventsOrganizing' => $eventsOrganizing, 'eventsParticipatingIn' => $eventsParticipatingIn]);
+        $suspension = Suspension::where('id_user', $user->id)->where('until', '>', date('Y-m-d'))->first();
+        $ban = BannedUser::where('id_user', $user->id)->first();
+
+        return view('pages.user', ['user' => $user, 'eventsOrganizing' => $eventsOrganizing, 'eventsParticipatingIn' => $eventsParticipatingIn,
+                'suspension' => $suspension, 'ban' => $ban]);
     }
 
     /**
@@ -107,35 +115,11 @@ class UserController extends Controller {
         $picture = $request->file('picture');
 
         if ($request->hasFile('picture') && $picture->isValid()) {
-            // A valid image was uploaded
-            // TODO: move this to a separate function
+            $pictureBase64 = Utils::convertImageToBase64($picture);
 
-            list($width, $height) = getimagesize($picture);
-
-            if ($picture->extension() === 'png') {
-                $original = imagecreatefrompng($picture);
+            if (is_null($pictureBase64)) {
+                return back()->withErrors(['picture' => 'Uploaded picture has unsupported extension.']);
             }
-            else if ($picture->extension() === 'jpeg' || $picture->extension() === 'jpg') {
-                $original = imagecreatefromjpeg($picture);
-            }
-            else {
-                return back()->withErrors(['picture' => 'Uploaded picture has an unsupported extension.']);
-            }
-
-            $square = min($width, $height);
-
-            // Resize the uploaded image to 500x500 pixels
-            $resized = imagecreatetruecolor(500, 500);
-            imagecopyresized($resized, $original, 0, 0, ($width > $square) ? ($width - $square) / 2 : 0,
-                    ($height > $square) ? ($height - $square) / 2 : 0, 500, 500, $square, $square);
-
-            // Using output buffering to store the result of imagejpeg into a string
-            ob_start();
-            imagejpeg($resized);
-            $pictureString = ob_get_contents(); // Read string from buffer
-            ob_end_clean();
-
-            $pictureBase64 = base64_encode($pictureString);
         }
 
         $gender = $request->input('gender') === 'Unspecified' ? NULL : $request->input('gender');
@@ -159,6 +143,46 @@ class UserController extends Controller {
 
         $user->save();
         return redirect(route('users.profile', ['username' => $user->username]));
+    }
+
+    public static function passwordValidator(Request $request) {
+        return Validator::make($request->all(), [
+            'password' => 'required|string|min:6',
+            'newPassword' => 'required|string|min:6|confirmed',
+        ]);
+    }
+
+    public function updatePassword(Request $request, $username) {
+        $user = User::where('username', $username)->first();
+
+        if (is_null($user)) {
+            return response('User with the specified username does not exist.', 400);
+        }
+
+        if (!UserPolicy::update(Auth::user(), $user)) {
+            return response('No permission to perform this request.', 403);
+        }
+
+        $validator = UserController::passwordValidator($request);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
+        }
+
+        if (!password_verify($request->input('password'), $user->password)) {
+            return response('Current password does not match our records.', 400);
+        }
+
+        try {
+            $user->update([
+                'password' => bcrypt($request->input('newPassword'))
+            ]);
+            $user->save();
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        return response('');
     }
 
     /**
@@ -187,6 +211,34 @@ class UserController extends Controller {
 
         // Redirect back to edit profile
         return redirect(route('users.profile.edit', ['username' => $user->username]));
+    }
+
+    public function showEvents($username) {
+        $user = User::where('username', $username)->firstOrFail();
+        $this->authorize('view', $user);
+
+        $eventsOrganizing = $user->eventsOrganizing()->limit(3)->get();
+        foreach ($eventsOrganizing as $key => $event) {
+            if (!EventPolicy::view(Auth::user(), $event)) {
+                unset($eventsOrganizing[$key]);
+            }
+        }
+
+        $eventsParticipatingIn = $user->eventsParticipatingIn()->limit(3)->get();
+        foreach ($eventsParticipatingIn as $key => $event) {
+            if (!EventPolicy::view(Auth::user(), $event)) {
+                unset($eventsParticipatingIn[$key]);
+            }
+        }
+
+        return view('pages.user_events', ['user' => $user, 'eventsOrganizing' => $eventsOrganizing, 'eventsParticipatingIn' => $eventsParticipatingIn]);
+    }
+
+    public function showInvitations($username) {
+        $user = User::where('username', $username)->firstOrFail();
+        $this->authorize('update', $user); // Other users cannot view a user's invitations
+
+        return view('pages.user_invitations', ['user' => $user]);
     }
 
     /**

@@ -33,6 +33,7 @@ DROP FUNCTION IF EXISTS match_during_event();
 DROP FUNCTION IF EXISTS account_deletion();
 DROP FUNCTION IF EXISTS update_event_keywords();
 
+DROP TABLE IF EXISTS password_resets;
 DROP TABLE IF EXISTS event_tag;
 DROP TABLE IF EXISTS participation;
 DROP TABLE IF EXISTS comment;
@@ -124,13 +125,15 @@ CREATE TABLE "event" (
     "type" event_type NOT NULL DEFAULT 'InPerson',
     "location" TEXT,
     max_attendance INTEGER CONSTRAINT max_attendance_ck CHECK ((max_attendance >= 0) AND (max_attendance <= 10000)),
+    n_participants INTEGER NOT NULL DEFAULT 0 CONSTRAINT n_participants_ck CHECK (n_participants >=0),
     cancelled BOOLEAN NOT NULL DEFAULT false,
     id_category INTEGER REFERENCES category(id) NOT NULL,
-    win_points NUMERIC(3) NOT NULL DEFAULT 1 CONSTRAINT win_points_ck CHECK ((win_points >= 0) AND (win_points <= 100)),
-    draw_points NUMERIC(3) NOT NULL DEFAULT 0.5 CONSTRAINT draw_points_ck CHECK ((draw_points >= 0) AND (draw_points <= 100)),
-    loss_points NUMERIC(3) NOT NULL DEFAULT 0 CONSTRAINT loss_points_ck CHECK ((loss_points >= 0) AND (loss_points <= 100)),
+    win_points REAL NOT NULL DEFAULT 1 CONSTRAINT win_points_ck CHECK ((win_points >= 0) AND (win_points <= 100)),
+    draw_points REAL NOT NULL DEFAULT 0.5 CONSTRAINT draw_points_ck CHECK ((draw_points >= 0) AND (draw_points <= 100)),
+    loss_points REAL NOT NULL DEFAULT 0 CONSTRAINT loss_points_ck CHECK ((loss_points >= 0) AND (loss_points <= 100)),
     leaderboard BOOLEAN NOT NULL DEFAULT false,
-    CONSTRAINT event_date_ck CHECK ("start_date" < end_date)
+    CONSTRAINT event_date_ck CHECK ("start_date" < end_date),
+    CONSTRAINT participants_ck CHECK (n_participants <= max_attendance)
 );
 
 -- R07
@@ -206,6 +209,12 @@ CREATE TABLE event_tag (
     id_event INTEGER REFERENCES "event"(id) ON DELETE CASCADE,
     tag_name TEXT NOT NULL,
     PRIMARY KEY (id_event, tag_name)
+);
+
+CREATE TABLE password_resets (
+    email TEXT,
+    token TEXT,
+    created_at TIMESTAMP
 );
 
 
@@ -302,7 +311,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER poll_answer_option
-    BEFORE INSERT OR UPDATE ON poll_answer
+    BEFORE INSERT ON poll_answer
     FOR EACH ROW
     EXECUTE PROCEDURE poll_answer_option();
 
@@ -382,12 +391,25 @@ CREATE INDEX search_idx ON "event" USING GIST (keywords);
 
 -- POPULATION
 
+-- R01
+INSERT INTO "administrator" (username,"password") VALUES ('amanda'   ,'$2y$10$SMwx7vnXDrdpNSM9W/4vhOVGs/Wb6MrYDpDPhzz1YHmsPwWjN3YWS');
+INSERT INTO "administrator" (username,"password") VALUES ('kiona'    ,'$2y$10$gZHa7j1vNTXFQXskFgRET.A4n0Cxpp5kAwswrGzP.3B67oirEcFvm');
+INSERT INTO "administrator" (username,"password") VALUES ('shaeleigh','$2y$10$eTrJiN0bt.yw46GL8N.VOO4W2AtvQ6ecQHOjFs2G8xgao/8Y6qZzu');
+INSERT INTO "administrator" (username,"password") VALUES ('ina'      ,'$2y$10$0GXPGF8m/rC4av6v57u3xO7LDKRSvy4EiGoNVZB9rlGnN7C6rCHvu');
+
 -- R02
 INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('cballard'   ,'Cooper Ballard'   ,'cooperbal@outlook.com','$2y$10$myqDITxpP1uw4.Dkq.Mk7elaht.kiyRQ3cnaQdcDVU3/a./fXH9M2','Michigan, USA'     ,'Male'  ,23,'www.cballard.com'    ,NULL,'I enjoy driving, exercising and playing board games.'           );
 INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('dmaynard'   ,'Derek Maynard'    ,'dmal@gmail.com'       ,'$2y$10$suQG1OW49APnAOQgkKTXVev7CK6ZOL41X6nmJPOe3ib6Z0ruwVT26','Liverpool, UK'     ,'Male'  ,31,NULL                  ,NULL,'I am looking to travel all around the globe for events'         );
 INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('wblake'     ,'Wynter Blake'     ,'wblak@gmail.com'      ,'$2y$10$NVfSx13SsS6ye8mS39KGz.ptXppbMVgmf8j63i.kfOdP8eSZwqdNS','Sydney, AU'        ,'Female',42,NULL                  ,NULL,'I like playing chess, video games and meeting new people.'      );
 INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('fgallegos'  ,'Forrest Gallegos' ,'forrestgal@gmail.com' ,'$2y$10$hPeYJ64jAIUamFR.WAYkGuEDuBQ6ST0D3Z10hw/D5RMBi3zF1WycO','Catalonia'         ,NULL    ,20,'www.gallegoshub.com' ,NULL,'My interests are wide and I am open to all sort of events'      );
 INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('sebowens'   ,'Sebastian Owens'  ,'sebowens87@yahoo.com' ,'$2y$10$xhq55I1msKSODAYvMzh.aeFEl.ltMGlt1ur4n5QHTlLk8/4Vwdtv.',NULL                ,'Male'  ,28,'www.sebowensblog.com',NULL,'I am looking for online events as a way to interact with people');
+INSERT INTO "user" (username,"name",email,"password","address",gender,age,website,picture,"description") VALUES ('phillong'   ,'Phillip Long'     ,'phillip@graviti.net'  ,'$2y$10$Dc3CUUuq83.kwE.IrOw2ouxk15pZxaf.vgW2TQOtDd6po0wo/4KRK','Hawaii'            ,'Male'  ,32,NULL                  ,NULL,'I like to interact with people that are in the same event as me');
+
+-- R03
+INSERT INTO banned_user (id_user, since, reason) VALUES (6, '2021-05-10', 'Repeated use of highly offensive language.');
+
+-- R04
+INSERT INTO suspension (id_user, "from", until, reason) VALUES (4, '2021-05-15', '2021-05-19', 'Spamming in comments.');
 
 -- R05
 INSERT INTO "category" ("name") VALUES ('Board Games');
@@ -396,9 +418,9 @@ INSERT INTO "category" ("name") VALUES ('Card Games');
 INSERT INTO "category" ("name") VALUES ('Role-Playing Games');
 
 -- R06
-INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (1,'2021 FIFA Club Tournament'       ,'Private','Fifa Tournament with big prizes',NULL,'2021-06-10 20:00','2021-06-13 20:00','Virtual',NULL,NULL,'false',2,1,0.5,0,'false');
-INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (3,'2021 VCT Challengers'            ,'Public' ,'Valorant Challengers Competition',NULL,'2021-06-15 18:00','2021-06-18 22:00','Mixed','Smithings Street, Liverpool',30,'false',2,2,1,0,'false');
-INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (4,'Amateur Blitz Chess Tournament'  ,'Public' ,'Test your blitz skills in this amateur chess competition! Players with up to 1500 rating can participate.',NULL,'2021-05-30 10:00','2021-05-30 18:00','InPerson','79 Maroon Street, Toronto',20,'false',1,1,0.5,0,'true');
+INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,n_participants,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (1,'2021 FIFA Club Tournament'       ,'Private','Fifa Tournament with big prizes',NULL,'2021-06-10 20:00','2021-06-13 20:00','Virtual',NULL,NULL,2,'false',2,1,0.5,0,'false');
+INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,n_participants,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (3,'2021 VCT Challengers'            ,'Public' ,'Valorant Challengers Competition',NULL,'2021-06-15 18:00','2021-06-18 22:00','Mixed','Smithings Street, Liverpool',30,1,'false',2,3,1,0,'true');
+INSERT INTO "event" (id_organizer,title,visibility,"description",picture,"start_date",end_date,"type","location",max_attendance,n_participants,cancelled,id_category,win_points,draw_points,loss_points,leaderboard) VALUES (4,'Amateur Blitz Chess Tournament'  ,'Public' ,'Test your blitz skills in this amateur chess competition! Players with up to 1500 rating can participate.',NULL,'2021-05-30 10:00','2021-05-30 18:00','InPerson','79 Maroon Street, Toronto',20,1,'false',1,1,0.5,0,'true');
 
 -- R07
 INSERT INTO "poll" (id_event,question) VALUES (3,'What should the time control be?');
@@ -407,6 +429,20 @@ INSERT INTO "poll" (id_event,question) VALUES (3,'What should the time control b
 INSERT INTO "poll_option" (id_poll,"option") VALUES (1,'5 + 0');
 INSERT INTO "poll_option" (id_poll,"option") VALUES (1,'5 + 3');
 INSERT INTO "poll_option" (id_poll,"option") VALUES (1,'5 + 5');
+
+-- R11
+INSERT INTO "competitor" (id_event,"name") VALUES (1,'Mosaad Aldossary'     );
+INSERT INTO "competitor" (id_event,"name") VALUES (1,'Stefano Pinna'        );
+INSERT INTO "competitor" (id_event,"name") VALUES (1,'Kai Wollin'           );
+INSERT INTO "competitor" (id_event,"name") VALUES (2,'Sentinels'            );
+INSERT INTO "competitor" (id_event,"name") VALUES (2,'Imortals'             );
+INSERT INTO "competitor" (id_event,"name") VALUES (2,'Luminosity Gaming'    );
+
+-- R12
+INSERT INTO "match" (id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (1,'2021-06-12 15:00','Very close match'                               ,'Winner2', 1, 2);
+INSERT INTO "match" (id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (1,'2021-06-12 18:00',NULL                                             ,'TBD'    , 2, 3);
+INSERT INTO "match" (id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (2,'2021-06-16 19:00','The match was going back and forth all the time','Tie'    , 4, 5);
+INSERT INTO "match" (id_event,"date","description",result,id_competitor1,id_competitor2) VALUES (2,'2021-06-17 12:00','Very good performance by the Sentinels, staying calm under extreme pressure.','Winner1', 4, 6);
 
 -- R14
 INSERT INTO "participation" (id_user,id_event,"status") VALUES (2, 1,'Accepted');
