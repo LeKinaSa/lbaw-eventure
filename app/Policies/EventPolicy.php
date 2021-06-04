@@ -51,6 +51,11 @@ class EventPolicy {
             return true;
         }
 
+        if ($event->invitations()->wherePivot('id_user', optional($user)->id)->first() !== null) {
+            // Users can see private events they are invited to
+            return true;
+        }
+
         return false;
     }
 
