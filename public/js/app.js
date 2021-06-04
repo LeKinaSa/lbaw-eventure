@@ -948,3 +948,46 @@ function createCompetitorHandler() {
     document.querySelector('#addCompetitorForm input[name=name]').value = '';
     document.getElementById('competitors').insertAdjacentHTML('beforeend', this.responseText);
 }
+
+// Change Password
+
+let changePasswordForm = document.getElementById('changePasswordForm');
+if (changePasswordForm !== null) {
+    changePasswordForm.addEventListener('submit', sendChangePasswordRequest);
+}
+
+function sendChangePasswordRequest(event) {
+    event.preventDefault();
+
+    let method = this.querySelector('input[name=_method]').value;
+    let password = this.querySelector('input[name=password]').value;
+    let newPassword = this.querySelector('input[name=newPassword]').value;
+    let newPasswordConfirm = this.querySelector('input[name=newPasswordConfirm]').value;
+
+    if (newPassword !== newPasswordConfirm) {
+        document.getElementById('changePasswordError').innerHTML = 'The password confirmation does not match.';
+        return;
+    }
+
+    let data = {
+        password: password,
+        newPassword: newPassword,
+        newPassword_confirmation: newPasswordConfirm,
+    };
+
+    sendAjaxRequest(method, this.action, data, changePasswordHandler);
+}
+
+function changePasswordHandler() {
+    if (this.status !== 200) {
+        document.getElementById('changePasswordError').innerHTML = this.responseText;
+        return;
+    }
+
+    changePasswordForm.querySelector('input[name=password]').value = '';
+    changePasswordForm.querySelector('input[name=newPassword]').value = '';
+    changePasswordForm.querySelector('input[name=newPasswordConfirm]').value = '';
+
+    document.getElementById('changePasswordError').innerHTML = '';
+    document.getElementById('changePasswordSuccess').innerHTML = 'Your password was successfully changed.';
+}

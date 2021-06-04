@@ -48,7 +48,7 @@ class UserPolicy {
      * @param  \App\Models\User  $model
      * @return mixed
      */
-    public function update(User $user, User $model) {
+    public static function update(User $user, User $model) {
         return $user->id === $model->id;
     }
 

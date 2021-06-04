@@ -86,6 +86,7 @@ Route::post('/forgot-password', 'Auth\ForgotPasswordController@sendEmail')->name
 Route::get('/reset-password', 'Auth\ForgotPasswordController@showEmailSent')->name('password.email.sent');
 Route::get('/recover-password/{token}', 'Auth\ResetPasswordController@show')->name('password.reset');
 Route::post('/recover-password', 'Auth\ResetPasswordController@recoverPassword')->name('password.update');
+Route::patch('/api/users/{username}/password', 'UserController@updatePassword')->name('api.users.user.password.update');
 
 // Administrator authentication
 Route::get('/admin/sign-in', 'Auth\AdminLoginController@showLoginForm')->name('admin.sign-in');
