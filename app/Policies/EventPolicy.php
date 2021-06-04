@@ -51,6 +51,11 @@ class EventPolicy {
             return true;
         }
 
+        if ($event->invitations()->wherePivot('id_user', optional($user)->id)->first() !== null) {
+            // Users can see private events they are invited to
+            return true;
+        }
+
         return false;
     }
 
@@ -72,7 +77,7 @@ class EventPolicy {
      * @param  \App\Models\Event  $event
      * @return mixed
      */
-    public function update(User $user, Event $event) {
+    public static function update(User $user, Event $event) {
         // Only organizers can update the details of their events
         return $user->id === $event->id_organizer;
     }
@@ -150,14 +155,20 @@ class EventPolicy {
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
+     * @param  Illuminate\Foundation\Auth\User  $user
      * @param  \App\Models\Event  $event
      * @return mixed
      */
-    public function delete(User $user, Event $event) {
-        // Organizers can delete their events
-        // TODO: and admin
-        return $user->id === $event->id_organizer;
+    public static function delete(?Authenticatable $user, Event $event) {
+        // Organizers (and administrators) can delete events
+        if ($user instanceof Administrator) {
+            return true;
+        }
+        else if ($user instanceof User) {
+            return $user->id === $event->id_organizer;
+        }
+
+        return false;
     }
 
     /**

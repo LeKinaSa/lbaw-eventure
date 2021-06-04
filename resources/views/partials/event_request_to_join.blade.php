@@ -18,7 +18,8 @@ $participation = $event->usersRelatedTo()->wherePivot('id_user', Auth::id())->fi
             <p class="mb-0 text-muted">You have requested to join this event</p>
             @break
         @case ('Invitation')
-            <p class="mb-0 text-muted">You have been invited to this event</p>
+            <p class="mb-0 text-muted" id="updateInvitationInfo">You have been invited to this event</p>
+            <p class="mb-0 text-danger" id="updateInvitationError"></p>
             <form method="POST" action="{{ route('users.user.invitations.invitation.update', ['username' => Auth::user()->username, 'idEvent' => $event->id]) }}" class="form-manage-invitation">
                 @csrf
                 @method('PATCH')

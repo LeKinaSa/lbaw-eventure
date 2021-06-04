@@ -1,4 +1,9 @@
 
+let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+});
+
 function onWindowResize(event) {
     let dropdownList = document.getElementById('dropdownUserItems');
 
@@ -323,7 +328,7 @@ function postCommentHandler(data) {
     if (data.idParent == null) {
         // New root comment
         let commentsDiv = document.querySelector('section#comments > div');
-        commentsDiv.innerHTML = this.responseText + commentsDiv.innerHTML;
+        commentsDiv.insertAdjacentHTML('afterbegin', this.responseText);
 
         // Clear the comment form
         rootCommentForm.querySelector('textarea[name=text]').value = "";
@@ -496,7 +501,7 @@ function sendUpdateInvitationRequest(event) {
     let status = this.querySelector('input[name=status]').value;
 
     let invitation = this.parentNode;
-    while (invitation.className !== 'card card-invitation') {
+    while ((invitation !== null) && (invitation.className !== 'card card-invitation')) {
         invitation = invitation.parentNode;
     }
 
@@ -510,12 +515,21 @@ function sendUpdateInvitationRequest(event) {
 
 function updateInvitationHandler(data) {
     if (this.status !== 200) {
+        if (data.invitation === null) {
+            document.getElementById('updateInvitationInfo').innerHTML = "";
+        }
         document.getElementById('updateInvitationError').innerHTML = this.responseText;
         return;
     }
 
     document.getElementById('updateInvitationError').innerHTML = "";
-    data.invitation.remove();
+    if (data.invitation === null) {
+        let requestToJoinDiv = document.getElementById('requestToJoin');
+        requestToJoinDiv.innerHTML = this.responseText;
+    }
+    else {
+        data.invitation.remove();
+    }
 }
 
 // ----- Join Requests API -----
@@ -552,10 +566,7 @@ function sendUpdateJoinRequestRequest(event) {
     let method = this.querySelector('input[name=_method]').value;
     let status = this.querySelector('input[name=status]').value;
     
-    let joinRequest = this.parentNode;
-    while (joinRequest.className !== 'card') {
-        joinRequest = joinRequest.parentNode;
-    }
+    let joinRequest = this.closest('.card');
 
     let data = {
         _token: csrfToken,
@@ -638,7 +649,7 @@ let searchFiltersSection = document.getElementById('searchFilters');
 let searchEventsSpinner = document.getElementById('searchResultsSpinner');
 let searchEventsError = document.getElementById('searchEventsError');
 
-for (let input of document.querySelectorAll('#searchFilters input, select')) {
+for (let input of document.querySelectorAll('#searchFilters input, #searchFilters select')) {
     input.addEventListener('change', sendSearchEventsRequest);
 }
 
@@ -801,4 +812,139 @@ function deleteFileHandler(data) {
     if (data.file !== null) {
         data.file.remove();
     }
+}
+
+// ----- Match Results API -----
+
+let leaderboardSettingsForm = document.getElementById('leaderboardSettingsForm');
+if (leaderboardSettingsForm !== null) {
+    leaderboardSettingsForm.addEventListener('submit', sendUpdateLeaderboardSettingsRequest);
+}
+
+function sendUpdateLeaderboardSettingsRequest(event) {
+    event.preventDefault();
+
+    let method = this.querySelector('input[name=_method]').value;
+    let winPoints = this.querySelector('input[name=winPoints]').value;
+    let drawPoints = this.querySelector('input[name=drawPoints]').value;
+    let lossPoints = this.querySelector('input[name=lossPoints]').value;
+    let generateLeaderboard = this.querySelector('input[name=generateLeaderboard]').checked;
+
+    let data = {
+        winPoints: winPoints,
+        drawPoints: drawPoints,
+        lossPoints: lossPoints,
+        generateLeaderboard: generateLeaderboard,
+    };
+
+    console.log(data);
+
+    sendAjaxRequest(method, this.action, data, updateLeaderboardSettingsHandler);
+}
+
+function updateLeaderboardSettingsHandler() {
+    if (this.status !== 200) {
+        document.getElementById('leaderboardSettingsError').innerHTML = this.responseText;
+        return;
+    }
+
+    document.getElementById('leaderboard').innerHTML = this.responseText;
+}
+
+let createMatchForm = document.getElementById('createMatchForm');
+if (createMatchForm !== null) {
+    let firstSelect = createMatchForm.querySelector('select[name=first]');
+    firstSelect.addEventListener('change', function() {
+        disableSameCompetitor(firstSelect.value);
+    });
+    disableSameCompetitor(firstSelect.value);
+
+    createMatchForm.addEventListener('submit', sendCreateMatchRequest);
+}
+
+function disableSameCompetitor(id) {
+    let secondSelect = createMatchForm.querySelector('select[name=second]');
+    let sameOption = secondSelect.querySelector('option[value=\'' + id + '\']');
+    
+    for (let option of secondSelect.querySelectorAll('option')) {
+        option.disabled = false;
+    }
+
+    sameOption.disabled = true;
+    sameOption.selected = false;
+}
+
+function sendCreateMatchRequest(event) {
+    event.preventDefault();
+
+    let first = this.querySelector('select[name=first]').value;
+    let second = this.querySelector('select[name=second]').value;
+
+    let resultRadio = this.querySelector('input[name=result]:checked');
+    let result = resultRadio === null ? null : resultRadio.value;
+
+    let date = this.querySelector('input[name=date]').value;
+    let time = this.querySelector('input[name=time]').value;
+
+    let description = this.querySelector('textarea[name=description]').value;
+
+    let data = {
+        first: first,
+        second: second,
+        result: result,
+    }
+
+    if (date !== '') data.date = date;
+    if (time !== '') data.time = time;
+    if (description !== '') data.description = description;
+
+    sendAjaxRequest(this.method, this.action, data, createMatchHandler);
+}
+
+function createMatchHandler() {
+    if (this.status !== 200) {
+        document.getElementById('createMatchError').innerHTML = this.responseText;
+        return;
+    }
+    
+    document.getElementById('createMatchError').innerHTML = '';
+
+    document.querySelector('#createMatchForm input[name=date]').value = '';
+    document.querySelector('#createMatchForm input[name=time]').value = '';
+    document.querySelector('#createMatchForm textarea[name=description]').value = '';
+
+    document.querySelector('#matchModal button.btn-close').click();
+    document.getElementById('matchList').insertAdjacentHTML('beforeend', this.responseText);
+}
+
+// ----- Competitors API -----
+
+let addCompetitorForm = document.getElementById('addCompetitorForm');
+if (addCompetitorForm !== null) {
+    addCompetitorForm.addEventListener('submit', sendCreateCompetitorRequest);
+}
+
+function sendCreateCompetitorRequest(event) {
+    event.preventDefault();
+
+    let name = this.querySelector('input[name=name]').value;
+
+    let data = {
+        name: name
+    };
+
+    sendAjaxRequest(this.method, this.action, data, createCompetitorHandler);
+}
+
+function createCompetitorHandler() {
+    let addCompetitorError = document.getElementById('addCompetitorError');
+
+    if (this.status !== 200) {
+        addCompetitorError.innerHTML = this.responseText;
+        return;
+    }
+
+    addCompetitorError.innerHTML = '';
+    document.querySelector('#addCompetitorForm input[name=name]').value = '';
+    document.getElementById('competitors').insertAdjacentHTML('beforeend', this.responseText);
 }
