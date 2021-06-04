@@ -33,7 +33,7 @@ class SuspensionController extends Controller {
         }
         
         // TODO: maybe we need a DB trigger?
-        $suspension = Suspension::where('id_user', $user->id)->where('until', '<=', date('Y-m-d'))->first();
+        $suspension = Suspension::where('id_user', $user->id)->where('until', '>=', date('Y-m-d'))->first();
         $ban = BannedUser::where('id_user', $user->id)->first();
 
         if (!is_null($suspension)) {

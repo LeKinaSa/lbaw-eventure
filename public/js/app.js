@@ -697,7 +697,8 @@ function searchEventsHandler() {
         searchEventsError.innerHTML = this.responseText;
         return;
     }
-
+    
+    searchEventsError.innerHTML = '';
     document.getElementById('searchResults').innerHTML = this.responseText;
 }
 
@@ -728,6 +729,7 @@ function suspendUserHandler() {
         return;
     }
 
+    document.getElementById('suspendUserError').innerHTML = '';
     document.querySelector('#suspendUserModal .btn-close').click();
 
     document.getElementById('suspensionBanStatus').outerHTML = this.responseText;
@@ -764,6 +766,7 @@ function banUserHandler() {
         return;
     }
 
+    document.getElementById('banUserErrror').innerHTML = '';
     document.querySelector('#banUserModal .btn-close').click();
 
     document.getElementById('suspensionBanStatus').outerHTML = this.responseText;
