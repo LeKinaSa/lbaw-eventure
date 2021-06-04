@@ -14,10 +14,10 @@
             @if (App\Policies\CommentPolicy::create(Auth::user(), $event) && !is_null($comment->id_author))
             <button type="button" class="btn btn-primary button-comment-reply" aria-label="Reply"><i class="fa fa-reply"></i></button>
             @endif
-            @can ('update', $comment)
+            @if (App\Policies\CommentPolicy::update(Auth::user(), $comment) && !is_null($comment->id_author))
             <button type="button" class="btn btn-secondary button-comment-edit" aria-label="Edit"><i class="fa fa-pencil"></i></button>
-            @endcan
-            @if (App\Policies\CommentPolicy::delete(Auth::user() ?? Auth::guard('admin')->user(), $comment))
+            @endif
+            @if (App\Policies\CommentPolicy::delete(Auth::user() ?? Auth::guard('admin')->user(), $comment) && !is_null($comment->id_author))
             <form method="POST" action="{{ route('api.events.event.comments.comment.delete', ['idEvent' => $event->id, 'id' => $comment->id]) }}">
             @csrf
             @method ('delete')

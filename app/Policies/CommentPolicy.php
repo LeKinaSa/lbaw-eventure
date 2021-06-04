@@ -54,7 +54,7 @@ class CommentPolicy {
      * @param  \App\Models\Comment  $comment
      * @return mixed
      */
-    public function update(?User $user, Comment $comment) {
+    public static function update(?User $user, Comment $comment) {
         return optional($user)->id === $comment->id_author;
     }
 
