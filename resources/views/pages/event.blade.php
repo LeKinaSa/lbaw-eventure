@@ -238,12 +238,15 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
 
             <section id="polls" class="row mt-3">
                 <p class="text-danger" id="pollError"></p>
+                <p class="text-danger" id="deletePollError"></p>
                 @foreach($event->polls()->get() as $poll)
                     @include('partials.poll', ['poll' => $poll])
                 @endforeach
             </section>
         </div>
         <div class="tab-pane fade p-3" id="filesTab" role="tabpanel" aria-labelledby="filesLabel">
+            <p class="text-danger" id="deleteFileError"></p>
+            
             @if (App\Policies\FilePolicy::create(Auth::user(), $event))
             <form enctype="multipart/form-data" method="POST" action="{{ route('events.event.files.new', ['id' => $event->id]) }}" class="mb-3" id="uploadFileForm">
                 @csrf

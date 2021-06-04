@@ -5,8 +5,9 @@ namespace App\Policies;
 use App\Models\File;
 use App\Models\User;
 use App\Models\Event;
-use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Models\Administrator;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class FilePolicy {
     use HandlesAuthorization;
@@ -58,13 +59,17 @@ class FilePolicy {
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
+     * @param  Authenticatable  $user
      * @param  \App\Models\File  $file
      * @return mixed
      */
-    public function delete(User $user, File $file)
-    {
-        //
+    public static function delete(?Authenticatable $user, File $file) {
+        if (!is_null($user) && $user instanceof Administrator) {
+            // Admnistrators can delete any file
+            return true;
+        }
+        $event = Event::find($file->id_event);
+        return ($event !== null) && (optional($user)->id === $event->id_organizer);
     }
 
     /**
