@@ -18,12 +18,12 @@ $admin = Auth::guard('admin')->user();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <script type="text/javascript">
+    <script>
       // Fix for Firefox autofocus CSS bug
       // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous" defer></script>
-    <script type="text/javascript" src={{ asset('js/app.js') }} defer>
+    <script src={{ asset('js/app.js') }} defer>
 </script>
   </head>
   <body class="d-flex flex-column min-vh-100">
@@ -47,7 +47,7 @@ $admin = Auth::guard('admin')->user();
                 @php $user = Auth::user() @endphp
                 <div class="dropdown">
                   <a href="#" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img class="rounded-circle avatar-small" src="{{ is_null($user->picture) ? asset('img/profile_default.png') : 'data:image/jpeg;base64, ' . $user->picture }}">
+                    <img class="rounded-circle avatar-small" src="{{ is_null($user->picture) ? asset('img/profile_default.png') : 'data:image/jpeg;base64, ' . $user->picture }}" alt="Profile picture">
                   </a>
                   <ul id="dropdownUserItems" class="dropdown-menu dropdown-menu-end ps-0 gap-2" aria-labelledby="dropdownUser">
                     <li><a href="{{ route('users.profile', ['username' => $user->username]) }}" class="dropdown-item d-block">My Profile</a></li>

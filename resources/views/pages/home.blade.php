@@ -32,18 +32,18 @@
 
         <div class="row text-center">
             <div class="col-md">
-                <h4><i class="fa fa-users text-primary"></i></h4>
+                <i class="fa fa-users text-primary fs-3"></i>
                 <h4>Community</h4>
                 <p>Eventure supports user interaction through comments and polls so you can organize your event according to user feedback and increase engagement</p>
             </div>
             <div class="col-md">
-                <h4><i class="fa fa-search text-primary"></i></h4>
+                <i class="fa fa-search text-primary fs-3"></i>
                 <h4>Discovery</h4>
                 <p>Increase the visibility of your event through tags, which can help you connect with your event's target audience. For attendees, our search system
                 can help you find the events you're most interested in.</p>
             </div>
             <div class="col-md">
-                <h4><i class="fa fa-trophy text-primary"></i></h4>
+                <i class="fa fa-trophy text-primary fs-3"></i>
                 <h4>Competitions</h4>
                 <p>We provide specialized features for tournaments and competitions, such as match results and automatic leaderboards.</p>
             </div>

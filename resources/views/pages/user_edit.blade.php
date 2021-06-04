@@ -27,7 +27,7 @@
 
                 <div class="mb-3">
                     <label for="username" class="h5 form-label">Username *</label>
-                    <input type="text" id="name" name="username" class="form-control" value="{{ $user->username }}" required>
+                    <input type="text" id="username" name="username" class="form-control" value="{{ $user->username }}" required>
                     @error ('username')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror

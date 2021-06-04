@@ -1,6 +1,6 @@
 
 <article class="card card-profile" data-id="{{ $event->id }}">
-    <img src="{{ is_null($event->picture) ? asset('img/event_default.png') : 'data:image/jpeg;base64, ' . $event->picture }}" class="card-img-top card-event-small">
+    <img src="{{ is_null($event->picture) ? asset('img/event_default.png') : 'data:image/jpeg;base64, ' . $event->picture }}" class="card-img-top card-event-small" alt="Event image">
     <div class="card-body">
         <h5 class="card-title text-center">
             <i class="text-danger {{ $event->cancelled ? "fa fa-ban" : "" }}" title="Event Cancelled" aria-label="Event Cancelled"></i>

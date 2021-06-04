@@ -192,7 +192,7 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
                                 @csrf
 
                                 <div class="mb-3">
-                                    <label for="pollTitle" class="h5 form-label">Title <span class="text-danger">*</span></label>
+                                    <label for="createPollQuestion" class="h5 form-label">Title <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="createPollQuestion" name="question" required>
                                 </div>
 
