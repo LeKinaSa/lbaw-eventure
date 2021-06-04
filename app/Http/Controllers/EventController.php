@@ -284,6 +284,10 @@ class EventController extends Controller {
             return response('The event has been cancelled.', 400);
         }
 
+        if ($event->max_attendance === $event->n_participants) {
+            return response('The attendance limit for this event has been reached.', 400);
+        }
+
         // The input may be username or email
         $usernameOrEmail = $request->input('invite');
 
