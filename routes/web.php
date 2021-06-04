@@ -45,9 +45,6 @@ Route::post('/api/events/{id}/matches', 'MatchController@store')->name('api.even
 Route::get('/events/{id}/matches/competitors', 'CompetitorController@index')->name('events.event.competitors');
 Route::post('/api/events/{id}/competitors', 'CompetitorController@store')->name('api.events.event.competitors.new');
 
-// TODO: next route is not complete
-//Route::get('/events/{id}/matches', 'EventController@show')->name('events.event.matches');
-
 // Invitations
 Route::get('/events/{id}/invitations', 'EventController@showInvitations')->name('events.event.invitations');
 Route::post('/api/events/{id}/invitations', 'EventController@createInvitation')->name('events.event.invitations.new');
