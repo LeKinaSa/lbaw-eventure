@@ -36,6 +36,7 @@ Route::get('/events/{id}/edit', 'EventController@edit')->name('events.event.edit
 Route::post('/events/{id}/edit', 'EventController@update');
 Route::get('/events/{id}/participants', 'EventController@showParticipants')->name('events.event.participants');
 Route::post('/events/{id}/cancel', 'EventController@cancel')->name('events.event.cancel');
+Route::post('/events/{id}/delete', 'EventController@destroy')->name('events.event.delete');
 
 // Matches and Competitors
 Route::patch('/api/events/{id}/leaderboard-settings', 'EventController@updateLeaderboardSettings')->name('api.events.event.leaderboard-settings.update');

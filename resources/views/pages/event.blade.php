@@ -34,7 +34,36 @@ $endDate = is_null($event->end_date) ? NULL : (new DateTime($event->end_date))->
                     <a href="{{ route('events.event.participants', ['id' => $event->id]) }}" role="button" class="btn btn-primary">Participants <i class="fa fa-users"></i></a>
                     @endif
                 </div>
-                <div class="d-flex align-items-center p-2">
+                <div class="d-flex align-items-center gap-2">
+                    @if (App\Policies\EventPolicy::delete(Auth::user() ?? Auth::guard('admin')->user(), $event))
+                    <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteEventModal">
+                    Delete event <i class="fa fa-remove"></i>
+                    </button>
+
+                    <div class="modal fade" id="deleteEventModal" tabindex="-1" aria-labelledby="deleteEventLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteEventLabel">Delete event</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><b>Warning:</b> deleting an event is an irreversible action. All comments, polls, uploaded files and matches 
+                                    will be permanently deleted.</p>
+                                    
+                                    <p>If you are sure that you wish to delete this event, click the button below.</p>
+                                    
+                                    <form method="POST" action="{{ route('events.event.delete', ['id' => $event->id]) }}">
+                                        @csrf
+                                        <div class="modal-footer">
+                                            <input type="submit" class="btn btn-danger" value="Delete">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                     @if (Auth::id() === $event->id_organizer)
                     <a class="btn btn-secondary" href="{{ route('events.event.edit', ['id' => $event->id]) }}"><i class="fa fa-pencil"></i></a>
                     @endif

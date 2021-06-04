@@ -150,14 +150,20 @@ class EventPolicy {
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
+     * @param  Illuminate\Foundation\Auth\User  $user
      * @param  \App\Models\Event  $event
      * @return mixed
      */
-    public function delete(User $user, Event $event) {
-        // Organizers can delete their events
-        // TODO: and admin
-        return $user->id === $event->id_organizer;
+    public static function delete(Authenticatable $user, Event $event) {
+        // Organizers (and administrators) can delete events
+        if ($user instanceof Administrator) {
+            return true;
+        }
+        else if ($user instanceof User) {
+            return $user->id === $event->id_organizer;
+        }
+
+        return false;
     }
 
     /**
