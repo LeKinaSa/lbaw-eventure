@@ -15,22 +15,21 @@ img.google {
     height: 1em;
 }
 
-.btn-secondary {
+.btn-secondary, .btn-secondary:hover, .btn-secondary:focus, .btn-secondary.focus {
     color: #212529;
+}
+
+.btn-secondary {
     background-color: var(--secondary);
     border-color: var(--secondary);
 }
 
-.btn-secondary:hover {
-    color: #212529;
+.btn-secondary:hover, .btn-secondary:focus, .btn-secondary.focus {
     background-color: var(--secondary-darker);
     border-color:var(--secondary-darker);
 }
 
 .btn-secondary:focus, .btn-secondary.focus {
-    color: #212529;
-    background-color: var(--secondary-darker);
-    border-color:var(--secondary-darker);
     box-shadow: 0 0 0 0.2rem rgba(250, 180, 40, 0.5);
 }
 
