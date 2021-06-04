@@ -772,11 +772,22 @@ class EventController extends Controller {
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Event  $event
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Event $event) {
-        //
+    public function destroy($id) {
+        $event = Event::findOrFail($id);
+        $user = Auth::user() ?? Auth::guard('admin')->user();
+        $this->authorizeForUser($user, 'delete', $event);
+
+        try {
+            $event->delete();
+        }
+        catch (QueryException $ex) {
+            return redirect(route('events.event', ['id' => $id]));
+        }
+
+        return redirect(url('/'));
     }
 
     /**
