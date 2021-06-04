@@ -687,7 +687,7 @@ class EventController extends Controller {
         return view('partials.leaderboard', ['leaderboard' => $leaderboard]);
     }
 
-    public function buildLeaderboard($event, $matches, $competitors) {
+    public static function buildLeaderboard($event, $matches, $competitors) {
         $leaderboard = array();
         foreach ($competitors as $competitor) {
             $leaderboard[$competitor->id] = ['name' => $competitor->name, 'games' => 0, 'wins' => 0, 'draws' => 0, 'losses' => 0, 'points' => 0.0];

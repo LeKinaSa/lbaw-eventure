@@ -99,7 +99,21 @@ class MatchController extends Controller {
                 ->join('competitor AS c2', 'c2.id', '=', 'match.id_competitor2')
                 ->select('match.*', 'c1.name AS name_competitor1', 'c2.name AS name_competitor2')->first();
 
-        return view('partials.match', ['match' => $match]);
+        $leaderboard = null;
+        if ($event->leaderboard) {
+            $matches = $event->matches()
+                ->join('competitor AS c1', 'c1.id', '=', 'match.id_competitor1')
+                ->join('competitor AS c2', 'c2.id', '=', 'match.id_competitor2')
+                ->select('match.*', 'c1.name AS name_competitor1', 'c2.name AS name_competitor2')->get();
+
+            $competitors = $event->competitors()->get();
+
+            $leaderboard = EventController::buildLeaderboard($event, $matches, $competitors);
+        }
+        
+        $json = ['match' => view('partials.match', ['match' => $match])->render(), 'leaderboard' => view('partials.leaderboard', ['leaderboard' => $leaderboard])->render()];
+
+        return response()->json($json);
     }
 
     /**

@@ -898,7 +898,7 @@ function sendCreateMatchRequest(event) {
     if (time !== '') data.time = time;
     if (description !== '') data.description = description;
 
-    sendAjaxRequest(this.method, this.action, data, createMatchHandler);
+    sendAjaxRequest(this.method, this.action, data, createMatchHandler, {}, 'application/json');
 }
 
 function createMatchHandler() {
@@ -907,6 +907,9 @@ function createMatchHandler() {
         return;
     }
     
+    let json = JSON.parse(this.responseText);
+    console.log(json);
+
     document.getElementById('createMatchError').innerHTML = '';
 
     document.querySelector('#createMatchForm input[name=date]').value = '';
@@ -914,7 +917,8 @@ function createMatchHandler() {
     document.querySelector('#createMatchForm textarea[name=description]').value = '';
 
     document.querySelector('#matchModal button.btn-close').click();
-    document.getElementById('matchList').insertAdjacentHTML('beforeend', this.responseText);
+    document.getElementById('matchList').insertAdjacentHTML('beforeend', json['match']);
+    document.getElementById('leaderboard').innerHTML = json['leaderboard'];
 }
 
 // ----- Competitors API -----
