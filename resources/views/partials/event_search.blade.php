@@ -7,7 +7,7 @@
             <div class="card-body">
                 <a class="text-primary" href="{{ route('events.event', $event) }}"><h5 class="card-title text-center">{{ $event->title }}</h5></a>
                 <ul class="list-unstyled">
-                    <li class="card-text"><i class="fs-5 col-1 fa fa-globe" aria-label="Type"></i>{{ $event->getTypeFormatted() }}</li>
+                    <li class="card-text"><i class="fs-5 col-1 fa fa-info" aria-label="Type"></i>{{ $event->getTypeFormatted() }}</li>
                     @if (!is_null($event->start_date))
                     <li class="card-text"><i class="fs-5 col-1 fa fa-calendar" aria-label="Date"></i>{{ (new DateTime($event->start_date))->format('j M, Y H:i') }}</li>
                     @endif
