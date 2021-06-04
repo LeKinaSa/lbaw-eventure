@@ -194,7 +194,7 @@ class EventController extends Controller {
             ]);
         }
 
-        $maxAttendance => $request->has('switchLimitedAttendance') ? $request->input('maxAttendance') : NULL;
+        $maxAttendance = $request->has('switchLimitedAttendance') ? $request->input('maxAttendance') : NULL;
         if (($maxAttendance !== null) && ($maxAttendance < $event->n_participants)) {
             return back()->withErrors([
                 'maxAttendance' => 'Attendance limit cannot be smaller than the number of participants.'
@@ -302,6 +302,11 @@ class EventController extends Controller {
         $user = User::where('username', $usernameOrEmail)->orWhere('email', $usernameOrEmail)->first();
         if (is_null($user))  {
             return response('The given username or email does not match any user.', 400);
+        }
+
+        // Check if the user is the organizer
+        if ($event->id_organizer === $user->id) {
+            return response('You cannot invite yourself for this event.', 400);
         }
 
         // Check if an invitation or join request already exists
