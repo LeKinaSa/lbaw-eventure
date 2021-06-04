@@ -131,7 +131,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form method="POST" action="{{ route('api.users.user.password.update', ['username' => $user->username]) }}" id="changePasswordForm">
+                            @method('PATCH')
                             <div class="mb-3">
                                 <label for="password" class="form-label">Current Password *</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
@@ -147,7 +148,11 @@
                                 <input type="password" class="form-control" id="newPasswordConfirm" name="newPasswordConfirm" required>
                             </div>
 
-                            <div class="modal-footer">
+                            <div class="modal-footer d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-danger mb-0" id="changePasswordError"></p>
+                                    <p class="text-success mb-0" id="changePasswordSuccess"></p>
+                                </div>
                                 <input type="submit" class="btn btn-primary" value="Change">
                             </div>
                         </form>

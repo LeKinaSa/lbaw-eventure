@@ -7,11 +7,12 @@ use App\Models\Suspension;
 use App\Models\User;
 use App\Utils;
 use App\Policies\EventPolicy;
-
+use App\Policies\UserPolicy;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller {
@@ -142,6 +143,46 @@ class UserController extends Controller {
 
         $user->save();
         return redirect(route('users.profile', ['username' => $user->username]));
+    }
+
+    public static function passwordValidator(Request $request) {
+        return Validator::make($request->all(), [
+            'password' => 'required|string|min:6',
+            'newPassword' => 'required|string|min:6|confirmed',
+        ]);
+    }
+
+    public function updatePassword(Request $request, $username) {
+        $user = User::where('username', $username)->first();
+
+        if (is_null($user)) {
+            return response('User with the specified username does not exist.', 400);
+        }
+
+        if (!UserPolicy::update(Auth::user(), $user)) {
+            return response('No permission to perform this request.', 403);
+        }
+
+        $validator = UserController::passwordValidator($request);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
+        }
+
+        if (!password_verify($request->input('password'), $user->password)) {
+            return response('Current password does not match our records.', 400);
+        }
+
+        try {
+            $user->update([
+                'password' => bcrypt($request->input('newPassword'))
+            ]);
+            $user->save();
+        }
+        catch (QueryException $ex) {
+            return response('A database error occurred.', 500);
+        }
+
+        return response('');
     }
 
     /**
